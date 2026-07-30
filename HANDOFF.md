@@ -258,7 +258,49 @@ picking one of two contradictory live numbers.
 
 ---
 
-## 9. If you're the next agent picking this up
+## 9. Visual-fidelity fixes (2026-07-30)
+
+Michael spotted four real design mismatches by eyeballing the deployed preview
+against the live site. All four traced back to real, fixable causes — not
+subjective taste calls:
+
+- **Site font was wrong.** This build was loading Google's Inter font via
+  `next/font/google` in `layout.tsx`. The live site (Neve theme default)
+  never loads a web font at all — it's plain `Arial, Helvetica, sans-serif`
+  at a 15px root size. Removed Inter entirely; `tailwind.config.ts`'s
+  `fontFamily.sans` and `globals.css`'s `body` rule now match live exactly.
+  This is why headers "looked wrong" — different font, different metrics.
+- **Missing "Trusted By Over 2000+ Engineers..." ticker.** Not a slider —
+  it's a CSS `@keyframes` scrolling marquee (single copy of text, off-screen
+  right to off-screen left, restart), and it's a **global header element**
+  (confirmed present on 5/6 live pages checked), not homepage-specific. The
+  previous build had it as static homepage-only hero text. Rebuilt as real
+  CSS marquee in `globals.css` + `Header.tsx`, removed the now-duplicate
+  static line from `page.tsx`.
+- **`#004aad` background missing.** That's Elementor's own "secondary" global
+  colour on the live site (distinct from `#2f5aae`, the `theme-color`/`brand`
+  token) — used specifically as the marquee's background. Added as
+  `secondary` in `tailwind.config.ts` rather than changing `brand`.
+- **Homepage video missing.** Live has a self-hosted `<video>` (not YouTube —
+  there's an empty/unconfigured Elementor YouTube widget alongside it that's
+  a red herring) as the literal first thing in `<main>`, right after the
+  header, before the "Latest posts" grid. Added to `page.tsx` with identical
+  attributes (`autoplay controls playsinline controlslist="nodownload"
+  preload="none"`, no `muted` — matching live exactly even though most
+  browsers will silently block the autoplay without it, same as live).
+  Path is `/wp-content/uploads/2026/04/2026-04-04-201337262.mp4`, proxied
+  through the existing `MEDIA_ORIGIN` rewrite like every other legacy asset.
+
+Note: confirmed there is no "Nigeria's Leading Roofing Company" hero
+heading/description/CTA section anywhere on the live site — that whole block
+in `page.tsx` was an original addition, not a live-site match. Michael didn't
+ask for it to be removed, so it's left in place (now below the video rather
+than above it, to keep the video in its correct live position).
+
+Verified: `npm run build` passes, `npm run verify` still 110/110 after
+redeploy.
+
+## 10. If you're the next agent picking this up
 
 Read `CLAUDE.md` first — it has the invariants. Then:
 
