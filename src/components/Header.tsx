@@ -181,6 +181,14 @@ export function Header({
           />
         </Container>
       </div>
+
+      {/* Scrolling ticker — present on every page on the live site, sitting
+          right at the bottom of the header. */}
+      <div className="marquee-container">
+        <div className="marquee-content">
+          Trusted By Over 2000+ Engineers and 7000 clients nationwide
+        </div>
+      </div>
     </header>
   )
 }

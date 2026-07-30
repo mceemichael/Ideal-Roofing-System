@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
-import { Inter } from 'next/font/google'
 import { GoogleTagManager } from '@next/third-parties/google'
 
 import './globals.css'
@@ -13,12 +12,6 @@ import WhatsAppFloat from '@/components/WhatsAppFloat'
 import JsonLd from '@/components/JsonLd'
 import { sanityFetch } from '../../sanity/client'
 import { siteSettingsQuery } from '../../sanity/queries'
-
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-sans',
-})
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || site.url),
@@ -88,7 +81,7 @@ export default async function RootLayout({
   const reviewCount = settings?.reviewCount ?? site.reviewCount
 
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en">
       <head>
         <JsonLd data={graph(organizationSchema(), websiteSchema())} />
 

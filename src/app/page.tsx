@@ -95,12 +95,26 @@ export default async function HomePage() {
     <>
       <JsonLd data={graph(organizationSchema(), websiteSchema())} />
 
+      {/* Video -------------------------------------------------------
+          First thing on the live homepage, right after the header. Self-
+          hosted, not YouTube — matches the live <video> element exactly
+          (same attributes), proxied through /wp-content/uploads/* like
+          every other legacy asset. */}
+      <video
+        poster="/wp-content/uploads/2026/04/919908-768x639.jpg"
+        autoPlay
+        controls
+        playsInline
+        controlsList="nodownload"
+        preload="none"
+        className="w-full"
+      >
+        <source src="/wp-content/uploads/2026/04/2026-04-04-201337262.mp4#t=0" />
+      </video>
+
       {/* Hero ------------------------------------------------------- */}
       <section className="bg-gradient-to-b from-brand-50 to-white">
         <Container className="py-12 text-center sm:py-16">
-          <p className="text-sm font-medium text-brand">
-            Trusted By Over 2000+ Engineers and 7000 clients nationwide
-          </p>
           <h1 className="mt-3 text-3xl font-bold leading-tight text-ink sm:text-5xl">
             Nigeria&rsquo;s Leading Roofing Company
           </h1>

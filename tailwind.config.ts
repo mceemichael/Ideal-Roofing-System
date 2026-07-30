@@ -30,6 +30,9 @@ const config: Config = {
           DEFAULT: '#f5a623',
           600: '#d98c0f',
         },
+        // Elementor's own "secondary" global colour on the live site — used
+        // on the header marquee. Distinct from `brand` (the theme-color).
+        secondary: '#004aad',
         ink: {
           DEFAULT: '#1a1a1a',
           muted: '#5b6472',
@@ -42,8 +45,11 @@ const config: Config = {
         },
         whatsapp: '#25d366',
       },
+      // The live site (Neve theme default) never loads a web font — it's
+      // plain Arial/Helvetica at 15px root. Matching that exactly rather
+      // than the Inter Google Font this build previously loaded.
       fontFamily: {
-        sans: ['var(--font-sans)', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ['Arial', 'Helvetica', 'sans-serif'],
       },
       maxWidth: {
         content: '1140px',
