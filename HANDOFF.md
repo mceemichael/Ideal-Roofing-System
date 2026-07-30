@@ -154,6 +154,70 @@ Also done as part of this: the project was moved out of Claude's local-agent-mod
 8. Move `uploads` to Vercel Blob or R2 and set `MEDIA_ORIGIN` **before** cancelling WordPress hosting.
 9. T+60: consolidate the thin tag archives.
 
+## 7. GitHub + Vercel deploy (2026-07-30)
+
+Pushed to `github.com/mceemichael/Ideal-Roofing-System` (private) and deployed
+via the Vercel CLI (no `gh` CLI available in this environment, so repo
+creation was done by Michael through the website; everything else driven from
+the terminal). Live preview: `https://ideal-roofing-vercel.vercel.app`.
+
+**Two real bugs found and fixed during this deploy, not before:**
+
+1. **Preview-noindex blind spot.** Vercel auto-promotes a brand-new project's
+   *first* deployment to `VERCEL_ENV=production` even with no custom domain
+   attached — both existing noindex guards (`robots.ts`, `next.config.mjs`
+   headers) keyed off `VERCEL_ENV === 'preview'` alone, so neither fired and
+   the `.vercel.app` URL was briefly crawlable with a real `Allow: /` robots.txt.
+   Fixed by adding a **request-host check** (`middleware.ts`'s
+   `isNonCanonicalHost()`, and the same check in `robots.ts` via
+   `next/headers`) that noindexes any request whose hostname isn't the real
+   `NEXT_PUBLIC_SITE_URL` domain — robust against this Vercel quirk, ordinary
+   preview deploys, and stays permanently correct after DNS cutover (the real
+   domain will match; the `.vercel.app` alias never will). Verified: fixed
+   deploy shows `Disallow: /` and `X-Robots-Tag: noindex, nofollow` on the
+   `.vercel.app` URL.
+2. **`POSTS_PER_PAGE` was wrong (14, should be 10).** `npm run verify` failed
+   on `/blogs-and-projects/page/4/` (404). Checked the live site directly:
+   it has exactly 4 pagination pages for 39 posts (10+10+10+9), confirming
+   WordPress's default of 10/page — the original build's "WordPress was
+   showing 14" comment was a guess made without live access, and wrong. Fixed
+   in `src/lib/site.ts`.
+3. Also fixed: `/author/[slug]` lookup was case-sensitive (`slug.current ==
+   $slug`), 404ing on `/author/ruth/` when the imported slug was `Ruth`.
+   WordPress's author-archive rewrite is case-insensitive (both case variants
+   200 on live), so `authorBySlugQuery` now matches via `lower(slug.current)
+   == lower($slug)`.
+
+After those fixes: `npm run verify -- https://ideal-roofing-vercel.vercel.app`
+→ **110/110, GATE: PASSED.**
+
+**Content-diff check (`--diff`) has two known false positives, both
+investigated and explained, neither is a real gap:**
+
+- `/blogs-and-projects/` reads as -42% "loss" because the **live site's own
+  Elementor pagination has a bug** — it duplicates some posts across pages
+  (verified: "Roofing Sheets Budgets for a 3-bedroom Bungalow in 2024" appears
+  on both live page 1 and live page 3). Our version shows each post exactly
+  once, which is more correct, not less complete.
+- The 4 remaining flagged pages (including both top-priority pricelist pages)
+  were missing a **Trustindex Google-reviews widget** the live site embeds on
+  individual posts only (not pages) — genuine third-party review content, not
+  stored in the WordPress export since it's plugin-rendered. Michael provided
+  his Trustindex embed snippet; it's now wired in via `TrustindexReviews.tsx`
+  (`next/script`, `strategy="afterInteractive"`) inserted into the post
+  template in `src/app/[slug]/page.tsx`, right after `PortableBody` and before
+  the tags list — matching the live page's exact placement. Confirmed the
+  script tag renders in the deployed HTML. The `--diff` script still reports
+  these as "loss" because it only fetches plain HTML — it can't execute the
+  widget's JS to see the reviews it injects, the same class of limitation as
+  the pagination false-positive above, not a sign anything is still missing.
+
+**Not yet done:** Vercel's GitHub integration (auto-deploy on push) failed to
+connect ("Failed to connect mceemichael/Ideal-Roofing-System... make sure you
+have access") — likely needs the Vercel GitHub App authorized for this
+specific private repo via the Vercel dashboard. Not blocking; deploys work
+fine via `npx vercel --prod` in the meantime.
+
 ## 8. Live-site copy sync (2026-07-30)
 
 Michael's WordPress site has been edited since this repo's homepage copy was
@@ -194,7 +258,7 @@ picking one of two contradictory live numbers.
 
 ---
 
-## 7. If you're the next agent picking this up
+## 9. If you're the next agent picking this up
 
 Read `CLAUDE.md` first — it has the invariants. Then:
 
