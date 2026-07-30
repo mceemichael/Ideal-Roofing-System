@@ -165,7 +165,11 @@ export const allTagSlugsQuery = groq`*[_type == "tag" && defined(slug.current)]{
 /* Authors                                                             */
 /* ------------------------------------------------------------------ */
 
-export const authorBySlugQuery = groq`*[_type == "author" && slug.current == $slug][0]{
+// WordPress's author-archive rewrite rule is case-insensitive (both
+// /author/Ruth/ and /author/ruth/ 200 on the live site), so the lookup here
+// matches case-insensitively too rather than 404ing on a differently-cased
+// but otherwise-identical URL.
+export const authorBySlugQuery = groq`*[_type == "author" && lower(slug.current) == lower($slug)][0]{
   _id,
   name,
   "slug": slug.current,

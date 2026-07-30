@@ -87,6 +87,11 @@ export const site = {
     adsenseHostAccount: 'ca-host-pub-2644536267352236',
   },
 
+  // Real, third-party-sourced Google reviews widget shown on individual
+  // posts (see .claude/rules/seo.md re: not adding self-serving review
+  // markup — this is the legitimate, existing exception).
+  trustindexWidgetSrc: 'https://cdn.trustindex.io/loader.js?76c08ed770ad9192df546679c7',
+
   // LOCKED — these prove domain ownership. Removing any one of them silently
   // breaks a webmaster tool or an ad account.
   verification: {
@@ -124,8 +129,12 @@ export const mainNav = [
   { label: 'Blog', href: '/blogs-and-projects/' },
 ] as const
 
-/** Posts per page on the blog index. WordPress was showing 14. */
-export const POSTS_PER_PAGE = 14
+// Verified 2026-07-30 against the live site directly: /blogs-and-projects/
+// has exactly 4 pages for 39 posts (10+10+10+9), confirming WordPress's
+// default of 10/page. The original build guessed 14 without live access —
+// that was wrong and would have under-paginated (3 pages instead of 4),
+// leaving page/4/ 404 despite it being indexed and linked from page 3.
+export const POSTS_PER_PAGE = 10
 
 /**
  * Routes that must never be resolved by the /[slug] catch-all, because a

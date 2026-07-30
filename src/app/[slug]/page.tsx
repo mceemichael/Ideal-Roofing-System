@@ -35,6 +35,7 @@ import PostCard, { type PostCardData } from '@/components/PostCard'
 import PageHeader from '@/components/PageHeader'
 import JsonLd from '@/components/JsonLd'
 import Comments, { type CommentData } from '@/components/Comments'
+import TrustindexReviews from '@/components/TrustindexReviews'
 
 /**
  * The catch-all that reproduces WordPress's flat URL structure.
@@ -310,6 +311,8 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
 
         <div className="mx-auto mt-8 max-w-prose">
           <PortableBody value={post.body} />
+
+          <TrustindexReviews />
 
           {post.tags?.length ? (
             <div className="mt-10 border-t border-surface-border pt-6">
