@@ -333,19 +333,32 @@ export default async function HomePage() {
             href={site.googleReviewUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-xl border border-white/20 p-6 transition-colors hover:bg-white/10"
+            className="flex items-center gap-4 rounded-xl border border-white/20 p-6 text-left transition-colors hover:bg-white/10"
           >
-            <p className="font-semibold text-white">Rate Us on Google</p>
-            <p className="mt-1 text-sm text-white/85">128 reviews</p>
+            <svg viewBox="0 0 48 48" aria-hidden="true" className="h-10 w-10 shrink-0">
+              <path fill="#FFC107" d="M43.6 20.5H42V20.4H24v7.2h11.3C33.7 32 29.3 35 24 35c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.1-5.1C33.9 5.9 29.2 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5Z" />
+              <path fill="#FF3D00" d="m6.3 14.7 6 4.4C14 15.4 18.6 12 24 12c3.1 0 5.9 1.2 8 3.1l5.1-5.1C33.9 5.9 29.2 4 24 4c-7.5 0-14 4.2-17.7 10.7Z" />
+              <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.4 26.7 36 24 36c-5.3 0-9.7-3-11.4-7.3l-6.2 4.8C10 39.7 16.4 44 24 44Z" />
+              <path fill="#1976D2" d="M43.6 20.5H42V20.4H24v7.2h11.3c-.8 2.3-2.3 4.2-4.2 5.6l6.2 5.2C40.9 35.8 44 30.5 44 24c0-1.2-.1-2.4-.4-3.5Z" />
+            </svg>
+            <div>
+              <p className="font-semibold text-white">Rate Us on Google</p>
+              <p className="mt-1 text-sm text-white/85">128 reviews</p>
+            </div>
           </a>
           <a
             href={site.facebookReviewUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-xl border border-white/20 p-6 transition-colors hover:bg-white/10"
+            className="flex items-center gap-4 rounded-xl border border-white/20 p-6 text-left transition-colors hover:bg-white/10"
           >
-            <p className="font-semibold text-white">Rate Us on Facebook</p>
-            <p className="mt-1 text-sm text-white/85">24 reviews</p>
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-10 w-10 shrink-0 fill-[#1877F2]">
+              <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.52 1.49-3.91 3.77-3.91 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.89h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94Z" />
+            </svg>
+            <div>
+              <p className="font-semibold text-white">Rate Us on Facebook</p>
+              <p className="mt-1 text-sm text-white/85">24 reviews</p>
+            </div>
           </a>
         </div>
       </Container>
