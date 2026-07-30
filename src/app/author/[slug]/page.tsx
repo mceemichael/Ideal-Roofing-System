@@ -59,7 +59,7 @@ export default async function AuthorPage({ params }: Props) {
         ]}
       />
 
-      <header className="flex flex-col items-center gap-4 border-b border-surface-border pb-8 text-center sm:flex-row sm:text-left">
+      <header className="flex flex-col items-center gap-4 border-b border-white/20 pb-8 text-center sm:flex-row sm:text-left">
         {avatar ? (
           <Image
             src={avatar}
@@ -70,10 +70,10 @@ export default async function AuthorPage({ params }: Props) {
           />
         ) : null}
         <div>
-          <h1 className="text-2xl font-bold text-ink sm:text-3xl">{author.name}</h1>
-          {author.role ? <p className="text-brand">{author.role}</p> : null}
+          <h1 className="text-2xl font-bold text-white sm:text-3xl">{author.name}</h1>
+          {author.role ? <p className="text-white/85">{author.role}</p> : null}
           {author.bio ? (
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink-muted">
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/85">
               {author.bio}
             </p>
           ) : null}

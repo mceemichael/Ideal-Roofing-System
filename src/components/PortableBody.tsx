@@ -37,12 +37,12 @@ function extractText(node: unknown): string {
 const components: PortableTextComponents = {
   block: {
     normal: ({ children }) => (
-      <p className="my-5 leading-[1.75] text-ink">{children}</p>
+      <p className="my-5 leading-[1.75] text-white">{children}</p>
     ),
     h2: ({ children }) => (
       <h2
         id={slugifyHeading(children)}
-        className="mt-10 mb-4 scroll-mt-32 text-2xl font-bold leading-snug text-ink sm:text-[1.75rem]"
+        className="mt-10 mb-4 scroll-mt-32 text-2xl font-bold leading-snug text-white sm:text-[1.75rem]"
       >
         {children}
       </h2>
@@ -50,16 +50,16 @@ const components: PortableTextComponents = {
     h3: ({ children }) => (
       <h3
         id={slugifyHeading(children)}
-        className="mt-8 mb-3 scroll-mt-32 text-xl font-bold leading-snug text-ink"
+        className="mt-8 mb-3 scroll-mt-32 text-xl font-bold leading-snug text-white"
       >
         {children}
       </h3>
     ),
     h4: ({ children }) => (
-      <h4 className="mt-6 mb-2 text-lg font-semibold text-ink">{children}</h4>
+      <h4 className="mt-6 mb-2 text-lg font-semibold text-white">{children}</h4>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="my-6 border-l-4 border-brand bg-brand-50 px-5 py-4 text-ink-muted">
+      <blockquote className="my-6 border-l-4 border-white bg-white/10 px-5 py-4 text-white">
         {children}
       </blockquote>
     ),
@@ -67,19 +67,19 @@ const components: PortableTextComponents = {
 
   list: {
     bullet: ({ children }) => (
-      <ul className="my-5 list-disc space-y-2 pl-6 leading-relaxed marker:text-brand">
+      <ul className="my-5 list-disc space-y-2 pl-6 leading-relaxed marker:text-white">
         {children}
       </ul>
     ),
     number: ({ children }) => (
-      <ol className="my-5 list-decimal space-y-2 pl-6 leading-relaxed marker:font-semibold marker:text-brand">
+      <ol className="my-5 list-decimal space-y-2 pl-6 leading-relaxed marker:font-semibold marker:text-white">
         {children}
       </ol>
     ),
   },
 
   marks: {
-    strong: ({ children }) => <strong className="font-semibold text-ink">{children}</strong>,
+    strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
     em: ({ children }) => <em className="italic">{children}</em>,
     underline: ({ children }) => <span className="underline">{children}</span>,
     link: ({ value, children }) => {
@@ -88,7 +88,7 @@ const components: PortableTextComponents = {
 
       if (isInternal && href.startsWith('/')) {
         return (
-          <Link href={href} className="font-medium text-brand underline underline-offset-2 hover:text-brand-700">
+          <Link href={href} className="font-medium text-white underline underline-offset-2 hover:text-white/80">
             {children}
           </Link>
         )
@@ -101,7 +101,7 @@ const components: PortableTextComponents = {
           // nofollow on outbound links only. Internal links must stay
           // followable or you leak your own internal PageRank.
           rel={isInternal ? 'noopener' : 'noopener noreferrer nofollow'}
-          className="font-medium text-brand underline underline-offset-2 hover:text-brand-700"
+          className="font-medium text-white underline underline-offset-2 hover:text-white/80"
         >
           {children}
         </a>
@@ -125,7 +125,7 @@ const components: PortableTextComponents = {
             className="h-auto w-full rounded-lg"
           />
           {value.caption ? (
-            <figcaption className="mt-2 text-center text-sm text-ink-light">
+            <figcaption className="mt-2 text-center text-sm text-white/70">
               {value.caption}
             </figcaption>
           ) : null}
@@ -138,6 +138,11 @@ const components: PortableTextComponents = {
      * they get real care: a proper <table> for semantics and for Google, a
      * horizontal scroll container so nothing is clipped on a phone, and
      * zebra striping so a long price list stays readable.
+     *
+     * Styling matches the live site's own table exactly: a lighter-blue
+     * header row, alternating dark-blue data rows with white text, and a
+     * white "label" cell in the first column of every row — confirmed by
+     * viewing the rendered table, not guessed.
      */
     priceTable: ({ value }) => {
       const headers: string[] = value?.headers || []
@@ -147,16 +152,16 @@ const components: PortableTextComponents = {
       return (
         <figure className="my-8">
           {value.caption ? (
-            <figcaption className="mb-3 text-base font-semibold text-ink">
+            <figcaption className="mb-3 text-base font-semibold text-white">
               {value.caption}
             </figcaption>
           ) : null}
 
-          <div className="overflow-x-auto rounded-lg border border-surface-border">
+          <div className="overflow-x-auto rounded-lg border border-white/20">
             <table className="w-full min-w-[32rem] border-collapse text-sm">
               {headers.length ? (
                 <thead>
-                  <tr className="bg-brand text-left text-white">
+                  <tr className="bg-brand-400 text-left text-white">
                     {headers.map((h, i) => (
                       <th key={i} scope="col" className="px-4 py-3 font-semibold">
                         {h}
@@ -169,17 +174,16 @@ const components: PortableTextComponents = {
                 {rows.map((row, ri) => (
                   <tr
                     key={ri}
-                    className={cn(
-                      'border-t border-surface-border',
-                      ri % 2 === 1 && 'bg-surface-soft'
-                    )}
+                    className={cn('border-t border-white/10', ri % 2 === 1 && 'bg-white/5')}
                   >
                     {(row.cells || []).map((cell, ci) => (
                       <td
                         key={ci}
                         className={cn(
-                          'px-4 py-3 align-top text-ink',
-                          ci === 0 && 'font-medium'
+                          'px-4 py-3 align-top',
+                          ci === 0
+                            ? 'bg-white font-medium text-ink'
+                            : 'text-white'
                         )}
                       >
                         {cell}
@@ -192,7 +196,7 @@ const components: PortableTextComponents = {
           </div>
 
           {value.footnote ? (
-            <p className="mt-2 text-xs text-ink-light">{value.footnote}</p>
+            <p className="mt-2 text-xs text-white/70">{value.footnote}</p>
           ) : null}
         </figure>
       )
@@ -219,7 +223,7 @@ const components: PortableTextComponents = {
             />
           </div>
           {value.title ? (
-            <figcaption className="mt-2 text-center text-sm text-ink-light">
+            <figcaption className="mt-2 text-center text-sm text-white/70">
               {value.title}
             </figcaption>
           ) : null}
@@ -230,17 +234,17 @@ const components: PortableTextComponents = {
     callout: ({ value }) => {
       const tone: string = value?.tone || 'info'
       const styles: Record<string, string> = {
-        info: 'border-brand bg-brand-50',
-        tip: 'border-emerald-500 bg-emerald-50',
-        warning: 'border-amber-500 bg-amber-50',
+        info: 'border-white bg-white/10',
+        tip: 'border-emerald-400 bg-emerald-400/10',
+        warning: 'border-amber-400 bg-amber-400/10',
       }
 
       return (
         <aside className={cn('my-6 rounded-lg border-l-4 p-5', styles[tone] || styles.info)}>
           {value.title ? (
-            <p className="mb-2 font-semibold text-ink">{value.title}</p>
+            <p className="mb-2 font-semibold text-white">{value.title}</p>
           ) : null}
-          <div className="text-sm leading-relaxed text-ink-muted [&>p]:my-2">
+          <div className="text-sm leading-relaxed text-white/85 [&>p]:my-2">
             <PortableText value={value.body || []} components={components} />
           </div>
         </aside>

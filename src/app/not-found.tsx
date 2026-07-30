@@ -10,13 +10,13 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <Container className="py-24 text-center">
-      <p className="text-sm font-semibold uppercase tracking-wider text-brand">
+      <p className="text-sm font-semibold uppercase tracking-wider text-white">
         404
       </p>
-      <h1 className="mt-3 text-3xl font-bold text-ink sm:text-4xl">
+      <h1 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
         We could not find that page
       </h1>
-      <p className="mx-auto mt-4 max-w-md text-ink-muted">
+      <p className="mx-auto mt-4 max-w-md text-white/85">
         The page may have moved. These are the ones people look for most:
       </p>
 
@@ -31,7 +31,7 @@ export default function NotFound() {
           <li key={l.href}>
             <Link
               href={l.href}
-              className="block rounded-lg border border-surface-border px-4 py-3 text-sm font-medium text-ink transition-colors hover:border-brand hover:text-brand"
+              className="block rounded-lg border border-white/30 px-4 py-3 text-sm font-medium text-white transition-colors hover:border-white"
             >
               {l.label}
             </Link>

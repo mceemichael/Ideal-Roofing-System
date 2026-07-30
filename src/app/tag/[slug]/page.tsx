@@ -70,7 +70,7 @@ export default async function TagPage({ params }: Props) {
             ))}
           </div>
         ) : (
-          <p className="py-12 text-center text-ink-muted">
+          <p className="py-12 text-center text-white/85">
             Nothing tagged {tag.title} yet.
           </p>
         )}

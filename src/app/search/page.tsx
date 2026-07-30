@@ -58,11 +58,11 @@ export default async function SearchPage({ searchParams }: Props) {
       <Container className="py-10">
         {term ? (
           <>
-            <p className="mb-6 text-sm text-ink-muted">
+            <p className="mb-6 text-sm text-white/85">
               {results.length === 0
                 ? 'No results for '
                 : results.length + (results.length === 1 ? ' result for ' : ' results for ')}
-              <strong className="text-ink">&ldquo;{term}&rdquo;</strong>
+              <strong className="text-white">&ldquo;{term}&rdquo;</strong>
             </p>
 
             {results.length ? (
@@ -72,8 +72,8 @@ export default async function SearchPage({ searchParams }: Props) {
                 ))}
               </div>
             ) : (
-              <div className="rounded-xl border border-dashed border-surface-border p-8 text-center">
-                <p className="text-ink-muted">
+              <div className="rounded-xl border border-dashed border-white/30 p-8 text-center">
+                <p className="text-white/85">
                   Nothing matched that. Try a shorter word, or start from one of
                   these:
                 </p>
@@ -83,7 +83,7 @@ export default async function SearchPage({ searchParams }: Props) {
           </>
         ) : (
           <div className="text-center">
-            <p className="text-ink-muted">
+            <p className="text-white/85">
               Type above, or jump to what people look for most:
             </p>
             <PopularLinks />
@@ -101,7 +101,7 @@ function PopularLinks() {
         <li key={l.href}>
           <Link
             href={l.href}
-            className="inline-block rounded-full border border-surface-border px-4 py-2 text-sm text-ink-muted transition-colors hover:border-brand hover:text-brand"
+            className="inline-block rounded-full border border-white/30 px-4 py-2 text-sm text-white/85 transition-colors hover:border-white hover:text-white"
           >
             {l.label}
           </Link>

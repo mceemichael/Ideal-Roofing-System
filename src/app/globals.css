@@ -16,6 +16,14 @@
     /* Matches the live site's root font-size exactly (Neve theme default). */
     font-size: 15px;
     text-rendering: optimizeLegibility;
+    /* The live site's Elementor "Kit" sets this directly on <body>, at
+       higher specificity than the theme's own white default — confirmed by
+       viewing the rendered site, not just its CSS. This is the real,
+       site-wide base: dark blue canvas, white text everywhere, with a
+       handful of deliberately-white "islands" (blog preview cards, the
+       price table's label column) layered on top. */
+    background-color: #004aad;
+    color: #fff;
   }
 
   /* Anything a heading anchor scrolls to must clear the sticky header. */
@@ -38,28 +46,28 @@
    * content, which matters because some of it will sit there for months.
    */
   .wp-legacy table {
-    @apply my-6 w-full border-collapse overflow-hidden rounded-lg border border-surface-border text-sm;
+    @apply my-6 w-full border-collapse overflow-hidden rounded-lg border border-white/20 text-sm;
   }
   .wp-legacy thead {
-    @apply bg-brand text-white;
+    @apply bg-brand-400 text-white;
   }
   .wp-legacy th {
     @apply px-4 py-3 text-left font-semibold;
   }
   .wp-legacy td {
-    @apply border-t border-surface-border px-4 py-3 align-top;
+    @apply border-t border-white/10 px-4 py-3 align-top text-white;
   }
   .wp-legacy tbody tr:nth-child(even) {
-    @apply bg-surface-soft;
+    @apply bg-white/5;
   }
   .wp-legacy p {
     @apply my-4 leading-relaxed;
   }
   .wp-legacy ul {
-    @apply my-4 list-disc space-y-2 pl-6 marker:text-brand;
+    @apply my-4 list-disc space-y-2 pl-6 marker:text-white;
   }
   .wp-legacy ol {
-    @apply my-4 list-decimal space-y-2 pl-6 marker:text-brand;
+    @apply my-4 list-decimal space-y-2 pl-6 marker:text-white;
   }
   .wp-legacy h2 {
     @apply mt-8 mb-3 text-2xl font-bold;
@@ -71,7 +79,7 @@
     @apply mt-5 mb-2 text-lg font-semibold;
   }
   .wp-legacy a {
-    @apply font-medium text-brand underline underline-offset-2;
+    @apply font-medium text-white underline underline-offset-2;
   }
   .wp-legacy img {
     @apply my-6 h-auto max-w-full rounded-lg;
@@ -80,10 +88,10 @@
     @apply my-6;
   }
   .wp-legacy figcaption {
-    @apply mt-2 text-center text-sm text-ink-light;
+    @apply mt-2 text-center text-sm text-white/70;
   }
   .wp-legacy blockquote {
-    @apply my-6 border-l-4 border-brand bg-brand-50 px-5 py-4 text-ink-muted;
+    @apply my-6 border-l-4 border-white bg-white/10 px-5 py-4 text-white;
   }
   .wp-legacy iframe {
     @apply my-6 aspect-video w-full rounded-lg border-0;

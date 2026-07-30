@@ -9,17 +9,17 @@ export function Breadcrumbs({
 
   return (
     <nav aria-label="Breadcrumb" className="mb-6">
-      <ol className="flex flex-wrap items-center gap-1.5 text-sm text-ink-light">
+      <ol className="flex flex-wrap items-center gap-1.5 text-sm text-white/70">
         {items.map((item, i) => {
           const isLast = i === items.length - 1
           return (
             <li key={item.path} className="flex items-center gap-1.5">
               {isLast ? (
-                <span aria-current="page" className="text-ink-muted">
+                <span aria-current="page" className="text-white/85">
                   {item.name}
                 </span>
               ) : (
-                <Link href={item.path} className="transition-colors hover:text-brand">
+                <Link href={item.path} className="transition-colors hover:text-white">
                   {item.name}
                 </Link>
               )}

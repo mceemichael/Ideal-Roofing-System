@@ -61,9 +61,9 @@ export function CommentForm({
 
   if (status === 'sent') {
     return (
-      <div className="mt-8 rounded-xl border-l-4 border-emerald-500 bg-emerald-50 p-5">
-        <p className="font-semibold text-ink">Thank you — your comment was received.</p>
-        <p className="mt-1 text-sm text-ink-muted">
+      <div className="mt-8 rounded-xl border-l-4 border-emerald-400 bg-emerald-400/10 p-5">
+        <p className="font-semibold text-white">Thank you — your comment was received.</p>
+        <p className="mt-1 text-sm text-white/85">
           It will appear here once we have read it. We check daily.
         </p>
       </div>
@@ -72,8 +72,8 @@ export function CommentForm({
 
   return (
     <div className="mt-10">
-      <h3 className="text-lg font-bold text-ink">Leave a reply</h3>
-      <p className="mt-1 text-sm text-ink-muted">
+      <h3 className="text-lg font-bold text-white">Leave a reply</h3>
+      <p className="mt-1 text-sm text-white/85">
         Your email address will not be published. Required fields are marked *
       </p>
 
@@ -86,8 +86,8 @@ export function CommentForm({
         <Field name="website" label="Website" type="url" autoComplete="url" />
 
         <div>
-          <label htmlFor="comment-body" className="block text-sm font-medium text-ink">
-            Comment <span className="text-red-600">*</span>
+          <label htmlFor="comment-body" className="block text-sm font-medium text-white">
+            Comment <span className="text-red-400">*</span>
           </label>
           <textarea
             id="comment-body"
@@ -95,7 +95,7 @@ export function CommentForm({
             required
             rows={5}
             maxLength={5000}
-            className="mt-1.5 w-full rounded-lg border border-surface-border px-3 py-2.5 text-base text-ink outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-brand/20"
+            className="mt-1.5 w-full rounded-lg border border-surface-border bg-white px-3 py-2.5 text-base text-ink outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-brand/20"
           />
         </div>
 
@@ -110,7 +110,7 @@ export function CommentForm({
         </div>
 
         {status === 'error' ? (
-          <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+          <p role="alert" className="rounded-lg bg-red-400/10 px-4 py-3 text-sm text-red-300">
             {error}
           </p>
         ) : null}
@@ -143,8 +143,8 @@ function Field({
   const id = 'comment-' + name
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-ink">
-        {label} {required ? <span className="text-red-600">*</span> : null}
+      <label htmlFor={id} className="block text-sm font-medium text-white">
+        {label} {required ? <span className="text-red-400">*</span> : null}
       </label>
       <input
         id={id}
@@ -152,7 +152,7 @@ function Field({
         type={type}
         required={required}
         autoComplete={autoComplete}
-        className="mt-1.5 w-full rounded-lg border border-surface-border px-3 py-2.5 text-base text-ink outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-brand/20"
+        className="mt-1.5 w-full rounded-lg border border-surface-border bg-white px-3 py-2.5 text-base text-ink outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-brand/20"
       />
     </div>
   )

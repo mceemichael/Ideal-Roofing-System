@@ -233,23 +233,23 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
           <Breadcrumbs items={crumbs} />
 
           {post.categories?.length ? (
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-brand">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-white">
               {post.categories.map((c: any) => c.title).join(' · ')}
             </p>
           ) : null}
 
-          <h1 className="text-3xl font-bold leading-tight text-ink sm:text-4xl">
+          <h1 className="text-3xl font-bold leading-tight text-white sm:text-4xl">
             {post.title}
           </h1>
 
-          <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-light">
+          <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-white/70">
             {post.author?.name ? (
               <>
                 <span>
                   by{' '}
                   <Link
                     href={'/author/' + post.author.slug + '/'}
-                    className="font-medium text-ink-muted transition-colors hover:text-brand"
+                    className="font-medium text-white/85 transition-colors hover:text-white"
                   >
                     {post.author.name}
                   </Link>
@@ -282,7 +282,7 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
           </div>
 
           {post.excerpt ? (
-            <p className="mt-5 border-l-4 border-brand-200 pl-4 text-lg leading-relaxed text-ink-muted">
+            <p className="mt-5 border-l-4 border-white/40 pl-4 text-lg leading-relaxed text-white/85">
               {post.excerpt}
             </p>
           ) : null}
@@ -302,7 +302,7 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
               className="h-auto w-full rounded-xl"
             />
             {post.featuredImage?.caption ? (
-              <figcaption className="mt-2 text-center text-sm text-ink-light">
+              <figcaption className="mt-2 text-center text-sm text-white/70">
                 {post.featuredImage.caption}
               </figcaption>
             ) : null}
@@ -315,8 +315,8 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
           <TrustindexReviews />
 
           {post.tags?.length ? (
-            <div className="mt-10 border-t border-surface-border pt-6">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-ink-light">
+            <div className="mt-10 border-t border-white/20 pt-6">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-white/70">
                 Tags
               </h2>
               <ul className="mt-3 flex flex-wrap gap-2">
@@ -324,7 +324,7 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
                   <li key={t.slug}>
                     <Link
                       href={'/tag/' + t.slug + '/'}
-                      className="inline-block rounded-full border border-surface-border px-3 py-1 text-sm text-ink-muted transition-colors hover:border-brand hover:text-brand"
+                      className="inline-block rounded-full border border-white/30 px-3 py-1 text-sm text-white/85 transition-colors hover:border-white hover:text-white"
                     >
                       {t.title}
                     </Link>
@@ -335,7 +335,7 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
           ) : null}
 
           {post.author?.bio ? (
-            <aside className="mt-10 flex gap-4 rounded-xl border border-surface-border bg-surface-soft p-5">
+            <aside className="mt-10 flex gap-4 rounded-xl border border-white/20 bg-white/10 p-5">
               {post.author.avatarUrl || post.author.avatar ? (
                 <Image
                   src={imageSrc(post.author.avatar, 128) || post.author.avatarUrl}
@@ -346,11 +346,11 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
                 />
               ) : null}
               <div>
-                <p className="font-semibold text-ink">{post.author.name}</p>
+                <p className="font-semibold text-white">{post.author.name}</p>
                 {post.author.role ? (
-                  <p className="text-sm text-brand">{post.author.role}</p>
+                  <p className="text-sm text-white/85">{post.author.role}</p>
                 ) : null}
-                <p className="mt-1.5 text-sm leading-relaxed text-ink-muted">
+                <p className="mt-1.5 text-sm leading-relaxed text-white/85">
                   {post.author.bio}
                 </p>
               </div>
@@ -368,7 +368,7 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
 
         {related.length ? (
           <section className="mt-16">
-            <h2 className="mb-6 text-2xl font-bold text-ink">Related reading</h2>
+            <h2 className="mb-6 text-2xl font-bold text-white">Related reading</h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((p) => (
                 <PostCard key={p._id} post={p} />
@@ -469,7 +469,7 @@ function CategoryView({ category, slug }: { category: any; slug: string }) {
             ))}
           </div>
         ) : (
-          <p className="py-12 text-center text-ink-muted">
+          <p className="py-12 text-center text-white/85">
             No posts in this category yet.
           </p>
         )}

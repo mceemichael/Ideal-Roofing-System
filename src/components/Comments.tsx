@@ -46,8 +46,8 @@ export function Comments({
   }
 
   return (
-    <section id="comments" className="mt-12 border-t border-surface-border pt-8">
-      <h2 className="text-xl font-bold text-ink sm:text-2xl">
+    <section id="comments" className="mt-12 border-t border-white/20 pt-8">
+      <h2 className="text-xl font-bold text-white sm:text-2xl">
         {comments.length === 0
           ? 'Leave a comment'
           : comments.length === 1
@@ -61,7 +61,7 @@ export function Comments({
             <li key={c._id}>
               <Comment comment={c} />
               {repliesByParent.get(c._id)?.length ? (
-                <ol className="mt-4 space-y-4 border-l-2 border-surface-border pl-4 sm:pl-6">
+                <ol className="mt-4 space-y-4 border-l-2 border-white/20 pl-4 sm:pl-6">
                   {repliesByParent.get(c._id)!.map((r) => (
                     <li key={r._id}>
                       <Comment comment={r} />
@@ -87,7 +87,7 @@ function Comment({ comment }: { comment: CommentData }) {
   return (
     <article
       id={anchor}
-      className="scroll-mt-32 rounded-xl border border-surface-border bg-surface-soft p-4 sm:p-5"
+      className="scroll-mt-32 rounded-xl border border-white/20 bg-white/10 p-4 sm:p-5"
     >
       <header className="flex items-center gap-3">
         {comment.avatarUrl ? (
@@ -98,19 +98,19 @@ function Comment({ comment }: { comment: CommentData }) {
             width={40}
             height={40}
             loading="lazy"
-            className="h-10 w-10 rounded-full bg-surface-border object-cover"
+            className="h-10 w-10 rounded-full bg-white/20 object-cover"
           />
         ) : (
           <span
             aria-hidden="true"
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-sm font-semibold text-white"
           >
             {comment.name.charAt(0).toUpperCase()}
           </span>
         )}
 
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-ink">
+          <p className="truncate text-sm font-semibold text-white">
             {comment.website ? (
               <a
                 href={comment.website}
@@ -119,7 +119,7 @@ function Comment({ comment }: { comment: CommentData }) {
                 // passing ranking value to arbitrary commenter sites is how
                 // you attract more of it.
                 rel="nofollow noopener noreferrer ugc"
-                className="hover:text-brand hover:underline"
+                className="hover:underline"
               >
                 {comment.name}
               </a>
@@ -127,8 +127,8 @@ function Comment({ comment }: { comment: CommentData }) {
               comment.name
             )}
           </p>
-          <p className="text-xs text-ink-light">
-            <a href={'#' + anchor} className="hover:text-brand">
+          <p className="text-xs text-white/70">
+            <a href={'#' + anchor} className="hover:text-white">
               <time dateTime={isoDate(comment.publishedAt)}>
                 {formatDate(comment.publishedAt)}
               </time>
@@ -137,7 +137,7 @@ function Comment({ comment }: { comment: CommentData }) {
         </div>
       </header>
 
-      <div className="mt-3 whitespace-pre-line text-sm leading-relaxed text-ink-muted">
+      <div className="mt-3 whitespace-pre-line text-sm leading-relaxed text-white/85">
         {comment.body}
       </div>
     </article>

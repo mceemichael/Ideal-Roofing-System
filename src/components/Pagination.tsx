@@ -31,7 +31,7 @@ export function Pagination({
             <Link
               href={href(currentPage - 1)}
               rel="prev"
-              className={cn(linkClass, 'border-surface-border text-ink hover:border-brand hover:text-brand')}
+              className={cn(linkClass, 'border-white/30 text-white hover:border-white')}
             >
               « Previous
             </Link>
@@ -50,7 +50,7 @@ export function Pagination({
             ) : (
               <Link
                 href={href(p)}
-                className={cn(linkClass, 'border-surface-border text-ink hover:border-brand hover:text-brand')}
+                className={cn(linkClass, 'border-white/30 text-white hover:border-white')}
               >
                 {p}
               </Link>
@@ -63,7 +63,7 @@ export function Pagination({
             <Link
               href={href(currentPage + 1)}
               rel="next"
-              className={cn(linkClass, 'border-surface-border text-ink hover:border-brand hover:text-brand')}
+              className={cn(linkClass, 'border-white/30 text-white hover:border-white')}
             >
               Next »
             </Link>

@@ -89,7 +89,7 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://cdn.sanity.io" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
       </head>
-      <body className="flex min-h-screen flex-col bg-white font-sans text-ink antialiased">
+      <body className="flex min-h-screen flex-col bg-secondary font-sans text-white antialiased">
         <a
           href="#content"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-brand focus:px-4 focus:py-2 focus:text-white"

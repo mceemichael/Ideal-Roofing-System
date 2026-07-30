@@ -26,7 +26,7 @@ export function Header({
   const [subOpen, setSubOpen] = useState<string | null>(null)
 
   return (
-    <header className="sticky top-0 z-40 bg-white shadow-sm">
+    <header className="sticky top-0 z-40 bg-secondary shadow-sm">
       {/* Logo + navigation */}
       <Container className="flex items-center justify-between gap-4 py-3">
         <Link href="/" className="flex shrink-0 items-center" aria-label="Ideal Roofing System home">
@@ -52,7 +52,7 @@ export function Header({
               <li key={item.href} className="group relative">
                 <Link
                   href={item.href}
-                  className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-ink transition-colors hover:bg-brand-50 hover:text-brand"
+                  className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10"
                 >
                   {item.label}
                   {'children' in item && item.children ? (
@@ -63,12 +63,12 @@ export function Header({
                 </Link>
 
                 {'children' in item && item.children ? (
-                  <ul className="invisible absolute left-0 top-full z-50 w-80 rounded-lg border border-surface-border bg-white p-2 opacity-0 shadow-card-hover transition-all group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                  <ul className="invisible absolute left-0 top-full z-50 w-80 rounded-lg border border-white/20 bg-brand-700 p-2 opacity-0 shadow-card-hover transition-all group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
                     {item.children.map((child) => (
                       <li key={child.href}>
                         <Link
                           href={child.href}
-                          className="block rounded-md px-3 py-2 text-sm text-ink-muted transition-colors hover:bg-brand-50 hover:text-brand"
+                          className="block rounded-md px-3 py-2 text-sm text-white/85 transition-colors hover:bg-white/10 hover:text-white"
                         >
                           {child.label}
                         </Link>
@@ -86,7 +86,7 @@ export function Header({
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls="mobile-nav"
-          className="rounded-md p-2 text-ink lg:hidden"
+          className="rounded-md p-2 text-white lg:hidden"
         >
           <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
           <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 stroke-current" fill="none" strokeWidth={2} strokeLinecap="round">
@@ -100,19 +100,19 @@ export function Header({
         id="mobile-nav"
         aria-label="Mobile"
         className={cn(
-          'overflow-hidden border-t border-surface-border bg-white transition-[max-height] duration-300 lg:hidden',
+          'overflow-hidden border-t border-white/20 bg-brand-700 transition-[max-height] duration-300 lg:hidden',
           open ? 'max-h-[32rem]' : 'max-h-0'
         )}
       >
         <Container className="py-2">
-          <ul className="divide-y divide-surface-border">
+          <ul className="divide-y divide-white/10">
             {mainNav.map((item) => (
               <li key={item.href} className="py-1">
                 <div className="flex items-center justify-between">
                   <Link
                     href={item.href}
                     onClick={() => setOpen(false)}
-                    className="block flex-1 py-2 text-sm font-medium text-ink"
+                    className="block flex-1 py-2 text-sm font-medium text-white"
                   >
                     {item.label}
                   </Link>
@@ -128,7 +128,7 @@ export function Header({
                         viewBox="0 0 20 20"
                         aria-hidden="true"
                         className={cn(
-                          'h-4 w-4 fill-current transition-transform',
+                          'h-4 w-4 fill-current text-white transition-transform',
                           subOpen === item.href && 'rotate-180'
                         )}
                       >
@@ -145,7 +145,7 @@ export function Header({
                         <Link
                           href={child.href}
                           onClick={() => setOpen(false)}
-                          className="block py-2 text-sm text-ink-muted"
+                          className="block py-2 text-sm text-white/80"
                         >
                           {child.label}
                         </Link>
@@ -160,7 +160,7 @@ export function Header({
       </nav>
 
       {/* Blue band */}
-      <div className="bg-brand text-white">
+      <div className="bg-secondary text-white">
         <Container className="flex flex-col items-center gap-3 py-3 text-center lg:flex-row lg:justify-between lg:text-left">
           <div className="shrink-0">
             <Link href="/" className="text-base font-bold tracking-wide sm:text-lg">
