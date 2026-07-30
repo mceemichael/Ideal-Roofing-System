@@ -33,6 +33,10 @@ const config: Config = {
         // Elementor's own "secondary" global colour on the live site — used
         // on the header marquee. Distinct from `brand` (the theme-color).
         secondary: '#004aad',
+        // Elementor custom global colour (--e-global-color-9d31dbf on live) —
+        // the reddish accent used for the search button, "Read More" links,
+        // and similar CTAs.
+        cta: '#da0d0d',
         ink: {
           DEFAULT: '#1a1a1a',
           muted: '#5b6472',

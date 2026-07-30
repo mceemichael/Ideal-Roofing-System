@@ -107,10 +107,34 @@ export default async function HomePage() {
         playsInline
         controlsList="nodownload"
         preload="none"
-        className="w-full"
+        className="aspect-video w-full"
       >
         <source src="/wp-content/uploads/2026/04/2026-04-04-201337262.mp4#t=0" />
       </video>
+
+      {/* Latest posts -------------------------------------------------
+          Immediately after the video, matching the live homepage's actual
+          order — there's no hero section between them on live. */}
+      {posts.length ? (
+        <Container className="py-14">
+          <div className="mb-6 flex items-end justify-between gap-4">
+            <h2 className="text-2xl font-bold text-white sm:text-3xl">
+              Latest Prices &amp; Guides
+            </h2>
+            <Link
+              href="/blogs-and-projects/"
+              className="shrink-0 text-sm font-semibold text-white hover:underline"
+            >
+              View all →
+            </Link>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {posts.map((p, i) => (
+              <PostCard key={p._id} post={p} priority={i === 0} />
+            ))}
+          </div>
+        </Container>
+      ) : null}
 
       {/* Hero ------------------------------------------------------- */}
       <section>
@@ -140,28 +164,6 @@ export default async function HomePage() {
           </div>
         </Container>
       </section>
-
-      {/* Latest posts ----------------------------------------------- */}
-      {posts.length ? (
-        <Container className="py-14">
-          <div className="mb-6 flex items-end justify-between gap-4">
-            <h2 className="text-2xl font-bold text-white sm:text-3xl">
-              Latest Prices &amp; Guides
-            </h2>
-            <Link
-              href="/blogs-and-projects/"
-              className="shrink-0 text-sm font-semibold text-white hover:underline"
-            >
-              View all →
-            </Link>
-          </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {posts.map((p, i) => (
-              <PostCard key={p._id} post={p} priority={i === 0} />
-            ))}
-          </div>
-        </Container>
-      ) : null}
 
       {/* About ------------------------------------------------------ */}
       <section className="py-14">
@@ -196,13 +198,20 @@ export default async function HomePage() {
           </div>
 
           <div className="order-1 lg:order-2">
+            {/* Real source is portrait (768x1024/225x300, not 900x600) —
+                without an explicit aspect ratio, the browser's real
+                dimensions win over the (wrong) width/height props once
+                w-full/h-auto are applied, rendering far taller than
+                intended on desktop's wider column. aspect-[4/3] + object-cover
+                keeps this proportionate at every viewport width, matching
+                how the services images below already handle the same issue. */}
             <Image
-              src="/wp-content/uploads/2026/03/20250605_163207-225x300.jpg"
+              src="/wp-content/uploads/2026/03/20250605_163207-768x1024.jpg"
               alt="Ideal Roofing System workers"
-              width={900}
-              height={600}
+              width={768}
+              height={1024}
               sizes="(max-width: 1024px) 100vw, 540px"
-              className="h-auto w-full rounded-xl object-cover"
+              className="aspect-[4/3] w-full rounded-xl object-cover"
             />
           </div>
         </Container>

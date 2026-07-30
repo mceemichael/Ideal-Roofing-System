@@ -86,7 +86,7 @@ export function Header({
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls="mobile-nav"
-          className="rounded-md p-2 text-white lg:hidden"
+          className="rounded-md border-0 p-2 text-white outline-none ring-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 lg:hidden"
         >
           <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
           <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 stroke-current" fill="none" strokeWidth={2} strokeLinecap="round">
@@ -95,24 +95,25 @@ export function Header({
         </button>
       </Container>
 
-      {/* Mobile nav */}
+      {/* Mobile nav — white panel with dark text, matching the live site's
+          mobile menu exactly (not the dark page canvas). */}
       <nav
         id="mobile-nav"
         aria-label="Mobile"
         className={cn(
-          'overflow-hidden border-t border-white/20 bg-brand-700 transition-[max-height] duration-300 lg:hidden',
+          'overflow-hidden border-t border-surface-border bg-white transition-[max-height] duration-300 lg:hidden',
           open ? 'max-h-[32rem]' : 'max-h-0'
         )}
       >
         <Container className="py-2">
-          <ul className="divide-y divide-white/10">
+          <ul className="divide-y divide-surface-border text-center">
             {mainNav.map((item) => (
               <li key={item.href} className="py-1">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-center gap-2">
                   <Link
                     href={item.href}
                     onClick={() => setOpen(false)}
-                    className="block flex-1 py-2 text-sm font-medium text-white"
+                    className="block flex-1 py-2 text-sm font-medium text-ink"
                   >
                     {item.label}
                   </Link>
@@ -128,7 +129,7 @@ export function Header({
                         viewBox="0 0 20 20"
                         aria-hidden="true"
                         className={cn(
-                          'h-4 w-4 fill-current text-white transition-transform',
+                          'h-4 w-4 fill-current text-ink transition-transform',
                           subOpen === item.href && 'rotate-180'
                         )}
                       >
@@ -139,13 +140,13 @@ export function Header({
                 </div>
 
                 {'children' in item && item.children && subOpen === item.href ? (
-                  <ul className="pb-2 pl-4">
+                  <ul className="pb-2">
                     {item.children.map((child) => (
                       <li key={child.href}>
                         <Link
                           href={child.href}
                           onClick={() => setOpen(false)}
-                          className="block py-2 text-sm text-white/80"
+                          className="block py-2 text-sm text-ink-muted"
                         >
                           {child.label}
                         </Link>

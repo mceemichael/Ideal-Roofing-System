@@ -50,7 +50,7 @@ export function SearchBox({
       <button
         type="submit"
         className={cn(
-          'shrink-0 rounded-r-lg bg-brand font-semibold text-white transition-colors hover:bg-brand-600',
+          'shrink-0 rounded-r-lg bg-cta font-semibold text-white transition-colors hover:bg-cta/90',
           compact ? 'px-3 py-2 text-sm' : 'px-5 py-2.5 text-base'
         )}
       >
