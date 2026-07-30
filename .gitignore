@@ -16,3 +16,6 @@ wordpress-export.xml
 sanity-import.ndjson
 uploads-backup/
 verify-report.json
+
+.vercel
+.env*

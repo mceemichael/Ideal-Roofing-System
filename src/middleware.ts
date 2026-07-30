@@ -29,8 +29,29 @@ const GONE_PATHS = [
 
 const GONE_PREFIXES = ['/wp-admin', '/wp-content/cache', '/wp-content/mu-plugins']
 
+/**
+ * True whenever this request did NOT arrive on the real production hostname —
+ * covers ordinary Vercel preview deployments, but also the one-off Vercel
+ * quirk where a brand-new project's very first deployment gets auto-promoted
+ * to "production" (VERCEL_ENV=production) despite the real custom domain not
+ * being attached yet. Checking the actual request host, rather than trusting
+ * VERCEL_ENV alone, means this can never accidentally let a *.vercel.app URL
+ * get indexed — and it stops applying itself automatically the moment DNS
+ * cutover points the real domain here.
+ */
+function isNonCanonicalHost(req: NextRequest): boolean {
+  const canonical = process.env.NEXT_PUBLIC_SITE_URL
+  if (!canonical) return false
+  try {
+    return req.nextUrl.hostname !== new URL(canonical).hostname
+  } catch {
+    return false
+  }
+}
+
 export async function middleware(req: NextRequest) {
   const { pathname, searchParams } = req.nextUrl
+  const blockIndexing = isNonCanonicalHost(req)
 
   // ---- 410 Gone --------------------------------------------------------
   if (
@@ -108,7 +129,11 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(clean, 301)
   }
 
-  return NextResponse.next()
+  const res = NextResponse.next()
+  if (blockIndexing) {
+    res.headers.set('X-Robots-Tag', 'noindex, nofollow')
+  }
+  return res
 }
 
 export const config = {
