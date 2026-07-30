@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --brand: #2f5aae;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Anything a heading anchor scrolls to must clear the sticky header. */
+  :target {
+    scroll-margin-top: 8rem;
+  }
+
+  ::selection {
+    background-color: #2f5aae;
+    color: #fff;
+  }
+}
+
+@layer components {
+  /*
+   * Styling for raw HTML carried over verbatim from WordPress (htmlEmbed
+   * blocks). Tailwind's preflight strips all default element styling, so
+   * without this, a legacy table or list would render completely unstyled.
+   * These rules make legacy content look identical to natively-converted
+   * content, which matters because some of it will sit there for months.
+   */
+  .wp-legacy table {
+    @apply my-6 w-full border-collapse overflow-hidden rounded-lg border border-surface-border text-sm;
+  }
+  .wp-legacy thead {
+    @apply bg-brand text-white;
+  }
+  .wp-legacy th {
+    @apply px-4 py-3 text-left font-semibold;
+  }
+  .wp-legacy td {
+    @apply border-t border-surface-border px-4 py-3 align-top;
+  }
+  .wp-legacy tbody tr:nth-child(even) {
+    @apply bg-surface-soft;
+  }
+  .wp-legacy p {
+    @apply my-4 leading-relaxed;
+  }
+  .wp-legacy ul {
+    @apply my-4 list-disc space-y-2 pl-6 marker:text-brand;
+  }
+  .wp-legacy ol {
+    @apply my-4 list-decimal space-y-2 pl-6 marker:text-brand;
+  }
+  .wp-legacy h2 {
+    @apply mt-8 mb-3 text-2xl font-bold;
+  }
+  .wp-legacy h3 {
+    @apply mt-6 mb-2 text-xl font-bold;
+  }
+  .wp-legacy h4 {
+    @apply mt-5 mb-2 text-lg font-semibold;
+  }
+  .wp-legacy a {
+    @apply font-medium text-brand underline underline-offset-2;
+  }
+  .wp-legacy img {
+    @apply my-6 h-auto max-w-full rounded-lg;
+  }
+  .wp-legacy figure {
+    @apply my-6;
+  }
+  .wp-legacy figcaption {
+    @apply mt-2 text-center text-sm text-ink-light;
+  }
+  .wp-legacy blockquote {
+    @apply my-6 border-l-4 border-brand bg-brand-50 px-5 py-4 text-ink-muted;
+  }
+  .wp-legacy iframe {
+    @apply my-6 aspect-video w-full rounded-lg border-0;
+  }
+
+  /* Tables inside migrated content should never overflow on a phone. */
+  .wp-legacy table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  @screen sm {
+    .wp-legacy table {
+      display: table;
+      white-space: normal;
+    }
+  }
+}
+
+@layer utilities {
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}

@@ -1,0 +1,18 @@
+node_modules/
+.next/
+out/
+build/
+.env
+.env.local
+.env*.local
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+
+# Migration artifacts - keep these OUT of git, they are large and contain
+# your full content export. Back them up somewhere durable instead.
+wordpress-export.xml
+sanity-import.ndjson
+uploads-backup/
+verify-report.json
