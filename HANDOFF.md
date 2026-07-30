@@ -300,7 +300,70 @@ than above it, to keep the video in its correct live position).
 Verified: `npm run build` passes, `npm run verify` still 110/110 after
 redeploy.
 
-## 10. If you're the next agent picking this up
+## 10. Site-wide theme correction (2026-07-30) — read this one carefully
+
+What started as "the header background is the wrong blue" turned into the
+single biggest correctness finding in this whole migration: **the live site
+is a dark-blue-background, white-text theme, and this entire build was done
+the opposite way** (white backgrounds, dark `ink` text) from the very first
+session, because it was authored via static HTML/CSS analysis without ever
+loading the site in a real browser (see §5 — `npm install` never ran, nothing
+was ever visually verified).
+
+The root cause, found by reading the live CSS: `<body class="... elementor-kit-8 ...">`
+carries a rule — `.elementor-kit-8{background-color:#004aad;color:#fff;...}` —
+that is Elementor's *global Kit* styling, applied via a class selector, which
+beats the theme's own `body{background-color:var(--nv-site-bg)}` (`#ffffff`)
+rule on CSS specificity alone. That single fact means the dark canvas isn't a
+homepage quirk — it's the base of every single page on the site. Confirmed
+with actual screenshots (via the `claude-in-chrome` browser tool), not just
+CSS reading: homepage top-to-bottom, and a full pricelist post including its
+price table, both fully dark-blue-and-white on live.
+
+**What changed:**
+
+- `globals.css` / `layout.tsx`: `<body>` is now `bg-secondary` (`#004aad`,
+  added as a real Tailwind token, distinct from `brand` `#2f5aae`) with white
+  default text. **This was almost missed** — `layout.tsx`'s `<body
+  className="bg-white ... text-ink">` was overriding the `globals.css` body
+  rule via Tailwind class specificity beating a plain element selector. Both
+  had to change together or the fix silently wouldn't apply.
+- `Header.tsx` / `Footer.tsx`: no longer a white top bar / dark navy footer —
+  both now blend into the same continuous page background, matching live.
+  Nav text, mobile flyout, dropdown submenu all switched to white/light
+  variants.
+- `PortableBody.tsx` — **the actual content renderer for every post and page
+  on the site** — every heading, paragraph, list, blockquote, callout and
+  link switched from `text-ink`/`text-ink-muted` to white/white-opacity
+  variants. The `priceTable` block specifically was redesigned to match the
+  live table's exact look: lighter-blue header row, dark-blue data cells with
+  white text, and a **white "label" cell in the first column of every row**
+  — confirmed pixel-for-pixel against a live screenshot, not guessed.
+- `page.tsx` (homepage), `PageHeader.tsx`, `Breadcrumbs.tsx`,
+  `[slug]/page.tsx`, `author/[slug]/page.tsx`, `tag/[slug]/page.tsx`,
+  `search/page.tsx`, `not-found.tsx`, `Pagination.tsx`, `Comments.tsx`,
+  `CommentForm.tsx` — same treatment throughout.
+
+**Deliberately left as white "islands"**, matching what live actually does:
+`PostCard.tsx` (blog preview cards), the price table's first column, form
+`<input>`/`<textarea>` fields (`SearchBox.tsx`, `CommentForm.tsx`), and the
+self-contained tool widgets (`RoofAreaCalculator.tsx`, `LengthConverter.tsx`,
+each already in their own white card). Sanity Studio (`/studio`) is
+untouched — that's Sanity's own UI, not site theme.
+
+**Verified, not assumed:** rebuilt, redeployed, re-ran `npm run verify`
+(110/110, still passing) after this change, and used the browser tool to
+screenshot both the homepage and a full pricelist page (including its price
+table) side-by-side against the equivalent live pages.
+
+**If something still looks wrong on a page type not explicitly listed
+above** (there are ~85 files in `src/`; this pass covered every
+high-traffic shared component and template, but not necessarily every
+one-off), the pattern to apply is the same: replace `text-ink`/`bg-white`/
+`bg-surface-soft`/`border-surface-border` with white/opacity equivalents,
+*unless* the element is a deliberately-white island per the list above.
+
+## 11. If you're the next agent picking this up
 
 Read `CLAUDE.md` first — it has the invariants. Then:
 
