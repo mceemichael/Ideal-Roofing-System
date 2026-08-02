@@ -47,19 +47,26 @@ export function PostCard({
           </p>
         ) : null}
 
-        <h2 className="text-lg font-bold leading-snug text-ink">
-          <Link href={href} className="transition-colors hover:text-brand">
+        <h2 className="text-lg font-bold leading-snug text-cta">
+          <Link href={href} className="transition-opacity hover:opacity-80">
             {post.title}
           </Link>
         </h2>
 
         {post.excerpt ? (
-          <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-ink-muted">
+          <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-ink-muted">
             {post.excerpt}
           </p>
         ) : null}
 
-        <div className="mt-4 flex items-center gap-2 text-xs text-ink-light">
+        <Link
+          href={href}
+          className="mt-3 inline-block self-start text-xs font-bold uppercase tracking-wide text-cta transition-opacity hover:opacity-80"
+        >
+          Read More »
+        </Link>
+
+        <div className="mt-auto flex items-center gap-2 border-t border-surface-border pt-3 text-xs text-ink-light">
           {post.author?.name ? (
             <>
               {post.author.slug ? (

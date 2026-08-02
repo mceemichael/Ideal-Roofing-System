@@ -7,6 +7,7 @@ import { latestPostsQuery, siteSettingsQuery, pageBySlugQuery } from '../../sani
 import { site } from '@/lib/site'
 import { buildMetadata } from '@/lib/seo'
 import { graph, organizationSchema, websiteSchema } from '@/lib/schema'
+import { cn } from '@/lib/cn'
 import Container from '@/components/Container'
 import PostCard, { type PostCardData } from '@/components/PostCard'
 import PortableBody from '@/components/PortableBody'
@@ -75,6 +76,36 @@ const ADDITIONAL = [
   'Roof Repainting',
   'Thunder Arrestor Installation',
   'PVC Rain Gutter Installation and Supply',
+]
+
+// Staff testimonials — live homepage's "People Say The Nicest Things"
+// section (three named staff, star rating, quote). Hardcoded homepage copy
+// like SERVICES/REASONS above, not CMS content. Ratings rounded to whole
+// stars (live shows 4.5/4/4) since the star icon here has no half-fill state.
+const TEAM = [
+  {
+    name: 'Michael Chibuzo',
+    role: 'Sales Manager',
+    rating: 5,
+    quote:
+      'I am not just interested in selling you our products, I am very much interested in listening to your needs and ensuring you get the very best of services',
+    image: '/wp-content/uploads/2026/03/20250605_154718-scaled-e1772790568389.jpg',
+  },
+  {
+    name: 'Adeshina Olabamiji',
+    role: 'Site Project Manager',
+    rating: 4,
+    quote: 'I and my team are dedicated to provide you with the best roofing experience',
+    image: '/wp-content/uploads/2026/03/IMG-20260310-WA0012-1536x2048.jpg',
+  },
+  {
+    name: 'Chinaza Ezeh',
+    role: 'Social Media Manager',
+    rating: 4,
+    quote:
+      'Check us out on TikTok, Facebook, and YouTube… I post our best projects on Instagram and Pinterest. All @idealroofingsystem',
+    image: '/wp-content/uploads/2026/03/IMG-20220808-WA0025.jpg',
+  },
 ]
 
 export default async function HomePage() {
@@ -335,38 +366,84 @@ export default async function HomePage() {
           OVER 100 &ldquo;5 STARS&rdquo; REVIEWS AND CLIMBING
         </h2>
 
-        <div className="mx-auto mt-8 grid max-w-2xl gap-6 sm:grid-cols-2">
+        <div className="mx-auto mt-8 grid max-w-2xl grid-cols-2 gap-3 sm:gap-6">
           <a
             href={site.googleReviewUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-4 rounded-xl border border-white/20 p-6 text-left transition-colors hover:bg-white/10"
+            className="flex items-center gap-2 rounded-xl border border-white/20 p-3 text-left transition-colors hover:bg-white/10 sm:gap-4 sm:p-6"
           >
-            <svg viewBox="0 0 48 48" aria-hidden="true" className="h-10 w-10 shrink-0">
+            <svg viewBox="0 0 48 48" aria-hidden="true" className="h-7 w-7 shrink-0 sm:h-10 sm:w-10">
               <path fill="#FFC107" d="M43.6 20.5H42V20.4H24v7.2h11.3C33.7 32 29.3 35 24 35c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.1-5.1C33.9 5.9 29.2 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5Z" />
               <path fill="#FF3D00" d="m6.3 14.7 6 4.4C14 15.4 18.6 12 24 12c3.1 0 5.9 1.2 8 3.1l5.1-5.1C33.9 5.9 29.2 4 24 4c-7.5 0-14 4.2-17.7 10.7Z" />
               <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.4 26.7 36 24 36c-5.3 0-9.7-3-11.4-7.3l-6.2 4.8C10 39.7 16.4 44 24 44Z" />
               <path fill="#1976D2" d="M43.6 20.5H42V20.4H24v7.2h11.3c-.8 2.3-2.3 4.2-4.2 5.6l6.2 5.2C40.9 35.8 44 30.5 44 24c0-1.2-.1-2.4-.4-3.5Z" />
             </svg>
             <div>
-              <p className="font-semibold text-white">Rate Us on Google</p>
-              <p className="mt-1 text-sm text-white/85">128 reviews</p>
+              <p className="text-sm font-semibold text-white sm:text-base">Rate Us on Google</p>
+              <p className="mt-1 text-xs text-white/85 sm:text-sm">128 reviews</p>
             </div>
           </a>
           <a
             href={site.facebookReviewUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-4 rounded-xl border border-white/20 p-6 text-left transition-colors hover:bg-white/10"
+            className="flex items-center gap-2 rounded-xl border border-white/20 p-3 text-left transition-colors hover:bg-white/10 sm:gap-4 sm:p-6"
           >
-            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-10 w-10 shrink-0 fill-[#1877F2]">
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-7 w-7 shrink-0 fill-[#1877F2] sm:h-10 sm:w-10">
               <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.52 1.49-3.91 3.77-3.91 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.89h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94Z" />
             </svg>
             <div>
-              <p className="font-semibold text-white">Rate Us on Facebook</p>
-              <p className="mt-1 text-sm text-white/85">24 reviews</p>
+              <p className="text-sm font-semibold text-white sm:text-base">Rate Us on Facebook</p>
+              <p className="mt-1 text-xs text-white/85 sm:text-sm">24 reviews</p>
             </div>
           </a>
+        </div>
+      </Container>
+
+      {/* Team testimonials -------------------------------------------
+          Live's "People Say The Nicest Things" section, right after the
+          Google/Facebook review badges and before the final CTA. */}
+      <Container className="py-14 text-center">
+        <h2 className="text-2xl font-bold text-white sm:text-3xl">
+          People Say The Nicest Things
+        </h2>
+        <p className="mt-2 text-white/85">
+          Do not just take our words, google what clients are saying
+        </p>
+
+        <div className="mt-10 grid gap-10 sm:grid-cols-3">
+          {TEAM.map((member) => (
+            <div key={member.name}>
+              <Image
+                src={member.image}
+                alt={member.name + ' (' + member.role + ')'}
+                width={600}
+                height={800}
+                sizes="(max-width: 640px) 60vw, 300px"
+                className="mx-auto aspect-[3/4] w-full max-w-[260px] rounded-xl object-cover"
+              />
+              <div
+                className="mt-4 flex items-center justify-center gap-1"
+                role="img"
+                aria-label={'Rated ' + member.rating + ' out of 5'}
+              >
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <svg
+                    key={i}
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                    className={cn('h-4 w-4', i < member.rating ? 'fill-accent' : 'fill-white/20')}
+                  >
+                    <path d="M9.05 2.93c.3-.92 1.6-.92 1.9 0l1.36 4.18a1 1 0 00.95.69h4.4c.97 0 1.37 1.24.59 1.81l-3.56 2.59a1 1 0 00-.36 1.12l1.36 4.18c.3.92-.75 1.69-1.54 1.12l-3.56-2.59a1 1 0 00-1.18 0l-3.56 2.59c-.78.57-1.83-.2-1.53-1.12l1.36-4.18a1 1 0 00-.37-1.12L1.75 9.61c-.78-.57-.38-1.81.59-1.81h4.4a1 1 0 00.95-.69l1.36-4.18Z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="mt-3 font-semibold text-white">{member.name}</p>
+              <p className="text-sm text-white/80">{member.role}</p>
+              <p className="mt-3 text-sm leading-relaxed text-white/85">{member.quote}</p>
+            </div>
+          ))}
         </div>
       </Container>
 
