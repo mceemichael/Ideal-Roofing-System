@@ -99,18 +99,25 @@ export default async function HomePage() {
           First thing on the live homepage, right after the header. Self-
           hosted, not YouTube — matches the live <video> element exactly
           (same attributes), proxied through /wp-content/uploads/* like
-          every other legacy asset. */}
-      <video
-        poster="/wp-content/uploads/2026/04/919908-768x639.jpg"
-        autoPlay
-        controls
-        playsInline
-        controlsList="nodownload"
-        preload="none"
-        className="aspect-video w-full"
-      >
-        <source src="/wp-content/uploads/2026/04/2026-04-04-201337262.mp4#t=0" />
-      </video>
+          every other legacy asset. Live renders this inside Elementor's
+          boxed container (~1140px max width), not edge-to-edge — confirmed
+          via computed styles on the live page (video width 1120px inside a
+          1140px `e-con-boxed`). Wrapped in the same `Container` every other
+          section uses instead of a bare `w-full`, which was rendering it
+          larger than live at wide viewports. */}
+      <Container>
+        <video
+          poster="/wp-content/uploads/2026/04/919908-768x639.jpg"
+          autoPlay
+          controls
+          playsInline
+          controlsList="nodownload"
+          preload="none"
+          className="aspect-video w-full"
+        >
+          <source src="/wp-content/uploads/2026/04/2026-04-04-201337262.mp4#t=0" />
+        </video>
+      </Container>
 
       {/* Latest posts -------------------------------------------------
           Immediately after the video, matching the live homepage's actual
