@@ -3,14 +3,13 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 import { sanityFetch } from '../../sanity/client'
-import { latestPostsQuery, siteSettingsQuery, pageBySlugQuery } from '../../sanity/queries'
+import { latestPostsQuery, siteSettingsQuery } from '../../sanity/queries'
 import { site } from '@/lib/site'
 import { buildMetadata } from '@/lib/seo'
 import { graph, organizationSchema, websiteSchema } from '@/lib/schema'
 import { cn } from '@/lib/cn'
 import Container from '@/components/Container'
 import PostCard, { type PostCardData } from '@/components/PostCard'
-import PortableBody from '@/components/PortableBody'
 import JsonLd from '@/components/JsonLd'
 
 /**
@@ -109,15 +108,13 @@ const TEAM = [
 ]
 
 export default async function HomePage() {
-  const [posts, settings, homePage] = await Promise.all([
+  const [posts, settings] = await Promise.all([
     sanityFetch<PostCardData[]>({
       query: latestPostsQuery,
       params: { limit: 3 },
       tags: ['post'],
     }).catch(() => [] as PostCardData[]),
     sanityFetch<any>({ query: siteSettingsQuery, tags: ['siteSettings'] }).catch(() => null),
-    // If you keep an editable body on the WP home page, it renders here.
-    sanityFetch<any>({ query: pageBySlugQuery, params: { slug: 'home' } }).catch(() => null),
   ])
 
   const stats = settings?.stats?.length ? settings.stats : DEFAULT_STATS
@@ -446,15 +443,6 @@ export default async function HomePage() {
           ))}
         </div>
       </Container>
-
-      {/* Editable body from Sanity, if a "home" page exists ---------- */}
-      {homePage?.body ? (
-        <Container className="pb-14">
-          <div className="mx-auto max-w-prose">
-            <PortableBody value={homePage.body} />
-          </div>
-        </Container>
-      ) : null}
 
       {/* Final CTA -------------------------------------------------- */}
       <section className="py-14 text-white">
