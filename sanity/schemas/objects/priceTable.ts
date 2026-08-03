@@ -16,6 +16,20 @@ export default defineType({
   fields: [
     defineField({ name: 'caption', title: 'Caption', type: 'string' }),
     defineField({
+      name: 'theme',
+      title: 'Colour theme',
+      type: 'string',
+      description:
+        'Live styles its price tables inconsistently per post — this matches whichever one the source page actually used, rather than forcing every table to look identical.',
+      options: {
+        list: [
+          { title: 'Brand blue (default)', value: 'brand' },
+          { title: 'Forest green (Stone coated pricelist)', value: 'forest' },
+        ],
+        layout: 'radio',
+      },
+    }),
+    defineField({
       name: 'headers',
       title: 'Column headers',
       type: 'array',

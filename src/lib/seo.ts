@@ -30,6 +30,28 @@ const NOINDEX_ROBOTS = {
   googleBot: { index: false, follow: true },
 }
 
+/**
+ * Plain-text summary from a page's own Portable Text body, for pages with no
+ * `seo.description` set in Sanity. Without this, `buildMetadata()`'s fallback
+ * chain reaches all the way to `site.description` (the homepage's own
+ * description) — every such page then shows the homepage's meta description
+ * instead of anything about itself.
+ */
+export function excerptFromBody(body: any[] | null | undefined, maxLen = 155): string | undefined {
+  if (!Array.isArray(body)) return undefined
+  const text = body
+    .filter((block) => block._type === 'block' && Array.isArray(block.children))
+    .map((block) => block.children.map((c: any) => c.text || '').join(''))
+    .join(' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+  if (!text) return undefined
+  if (text.length <= maxLen) return text
+  const truncated = text.slice(0, maxLen)
+  const lastSpace = truncated.lastIndexOf(' ')
+  return (lastSpace > 0 ? truncated.slice(0, lastSpace) : truncated) + '...'
+}
+
 export function absoluteUrl(path: string): string {
   const base = process.env.NEXT_PUBLIC_SITE_URL || site.url
   if (!path || path === '/') return base + '/'

@@ -70,7 +70,8 @@ export default async function AuthorPage({ params }: Props) {
           />
         ) : null}
         <div>
-          <h1 className="text-2xl font-bold text-white sm:text-3xl">{author.name}</h1>
+          {/* H2, not H1 — the site's single H1 lives in the header. */}
+          <h2 className="text-2xl font-bold text-white sm:text-3xl">{author.name}</h2>
           {author.role ? <p className="text-white/85">{author.role}</p> : null}
           {author.bio ? (
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/85">

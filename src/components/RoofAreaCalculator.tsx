@@ -155,7 +155,7 @@ export function RoofAreaCalculator() {
             measurements are taken. This method works well for{' '}
             <Link
               href="/popular-nigerian-roof-styles/"
-              className="font-medium text-brand underline underline-offset-2"
+              className="font-medium text-cta no-underline"
             >
               hip, gable and shed roofs
             </Link>

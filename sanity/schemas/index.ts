@@ -14,6 +14,7 @@ import priceTable from './objects/priceTable'
 import youtube from './objects/youtube'
 import callout from './objects/callout'
 import toolEmbed from './objects/toolEmbed'
+import imageCarousel from './objects/imageCarousel'
 import comment from './comment'
 
 export const schemaTypes: SchemaTypeDefinition[] = [
@@ -33,6 +34,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   youtube,
   callout,
   toolEmbed,
+  imageCarousel,
 ]
 
 export default schemaTypes

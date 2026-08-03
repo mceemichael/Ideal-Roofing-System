@@ -13,9 +13,10 @@ export default function NotFound() {
       <p className="text-sm font-semibold uppercase tracking-wider text-white">
         404
       </p>
-      <h1 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
+      {/* H2, not H1 — the site's single H1 lives in the header. */}
+      <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
         We could not find that page
-      </h1>
+      </h2>
       <p className="mx-auto mt-4 max-w-md text-white/85">
         The page may have moved. These are the ones people look for most:
       </p>

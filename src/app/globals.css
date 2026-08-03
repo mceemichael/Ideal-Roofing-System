@@ -79,7 +79,7 @@
     @apply mt-5 mb-2 text-lg font-semibold;
   }
   .wp-legacy a {
-    @apply font-medium text-white underline underline-offset-2;
+    @apply font-medium text-cta no-underline;
   }
   .wp-legacy img {
     @apply my-6 h-auto max-w-full rounded-lg;

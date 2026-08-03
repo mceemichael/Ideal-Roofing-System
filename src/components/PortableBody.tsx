@@ -6,6 +6,7 @@ import { youtubeId } from '@/lib/format'
 import { cn } from '@/lib/cn'
 import RoofAreaCalculator from './RoofAreaCalculator'
 import LengthConverter from './LengthConverter'
+import ImageCarousel from './ImageCarousel'
 
 /**
  * Renders migrated WordPress content.
@@ -86,9 +87,12 @@ const components: PortableTextComponents = {
       const href: string = value?.href || '#'
       const isInternal = href.startsWith('/') || href.includes('idealroofingsystem.com')
 
+      // Red, no underline — matches live's own in-content link style.
+      const linkClass = 'font-medium text-cta no-underline transition-opacity hover:opacity-80'
+
       if (isInternal && href.startsWith('/')) {
         return (
-          <Link href={href} className="font-medium text-white underline underline-offset-2 hover:text-white/80">
+          <Link href={href} className={linkClass}>
             {children}
           </Link>
         )
@@ -101,7 +105,7 @@ const components: PortableTextComponents = {
           // nofollow on outbound links only. Internal links must stay
           // followable or you leak your own internal PageRank.
           rel={isInternal ? 'noopener' : 'noopener noreferrer nofollow'}
-          className="font-medium text-white underline underline-offset-2 hover:text-white/80"
+          className={linkClass}
         >
           {children}
         </a>
@@ -149,19 +153,33 @@ const components: PortableTextComponents = {
       const rows: Array<{ cells?: string[] }> = value?.rows || []
       if (!rows.length) return null
 
+      // Live styles its price tables inconsistently per post rather than
+      // from one shared design — 'forest' matches the stone-coated
+      // pricelist's own table exactly (dark green header, orange accent
+      // border, rows blending into the page background). Every other price
+      // table keeps the original 'brand' look.
+      const forest = value?.theme === 'forest'
+
       return (
         <figure className="my-8">
           {value.caption ? (
-            <figcaption className="mb-3 text-base font-semibold text-white">
+            <figcaption
+              className={cn(
+                'px-4 py-4 text-lg font-bold text-white',
+                forest
+                  ? 'rounded-t-lg border-b-[3px] border-forest-accent bg-forest'
+                  : 'mb-3 bg-transparent px-0 py-0 text-base font-semibold'
+              )}
+            >
               {value.caption}
             </figcaption>
           ) : null}
 
-          <div className="overflow-x-auto rounded-lg border border-white/20">
+          <div className={cn('overflow-x-auto', forest ? 'rounded-b-lg border border-forest' : 'rounded-lg border border-white/20', !value.caption && 'rounded-lg')}>
             <table className="w-full min-w-[32rem] border-collapse text-sm">
               {headers.length ? (
                 <thead>
-                  <tr className="bg-brand-400 text-left text-white">
+                  <tr className={cn('text-left text-white', forest ? 'bg-forest' : 'bg-brand-400')}>
                     {headers.map((h, i) => (
                       <th key={i} scope="col" className="px-4 py-3 font-semibold">
                         {h}
@@ -174,16 +192,18 @@ const components: PortableTextComponents = {
                 {rows.map((row, ri) => (
                   <tr
                     key={ri}
-                    className={cn('border-t border-white/10', ri % 2 === 1 && 'bg-white/5')}
+                    className={cn(
+                      forest
+                        ? 'border-t border-forest'
+                        : cn('border-t border-white/10', ri % 2 === 1 && 'bg-white/5')
+                    )}
                   >
                     {(row.cells || []).map((cell, ci) => (
                       <td
                         key={ci}
                         className={cn(
                           'px-4 py-3 align-top',
-                          ci === 0
-                            ? 'bg-white font-medium text-ink'
-                            : 'text-white'
+                          !forest && ci === 0 ? 'bg-white font-medium text-ink' : 'text-white'
                         )}
                       >
                         {cell}
@@ -261,6 +281,11 @@ const components: PortableTextComponents = {
       if (value?.tool === 'roofAreaCalculator') return <RoofAreaCalculator />
       if (value?.tool === 'lengthConverter') return <LengthConverter />
       return null
+    },
+
+    imageCarousel: ({ value }) => {
+      if (!value?.slides?.length) return null
+      return <ImageCarousel slides={value.slides} />
     },
 
     /**

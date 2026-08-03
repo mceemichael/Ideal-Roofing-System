@@ -171,9 +171,10 @@ export default async function HomePage() {
       {/* Hero ------------------------------------------------------- */}
       <section>
         <Container className="py-12 text-center sm:py-16">
-          <h1 className="mt-3 text-3xl font-bold leading-tight text-white sm:text-5xl">
+          {/* H2, not H1 — the site's single H1 lives in the header. */}
+          <h2 className="mt-3 text-3xl font-bold leading-tight text-white sm:text-5xl">
             Nigeria&rsquo;s Leading Roofing Company
-          </h1>
+          </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg">
             {site.description}
           </p>

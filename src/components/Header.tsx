@@ -63,12 +63,15 @@ export function Header({
                 </Link>
 
                 {'children' in item && item.children ? (
-                  <ul className="invisible absolute left-0 top-full z-50 w-80 rounded-lg border border-white/20 bg-brand-700 p-2 opacity-0 shadow-card-hover transition-all group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                  // White dropdown with near-black text — matches live
+                  // exactly (confirmed via computed styles: #fff bg, #121212
+                  // text), inverted from what this build had before.
+                  <ul className="invisible absolute left-0 top-full z-50 w-80 rounded-lg border border-surface-border bg-white p-2 opacity-0 shadow-card-hover transition-all group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
                     {item.children.map((child) => (
                       <li key={child.href}>
                         <Link
                           href={child.href}
-                          className="block rounded-md px-3 py-2 text-sm text-white/85 transition-colors hover:bg-white/10 hover:text-white"
+                          className="block rounded-md px-3 py-2 text-sm text-ink transition-colors hover:bg-surface-soft"
                         >
                           {child.label}
                         </Link>
@@ -86,7 +89,10 @@ export function Header({
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls="mobile-nav"
-          className="rounded-md border-0 p-2 text-white outline-none ring-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 lg:hidden"
+          className={cn(
+            'rounded-md border-2 p-2 text-white outline-none transition-colors focus-visible:ring-2 focus-visible:ring-cta/60 lg:hidden',
+            open ? 'border-emerald-200 bg-emerald-200/10' : 'border-cta'
+          )}
         >
           <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
           <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 stroke-current" fill="none" strokeWidth={2} strokeLinecap="round">
@@ -164,9 +170,13 @@ export function Header({
       <div className="bg-secondary text-white">
         <Container className="flex flex-col items-center gap-3 py-3 text-center lg:flex-row lg:justify-between lg:text-left">
           <div className="shrink-0">
-            <Link href="/" className="text-base font-bold tracking-wide sm:text-lg">
-              IDEAL ROOFING SYSTEM
-            </Link>
+            {/* The only H1 on the site — rendered once here in the shared
+                header, so every page/post title below is an H2 instead.
+                Deliberate choice per an explicit accessibility/SEO request,
+                not the usual "article title is the H1" pattern. */}
+            <h1 className="text-base font-bold tracking-wide sm:text-lg">
+              <Link href="/">IDEAL ROOFING SYSTEM</Link>
+            </h1>
             <p className="text-xs text-white/85 sm:text-sm">{site.tagline}</p>
           </div>
 

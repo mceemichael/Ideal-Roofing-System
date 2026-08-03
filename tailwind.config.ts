@@ -48,6 +48,14 @@ const config: Config = {
           border: '#e4e9f0',
         },
         whatsapp: '#25d366',
+        // The stone-coated pricelist post's own table colours — dark green
+        // header with an orange accent border, confirmed against live's
+        // computed styles. Distinct from `accent` (#f5a623), which is a
+        // slightly different orange used elsewhere.
+        forest: {
+          DEFAULT: '#1a3c34',
+          accent: '#f4a261',
+        },
       },
       // The live site (Neve theme default) never loads a web font — it's
       // plain Arial/Helvetica at 15px root. Matching that exactly rather

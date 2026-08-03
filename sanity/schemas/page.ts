@@ -65,6 +65,7 @@ export default defineType({
         defineArrayMember({ type: 'youtube' }),
         defineArrayMember({ type: 'callout' }),
         defineArrayMember({ type: 'toolEmbed' }),
+        defineArrayMember({ type: 'imageCarousel' }),
         defineArrayMember({ type: 'htmlEmbed' }),
       ],
     }),

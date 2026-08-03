@@ -17,7 +17,7 @@ import {
 import { imageSrc } from '../../../sanity/image'
 
 import { RESERVED_SLUGS, site } from '@/lib/site'
-import { buildMetadata } from '@/lib/seo'
+import { buildMetadata, excerptFromBody } from '@/lib/seo'
 import {
   articleSchema,
   breadcrumbSchema,
@@ -147,6 +147,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return buildMetadata({
       path,
       title: doc.title,
+      // Without this, pages with no seo.description fall through to
+      // site.description (the homepage's) — every such page then shows the
+      // homepage's meta description in search results instead of its own.
+      description: excerptFromBody(doc.body),
       seo: doc.seo,
       image: doc.heroImage,
     })
@@ -238,9 +242,10 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
             </p>
           ) : null}
 
-          <h1 className="text-3xl font-bold leading-tight text-white sm:text-4xl">
+          {/* H2, not H1 — the site's single H1 lives in the header. */}
+          <h2 className="text-3xl font-bold leading-tight text-white sm:text-4xl">
             {post.title}
-          </h1>
+          </h2>
 
           <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-white/70">
             {post.author?.name ? (
