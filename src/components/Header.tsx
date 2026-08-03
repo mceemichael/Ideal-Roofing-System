@@ -173,7 +173,11 @@ export function Header({
       {/* Blue band */}
       <div className="bg-secondary text-white">
         <Container className="flex flex-col items-center gap-3 py-4 text-center lg:flex-row lg:justify-between lg:text-left">
-          <div className="shrink-0">
+          {/* Left-aligned on mobile (self-start + text-left override the
+              parent's items-center/text-center) — the search box and star
+              rating below stay centered, only the name/tagline block
+              shifts. Reverts to the parent's own alignment at lg:. */}
+          <div className="w-full self-start text-left lg:w-auto lg:shrink-0 lg:self-auto">
             {/* The only H1 on the site — rendered once here in the shared
                 header, so every page/post title below is an H2 instead.
                 Deliberate choice per an explicit accessibility/SEO request,
