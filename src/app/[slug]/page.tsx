@@ -285,12 +285,6 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
               </>
             ) : null}
           </div>
-
-          {post.excerpt ? (
-            <p className="mt-5 border-l-4 border-white/40 pl-4 text-lg leading-relaxed text-white/85">
-              {post.excerpt}
-            </p>
-          ) : null}
         </div>
 
         {heroSrc ? (
