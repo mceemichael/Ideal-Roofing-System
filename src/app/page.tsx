@@ -58,15 +58,12 @@ const SERVICES = [
 ]
 
 const REASONS = [
-  // Wording matches the live site exactly, including its "intergrity" typo —
-  // this is hardcoded homepage copy, not CMS content, so there is nowhere
-  // else to fix it; leave it to Michael to correct in a future content pass.
-  { title: 'Quality Material', body: 'Certified by SON, our materials are made of the highest standards and have undergone rigorous intergrity tests' },
+  { title: 'Quality Material', body: 'Certified by SON, our materials are made of the highest standards and have undergone rigorous integrity tests' },
   { title: 'Accredited', body: site.business.registrationNumber },
   { title: 'Trained Workers', body: 'We pride ourselves on utmost professionalism.' },
   { title: 'Time Availability', body: 'Do you need the project to be completed with speed and accuracy? We provide reliable hands' },
-  { title: 'Quick Response', body: 'We are always ready to pick your call or respond to your whatsapp' },
-  { title: '1 Year Warranty', body: 'We Offer 1 year warranty against leakage on all roofing project completed by us' },
+  { title: 'Quick Response', body: 'We are always ready to pick your call or respond to your WhatsApp' },
+  { title: '1 Year Warranty', body: 'We Offer 1 year warranty against leakage on all roofing projects completed by us' },
 ]
 
 const ADDITIONAL = [
@@ -80,7 +77,7 @@ const ADDITIONAL = [
 // Staff testimonials — live homepage's "People Say The Nicest Things"
 // section (three named staff, star rating, quote). Hardcoded homepage copy
 // like SERVICES/REASONS above, not CMS content. Ratings rounded to whole
-// stars (live shows 4.5/4/4) since the star icon here has no half-fill state.
+// stars (live shows 4.5/4/4.5) since the star icon here has no half-fill state.
 const TEAM = [
   {
     name: 'Michael Chibuzo',
@@ -100,7 +97,7 @@ const TEAM = [
   {
     name: 'Chinaza Ezeh',
     role: 'Social Media Manager',
-    rating: 4,
+    rating: 5,
     quote:
       'Check us out on TikTok, Facebook, and YouTube… I post our best projects on Instagram and Pinterest. All @idealroofingsystem',
     image: '/wp-content/uploads/2026/03/IMG-20220808-WA0025.jpg',

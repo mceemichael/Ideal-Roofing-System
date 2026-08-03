@@ -11,8 +11,13 @@ export const site = {
   url: 'https://idealroofingsystem.com',
   name: 'Ideal Roofing System',
   title: 'Ideal Roofing System | Best Roofing Company In Nigeria',
+  // Was byte-identical to live's own (typo'd) meta description — "Aluminiun"
+  // and a stray comma before "and installation". Fixed 2026-08-03 per an
+  // explicit grammar-accuracy pass; a spelling fix carries none of the
+  // ranking risk a URL/structure change would, so it's safe to diverge from
+  // live's current (still-typo'd) description here.
   description:
-    "Ideal Roofing System is a trusted leader in Nigeria's roofing industry, specializing in the sales, and installation of Aluminiun and Stonecoated Roofing Sheets",
+    "Ideal Roofing System is a trusted leader in Nigeria's roofing industry, specializing in the sales and installation of Aluminium and Stonecoated Roofing Sheets",
   tagline: 'Leading Roofing Company In Nigeria',
   locale: 'en_US',
   themeColor: '#2f5aae',

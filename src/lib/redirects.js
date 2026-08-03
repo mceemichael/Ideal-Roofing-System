@@ -41,6 +41,17 @@ export const redirects = [
   { source: '/blogs-and-projects/feed/', destination: '/feed.xml', permanent: true },
 
   // ---------------------------------------------------------------------
+  // WordPress's static-front-page mechanism gives the homepage's own page
+  // object a real slug ("home"), but WP redirects that URL to / rather than
+  // serving it — confirmed live, /home/ 301s to / with no duplicate content.
+  // The Sanity import brought that page object in as a normal page, which
+  // the [slug] catch-all would otherwise render as full duplicate content
+  // (About Company, team testimonials, etc. — the same copy hardcoded on
+  // the homepage). This redirect is what live already does; it isn't new.
+  // ---------------------------------------------------------------------
+  { source: '/home/', destination: '/', permanent: true },
+
+  // ---------------------------------------------------------------------
   // Legacy paths. The site previously used the ideroofingsystem branding and
   // a /category/ base; anything still linking to those lands correctly.
   // ---------------------------------------------------------------------
