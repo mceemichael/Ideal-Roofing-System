@@ -90,8 +90,8 @@ export function Header({
           aria-expanded={open}
           aria-controls="mobile-nav"
           className={cn(
-            'rounded-md border-2 p-2 text-white outline-none transition-colors focus-visible:ring-2 focus-visible:ring-cta/60 lg:hidden',
-            open ? 'border-emerald-200 bg-emerald-200/10' : 'border-cta'
+            'rounded-md border-2 bg-white p-2 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-cta/60 lg:hidden',
+            open ? 'border-emerald-400 text-emerald-500' : 'border-cta text-cta'
           )}
         >
           <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
@@ -107,8 +107,12 @@ export function Header({
         id="mobile-nav"
         aria-label="Mobile"
         className={cn(
-          'overflow-hidden border-t border-surface-border bg-white transition-[max-height] duration-300 lg:hidden',
-          open ? 'max-h-[32rem]' : 'max-h-0'
+          // border-t only when open — a border on a max-h-0 box still
+          // renders as a 1px line even though the box has no visible
+          // height, which is exactly the stray line between the header
+          // and the page underneath it on every page in mobile view.
+          'overflow-hidden bg-white transition-[max-height] duration-300 lg:hidden',
+          open ? 'max-h-[32rem] border-t border-surface-border' : 'max-h-0 border-t-0'
         )}
       >
         <Container className="py-2">
@@ -168,13 +172,18 @@ export function Header({
 
       {/* Blue band */}
       <div className="bg-secondary text-white">
-        <Container className="flex flex-col items-center gap-3 py-3 text-center lg:flex-row lg:justify-between lg:text-left">
+        <Container className="flex flex-col items-center gap-3 py-4 text-center lg:flex-row lg:justify-between lg:text-left">
           <div className="shrink-0">
             {/* The only H1 on the site — rendered once here in the shared
                 header, so every page/post title below is an H2 instead.
                 Deliberate choice per an explicit accessibility/SEO request,
-                not the usual "article title is the H1" pattern. */}
-            <h1 className="text-base font-bold tracking-wide sm:text-lg">
+                not the usual "article title is the H1" pattern. Sized to
+                match live's own header text exactly (36px mobile / 40px
+                desktop, confirmed via computed styles) — it was previously
+                left at the old placeholder text-base/text-lg size, which
+                is why it read as smaller than section headings lower on
+                the page despite being the H1. */}
+            <h1 className="text-[28px] font-bold leading-tight tracking-wide sm:text-[36px] lg:text-[40px]">
               <Link href="/">IDEAL ROOFING SYSTEM</Link>
             </h1>
             <p className="text-xs text-white/85 sm:text-sm">{site.tagline}</p>

@@ -54,6 +54,10 @@ const config: Config = {
         // slightly different orange used elsewhere.
         forest: {
           DEFAULT: '#1a3c34',
+          // The header ROW (Design Type / 0.50mm / 0.55mm) is a distinctly
+          // lighter shade than the caption bar above it — confirmed via
+          // computed styles, not the same colour repeated.
+          light: '#2e5c4a',
           accent: '#f4a261',
         },
       },

@@ -155,33 +155,42 @@ const components: PortableTextComponents = {
 
       // Live styles its price tables inconsistently per post rather than
       // from one shared design — 'forest' matches the stone-coated
-      // pricelist's own table exactly (dark green header, orange accent
-      // border, rows blending into the page background). Every other price
-      // table keeps the original 'brand' look.
+      // pricelist's own table exactly (every value below read from its
+      // computed styles, not guessed): dark green caption bar with an
+      // orange bottom border, a distinctly LIGHTER green header row, plain
+      // 1px light-grey cell borders, sharp corners (no border-radius), and
+      // the "footnote" is actually the table's own last row with an orange
+      // background and dark green italic text, not separate text below it.
+      // Every other price table keeps the original 'brand' look.
       const forest = value?.theme === 'forest'
 
       return (
         <figure className="my-8">
-          {value.caption ? (
-            <figcaption
-              className={cn(
-                'px-4 py-4 text-lg font-bold text-white',
-                forest
-                  ? 'rounded-t-lg border-b-[3px] border-forest-accent bg-forest'
-                  : 'mb-3 bg-transparent px-0 py-0 text-base font-semibold'
-              )}
-            >
+          {value.caption && !forest ? (
+            <figcaption className="mb-3 text-base font-semibold text-white">
               {value.caption}
             </figcaption>
           ) : null}
 
-          <div className={cn('overflow-x-auto', forest ? 'rounded-b-lg border border-forest' : 'rounded-lg border border-white/20', !value.caption && 'rounded-lg')}>
-            <table className="w-full min-w-[32rem] border-collapse text-sm">
+          <div className={cn('overflow-x-auto', forest ? 'border-2 border-forest' : 'rounded-lg border border-white/20')}>
+            <table className={cn('w-full min-w-[32rem] border-collapse text-sm', forest && 'border-collapse')}>
+              {value.caption && forest ? (
+                <caption className="border-b-[3px] border-forest-accent bg-forest px-4 py-4 text-center text-lg font-bold text-white caption-top">
+                  {value.caption}
+                </caption>
+              ) : null}
               {headers.length ? (
                 <thead>
-                  <tr className={cn('text-left text-white', forest ? 'bg-forest' : 'bg-brand-400')}>
+                  <tr className={cn('text-left text-white', forest ? 'bg-forest-light' : 'bg-brand-400')}>
                     {headers.map((h, i) => (
-                      <th key={i} scope="col" className="px-4 py-3 font-semibold">
+                      <th
+                        key={i}
+                        scope="col"
+                        className={cn(
+                          'px-4 py-3 font-semibold',
+                          forest ? 'border border-[#ddd] text-center text-base' : ''
+                        )}
+                      >
                         {h}
                       </th>
                     ))}
@@ -194,7 +203,7 @@ const components: PortableTextComponents = {
                     key={ri}
                     className={cn(
                       forest
-                        ? 'border-t border-forest'
+                        ? ''
                         : cn('border-t border-white/10', ri % 2 === 1 && 'bg-white/5')
                     )}
                   >
@@ -203,7 +212,11 @@ const components: PortableTextComponents = {
                         key={ci}
                         className={cn(
                           'px-4 py-3 align-top',
-                          !forest && ci === 0 ? 'bg-white font-medium text-ink' : 'text-white'
+                          forest
+                            ? cn('border border-[#ddd] text-white', ci === 0 ? 'text-left font-medium' : 'text-center')
+                            : ci === 0
+                              ? 'bg-white font-medium text-ink'
+                              : 'text-white'
                         )}
                       >
                         {cell}
@@ -211,11 +224,21 @@ const components: PortableTextComponents = {
                     ))}
                   </tr>
                 ))}
+                {forest && value.footnote ? (
+                  <tr>
+                    <td
+                      colSpan={headers.length || undefined}
+                      className="bg-forest-accent px-4 py-3 text-center text-sm italic text-forest"
+                    >
+                      {value.footnote}
+                    </td>
+                  </tr>
+                ) : null}
               </tbody>
             </table>
           </div>
 
-          {value.footnote ? (
+          {value.footnote && !forest ? (
             <p className="mt-2 text-xs text-white/70">{value.footnote}</p>
           ) : null}
         </figure>
