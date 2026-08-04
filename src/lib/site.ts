@@ -95,7 +95,16 @@ export const site = {
   // Real, third-party-sourced Google reviews widget shown on individual
   // posts (see .claude/rules/seo.md re: not adding self-serving review
   // markup — this is the legitimate, existing exception).
-  trustindexWidgetSrc: 'https://cdn.trustindex.io/loader.js?76c08ed770ad9192df546679c7',
+  //
+  // This is Trustindex's own AMP embed page, used here as a plain iframe
+  // src rather than for AMP. The documented plain <script> install (loader.js
+  // pointed at directly, with or without a wrapping element) never actually
+  // rendered anything in testing — it fetches review data successfully but
+  // never finds/creates a mount point. This URL is what that same loader
+  // ultimately runs inside of when Trustindex's own AMP integration embeds
+  // it, and it works standalone: confirmed rendering real reviews via a bare
+  // iframe pointed straight at it.
+  trustindexWidgetIframeSrc: 'https://cdn.trustindex.io/amp-widget.html#76c08ed770ad9192df546679c7',
 
   // LOCKED — these prove domain ownership. Removing any one of them silently
   // breaks a webmaster tool or an ad account.

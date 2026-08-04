@@ -127,10 +127,12 @@ export default async function HomePage() {
           every other legacy asset. Live renders this inside Elementor's
           boxed container (~1140px max width), not edge-to-edge — confirmed
           via computed styles on the live page (video width 1120px inside a
-          1140px `e-con-boxed`). Wrapped in the same `Container` every other
-          section uses instead of a bare `w-full`, which was rendering it
-          larger than live at wide viewports. */}
-      <Container>
+          1140px `e-con-boxed`, i.e. 10px padding each side — Elementor's
+          own container padding, not `Container`'s default 16-24px). Reusing
+          `Container`'s max-w-content but overriding its padding to match;
+          without the override this rendered at 1092px, visibly smaller than
+          live's 1120px at desktop widths. */}
+      <Container className="!px-2.5">
         <video
           poster="/wp-content/uploads/2026/04/919908-768x639.jpg"
           autoPlay
