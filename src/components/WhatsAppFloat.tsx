@@ -1,16 +1,30 @@
-import { site } from '@/lib/site'
+'use client'
+
+import { usePathname } from 'next/navigation'
+
+import {
+  whatsappHref,
+  whatsappMessageForPathname,
+} from '@/lib/whatsapp'
 
 /**
- * Replaces the WordPress WhatsApp plugin.
+ * Replaces the WordPress "Click to Chat for WhatsApp" plugin.
  *
- * Server-rendered, no JavaScript, no third-party script. The plugin version
- * was loading its own JS bundle plus a stylesheet on every page for what is
- * ultimately a link with an icon.
+ * That plugin loaded its own JS bundle plus a stylesheet on every page for
+ * what is ultimately a link with an icon, but it did do one thing worth
+ * keeping: most pages pre-fill a generic greeting, while a handful of
+ * high-intent product/budget pages pre-fill a specific question instead
+ * (e.g. "Hello, how I need the discounted price of aluminium sheets" on the
+ * aluminium pricelist). `usePathname()` is the only reason this is a client
+ * component — everything else about it is static.
  */
 export function WhatsAppFloat() {
+  const pathname = usePathname()
+  const message = whatsappMessageForPathname(pathname)
+
   return (
     <a
-      href={site.social.whatsapp}
+      href={whatsappHref(message)}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with Ideal Roofing System on WhatsApp"
