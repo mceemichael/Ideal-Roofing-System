@@ -133,8 +133,19 @@ export default async function HomePage() {
           without the override this rendered at 1092px, visibly smaller than
           live's 1120px at desktop widths. */}
       <Container className="!px-2.5">
+        {/* Video source points straight at Blob storage rather than through
+            the /wp-content/uploads/ rewrite: the rewrite's edge cache doesn't
+            vary by Range header, so a real visitor's browser seeking the video
+            (which sends Range requests) can get its response cached and served
+            to every later visitor regardless of what range they asked for —
+            observed in production, not hypothetical. Blob's own URL serves
+            Range requests correctly. Poster is a plain GET (no Range), so it's
+            unaffected and stays on the rewrite. -v2 filenames: some CDN edges
+            cached the post-cutover 508 error under the original paths with a
+            200 status and 30-day TTL; original paths still resolve fine for
+            any external hotlinks, just no longer referenced here. */}
         <video
-          poster="/wp-content/uploads/2026/04/919908-768x639.jpg"
+          poster="/wp-content/uploads/2026/04/919908-768x639-v2.jpg"
           autoPlay
           controls
           playsInline
@@ -142,7 +153,9 @@ export default async function HomePage() {
           preload="none"
           className="aspect-video w-full"
         >
-          <source src="/wp-content/uploads/2026/04/2026-04-04-201337262.mp4#t=0" />
+          <source
+            src={`${process.env.MEDIA_ORIGIN}/wp-content/uploads/2026/04/2026-04-04-201337262-v2.mp4#t=0`}
+          />
         </video>
       </Container>
 
