@@ -184,7 +184,7 @@ Do it **Tuesday or Wednesday morning**. Never Friday, never before a holiday. Be
 ### T-7 days
 - Deploy to a Vercel preview URL. Preview deploys emit `X-Robots-Tag: noindex` (already configured) — an indexed staging copy is a duplicate-content mess that takes months to unwind.
 - Run `scripts/verify-urls.mjs` in both plain and `--diff` mode. Fix everything red.
-- **Drop your DNS TTL to 300 seconds at the registrar.** Do this a full week ahead — the *old* TTL has to expire before the new short one takes effect. Skip this and a rollback takes hours instead of ten minutes.
+- **TTL: not applicable.** The domain's DNS is managed on Cloudflare, not a plain registrar, and every record is currently proxied (orange cloud). Proxied records don't carry a manually-set TTL — Cloudflare's network already makes config changes take effect near-instantly, so there's no week-ahead TTL step to do and no waiting period before T-0.
 
 ### T-1 day
 - Re-export and re-import if you've published anything since Phase 1.
@@ -192,7 +192,7 @@ Do it **Tuesday or Wednesday morning**. Never Friday, never before a holiday. Be
 
 ### T-0
 1. Stop editing WordPress (maintenance mode optional).
-2. Point DNS at Vercel: `A @ 76.76.21.21`, `CNAME www cname.vercel-dns.com` — or hand Vercel the nameservers. Add both apex and `www` as domains in Vercel.
+2. Add both apex and `www` as domains in Vercel; it'll show the `A`/`CNAME` values to use. In **Cloudflare → DNS → Records**, update the `A` record for `@` and the `CNAME` for `www` to those values, and switch both records' cloud icon to **grey ("DNS only")**. Leaving them orange/proxied means traffic still routes through Cloudflare's proxy in front of Vercel, which complicates Vercel's own SSL issuance and isn't necessary — Vercel's edge already provides the CDN/SSL Cloudflare was giving WordPress.
 3. **Keep the same canonical host you have today.** If you're on apex now, stay on apex. Changing www ↔ apex during a platform migration means two variables and no way to attribute a drop.
 4. Wait for SSL (2–10 min).
 5. Run `scripts/verify-urls.mjs` against the live domain.
@@ -253,7 +253,7 @@ Your options from there:
 
 ## 8. Rollback
 
-Revert DNS to the WordPress host. With TTL at 300s you're back inside ~10 minutes. That's the whole reason WordPress stays online for 30 days and the TTL drops a week early.
+Revert DNS in Cloudflare: point the `A`/`CNAME` records back at the WordPress host's values and re-enable proxying (orange cloud) if it was on before. Because this is Cloudflare rather than a plain registrar, the change propagates in minutes, not hours — that's the whole reason WordPress stays online for 30 days, as cheap insurance regardless.
 
 **Pull the trigger if:** site-wide 500s · wrong content being served · a top-5 URL 404-ing · >30% traffic drop sustained over 24 hours.
 

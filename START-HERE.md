@@ -557,20 +557,11 @@ It compares old and new versions of every page. **What you want:**
 
 **If it flags pages**, it tells you what's missing — usually "lost 1 table" or "12% fewer words". Send me that output and I'll fix the converter.
 
-### 6d. Lower your DNS TTL — do this NOW, a week before switching
+### 6d. DNS TTL — not needed, your domain is on Cloudflare
 
-This is the single most important preparation step, and it has to happen a week early.
+The usual advice here is "lower your DNS TTL a week early so rollback is fast." That doesn't apply to you: your domain's DNS is managed through **Cloudflare**, not a plain registrar, and every record is currently **proxied** (orange cloud icon). Proxied records don't use a manually-set TTL at all — Cloudflare's network already makes changes take effect almost immediately, so rollback speed is already covered. Nothing to do here.
 
-1. Log into wherever you bought your domain (GoDaddy, Namecheap, Whogohost, etc.).
-2. Find **DNS settings** / **DNS management**.
-3. Find your `A` record for `@` (or the root domain).
-4. Change **TTL** to **300** (seconds). Save.
-
-> **Why a week early:** TTL means "how long the internet is allowed to cache this DNS answer." If it's currently set to 24 hours, the world will keep using the old answer for up to 24 hours after you change it. Setting it to 300 now means that by next week, everyone will be checking every 5 minutes — so when you switch, it happens fast, and if you need to roll back, that's fast too.
->
-> Skip this and a rollback takes hours instead of minutes.
-
-✅ **Session 6 done.** Now wait a week for the TTL change to propagate.
+✅ **Session 6 done.**
 
 ---
 
@@ -595,9 +586,14 @@ This is the single most important preparation step, and it has to happen a week 
 
 > **Keep the same main version you use now.** If your site currently lives at `idealroofingsystem.com` without the `www`, keep it that way. Switching between www and non-www during a migration means two changes at once, and if rankings move you won't know which one caused it.
 
-### 7c. Change your DNS
+### 7c. Change your DNS (Cloudflare)
 
-At your domain registrar, update the records to match what Vercel showed you. Save.
+Your domain's DNS lives in **Cloudflare**, not a registrar panel. Log into Cloudflare → your domain → **DNS** → **Records**, and:
+
+1. Update the `A` record for `@` and the `CNAME` for `www` to the values Vercel gave you in 7b.
+2. Click the **cloud icon** on both records so it turns **grey ("DNS only")** instead of orange ("Proxied").
+
+> **Why grey, not orange:** if you leave these proxied, traffic goes Visitor → Cloudflare → Vercel, and Vercel can't issue its own SSL certificate or verify the domain properly through Cloudflare's proxy without extra configuration. Setting them to "DNS only" lets Vercel handle SSL and speed directly — which it's built to do anyway, so you don't lose anything by turning Cloudflare's proxy off for just these two records. Cloudflare still manages the DNS entries themselves; it just stops sitting in the traffic path for this domain.
 
 ### 7d. Wait, then verify
 
@@ -700,9 +696,9 @@ Keep the export XML and the uploads zip forever.
 
 If the site is broken, showing errors, or traffic collapses in the first 48 hours:
 
-**Go to your domain registrar and change the DNS records back to your old WordPress host's values.**
+**Go to Cloudflare → DNS → Records and change the `A`/`CNAME` records back to your old WordPress host's values, and switch the cloud icon back to orange ("Proxied") if it was proxied before.**
 
-Write those old values down *before* Session 7c so you have them. With TTL at 300, you're back on WordPress within about 10 minutes.
+Write those old values down *before* Session 7c so you have them. Because this is Cloudflare, changes propagate fast regardless of TTL — you should be back on WordPress within a few minutes.
 
 **Roll back if:** the site shows errors everywhere, the wrong content is served, a top page 404s, or traffic drops more than 30% for a full 24 hours.
 
@@ -741,7 +737,8 @@ Sessions 1–6 are safe to experiment with — nothing is live, and you can alwa
 | **Repository / repo** | A project folder on GitHub |
 | **Deploy** | Publish the code so it's live |
 | **DNS** | The internet's address book — maps your domain to a server |
-| **TTL** | How long the internet caches a DNS answer |
+| **TTL** | How long the internet caches a DNS answer — not something you need to touch; your domain's on Cloudflare, which manages this itself |
+| **Cloudflare** | Where your domain's DNS actually lives (not your registrar) — proxied ("orange cloud") records route through Cloudflare; "DNS only" ("grey cloud") records point straight at the destination |
 | **301 redirect** | "This page moved permanently" — passes ranking value along |
 | **404** | "Page not found" |
 | **Canonical** | Tag saying "this is the real URL for this content" |
@@ -762,11 +759,9 @@ WEEK 1
   Session 3  npm install, create Sanity account        45 min
   Session 4  Import content, check the numbers         30 min
   Session 5  Run it locally, CHECK YOUR PRICE TABLES    1 hr
-  Session 6  Deploy to Vercel, run verify, DROP TTL     1 hr
+  Session 6  Deploy to Vercel, run verify               1 hr
              ↑ nothing above touches your live site
-
-WEEK 2
-             wait for TTL to propagate
+             (no TTL wait needed — domain's on Cloudflare)
 
   Session 7  Tuesday morning: switch DNS                1 hr
              submit sitemap, request indexing
