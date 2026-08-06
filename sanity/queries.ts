@@ -78,6 +78,7 @@ export const postBySlugQuery = groq`*[_type == "post" && slug.current == $slug][
   author->{ name, "slug": slug.current, role, bio, avatarUrl, avatar { ${imageFields} } },
   categories[]->{ title, "slug": slug.current },
   tags[]->{ title, "slug": slug.current },
+  faq[]{ question, answer },
   ${seoFields}
 }`
 

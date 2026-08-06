@@ -21,6 +21,7 @@ import { buildMetadata, excerptFromBody } from '@/lib/seo'
 import {
   articleSchema,
   breadcrumbSchema,
+  faqSchema,
   graph,
   organizationSchema,
   videoSchema,
@@ -228,7 +229,8 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
                   : heroSrc,
                 uploadDate: post.publishedAt,
               })
-            : null
+            : null,
+          post.faq?.length ? faqSchema(post.faq) : null
         )}
       />
 
