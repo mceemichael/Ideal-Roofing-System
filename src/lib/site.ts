@@ -171,3 +171,27 @@ export const RESERVED_SLUGS = new Set([
   'robots.txt',
   'feed.xml',
 ])
+
+/**
+ * Slugs that keep their featured/hero image in metadata (og:image, JSON-LD)
+ * but don't render it as an on-page figure. Requested by Michael 2026-08-08
+ * for the pricelist posts and the roof area calculator — pages already dense
+ * with price tables/tools where the hero photo read as redundant. SEO image
+ * signals (Open Graph, Twitter card, structured data) are untouched; only the
+ * visual <figure> is suppressed.
+ */
+export const NO_HERO_IMAGE_SLUGS = new Set([
+  'roofing-budget-for-a-4-bedroom-bungalow',
+  'best-aluminium-thickness-for-flatroof',
+  'aluminum-long-span-vs-aluminum-step-tiles-vs-metrocoppo',
+  'aluminium-roofing-sheets-types-grades-price',
+  'choosing-the-best-color-for-your-aluminum-roof',
+  'stone-coated-vs-metrocopo',
+  'nine-factors-to-consider-when-choosing-a-roofing-material',
+  'price-of-aluminium-roofing-sheets-in-2026',
+  'price-of-stone-coated-gerard-in-lagos-2025',
+  'the-best-roof-to-use-aluminum-vs-stone-coated-roof',
+  'how-to-budget-for-a-2-bedroom-bungalow',
+  'price-of-pvc-rain-gutter-water-collector',
+  'roof-area-calculator',
+])

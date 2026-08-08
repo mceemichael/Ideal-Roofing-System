@@ -16,7 +16,7 @@ import {
 } from '../../../../sanity/queries'
 import { imageSrc } from '../../../../sanity/image'
 
-import { RESERVED_SLUGS, site } from '@/lib/site'
+import { NO_HERO_IMAGE_SLUGS, RESERVED_SLUGS, site } from '@/lib/site'
 import { buildMetadata, excerptFromBody } from '@/lib/seo'
 import {
   articleSchema,
@@ -209,6 +209,10 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
   ]
 
   const heroSrc = imageSrc(post.featuredImage, 1200)
+  // Metadata/structured-data image signals (og:image, JSON-LD) stay wired to
+  // heroSrc regardless — only the on-page <figure> is suppressed for these
+  // slugs. See NO_HERO_IMAGE_SLUGS in @/lib/site.
+  const showHero = heroSrc && !NO_HERO_IMAGE_SLUGS.has(slug)
   const ytId = post.videoUrl ? youtubeId(post.videoUrl) : null
 
   return (
@@ -289,7 +293,7 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
           </div>
         </div>
 
-        {heroSrc ? (
+        {showHero ? (
           <figure className="mx-auto mt-8 max-w-3xl">
             <Image
               src={heroSrc}
@@ -392,6 +396,9 @@ async function PageView({ page, slug }: { page: any; slug: string }) {
     { name: page.title, path: '/' + slug + '/' },
   ]
   const heroSrc = imageSrc(page.heroImage, 1600)
+  // See NO_HERO_IMAGE_SLUGS in @/lib/site — metadata/schema keep referencing
+  // page.heroImage regardless; only this on-page figure is suppressed.
+  const showHero = heroSrc && !NO_HERO_IMAGE_SLUGS.has(slug)
 
   const comments = await sanityFetch<CommentData[]>({
     query: commentsForDocumentQuery,
@@ -412,7 +419,7 @@ async function PageView({ page, slug }: { page: any; slug: string }) {
           <Breadcrumbs items={crumbs} />
         </div>
 
-        {heroSrc ? (
+        {showHero ? (
           <figure className="mx-auto mb-8 max-w-4xl">
             <Image
               src={heroSrc}
