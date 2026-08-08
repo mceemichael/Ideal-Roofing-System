@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
-import { sanityFetch } from '../../../sanity/client'
+import { sanityFetch } from '../../../../sanity/client'
 import {
   postBySlugQuery,
   pageBySlugQuery,
@@ -13,8 +13,8 @@ import {
   allPageSlugsQuery,
   allCategorySlugsQuery,
   commentsForDocumentQuery,
-} from '../../../sanity/queries'
-import { imageSrc } from '../../../sanity/image'
+} from '../../../../sanity/queries'
+import { imageSrc } from '../../../../sanity/image'
 
 import { RESERVED_SLUGS, site } from '@/lib/site'
 import { buildMetadata, excerptFromBody } from '@/lib/seo'

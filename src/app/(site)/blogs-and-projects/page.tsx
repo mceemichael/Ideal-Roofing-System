@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import { sanityFetch } from '../../../sanity/client'
-import { postsPageQuery } from '../../../sanity/queries'
+import { sanityFetch } from '../../../../sanity/client'
+import { postsPageQuery } from '../../../../sanity/queries'
 import { POSTS_PER_PAGE } from '@/lib/site'
 import { buildMetadata } from '@/lib/seo'
 import { breadcrumbSchema, graph, organizationSchema, websiteSchema } from '@/lib/schema'

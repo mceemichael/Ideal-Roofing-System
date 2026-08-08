@@ -1,4 +1,6 @@
 import { defineField, defineType } from 'sanity'
+import { SeoDescriptionInput } from '../../components/SeoDescriptionInput'
+import { SeoTitleInput } from '../../components/SeoTitleInput'
 
 /**
  * Mirrors the Rank Math fields from WordPress one-for-one.
@@ -11,7 +13,7 @@ export default defineType({
   name: 'seo',
   title: 'SEO',
   type: 'object',
-  options: { collapsible: true, collapsed: true },
+  options: { collapsible: true, collapsed: false },
   fields: [
     defineField({
       name: 'title',
@@ -19,6 +21,7 @@ export default defineType({
       type: 'string',
       description:
         'Overrides the page title in search results. Imported from Rank Math. Aim for under 60 characters.',
+      components: { input: SeoTitleInput },
       validation: (Rule) =>
         Rule.max(70).warning('Titles over ~70 characters get truncated in Google.'),
     }),
@@ -28,6 +31,7 @@ export default defineType({
       type: 'text',
       rows: 3,
       description: 'Imported from Rank Math. Aim for 140-160 characters.',
+      components: { input: SeoDescriptionInput },
       validation: (Rule) =>
         Rule.max(200).warning('Descriptions over ~160 characters get truncated.'),
     }),

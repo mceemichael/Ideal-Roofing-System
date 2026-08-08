@@ -1,5 +1,5 @@
-import { sanityFetch } from '../../../sanity/client'
-import { feedQuery } from '../../../sanity/queries'
+import { sanityFetch } from '../../../../sanity/client'
+import { feedQuery } from '../../../../sanity/queries'
 import { site } from '@/lib/site'
 import { absoluteUrl } from '@/lib/seo'
 

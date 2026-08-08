@@ -10,8 +10,8 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import WhatsAppFloat from '@/components/WhatsAppFloat'
 import JsonLd from '@/components/JsonLd'
-import { sanityFetch } from '../../sanity/client'
-import { siteSettingsQuery } from '../../sanity/queries'
+import { sanityFetch } from '../../../sanity/client'
+import { siteSettingsQuery } from '../../../sanity/queries'
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || site.url),

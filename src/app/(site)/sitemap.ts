@@ -1,9 +1,9 @@
 import type { MetadataRoute } from 'next'
 import { site, POSTS_PER_PAGE } from '@/lib/site'
 import { absoluteUrl } from '@/lib/seo'
-import { imageSrc } from '../../sanity/image'
-import { sanityFetch } from '../../sanity/client'
-import { sitemapQuery, sitemapMediaQuery } from '../../sanity/queries'
+import { imageSrc } from '../../../sanity/image'
+import { sanityFetch } from '../../../sanity/client'
+import { sitemapQuery, sitemapMediaQuery } from '../../../sanity/queries'
 
 /**
  * Replaces Rank Math's /sitemap_index.xml.

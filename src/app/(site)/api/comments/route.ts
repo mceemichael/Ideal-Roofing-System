@@ -1,7 +1,7 @@
 import { createClient } from 'next-sanity'
 import { type NextRequest, NextResponse } from 'next/server'
 import crypto from 'node:crypto'
-import { apiVersion, dataset, projectId } from '../../../../sanity/env'
+import { apiVersion, dataset, projectId } from '../../../../../sanity/env'
 
 /**
  * Receives comment submissions and files them in Sanity as UNAPPROVED.
