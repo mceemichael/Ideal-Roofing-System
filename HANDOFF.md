@@ -470,6 +470,20 @@ Michael asked for the `/pricelist/` hub page to look "cleaner and classic," reus
 
 Verified: `npm run build` (clean `.next`), `npm run verify` 110/110 locally and again against the live domain after deploy, and the live HTML fetched directly to confirm all 4 material images, the new headings, and the two new cross-links are actually present.
 
+## 16.6 Sanity → Vercel revalidate webhook was never actually wired up (2026-08-08)
+
+Michael edited a post's title and added a featured image in Studio, hit publish, and neither change showed up on the homepage. Checked the published document directly in Sanity — his edits were correctly saved and published, no draft stuck unpublished. So it wasn't an editing mistake on his end.
+
+**Root cause: `src/app/api/revalidate/route.ts` (the on-demand revalidation endpoint) has existed since the migration, with a comment saying exactly how to wire it up in Sanity's dashboard — but that setup step was never actually done.** `SANITY_REVALIDATE_SECRET` wasn't set in Vercel (`vercel env ls` showed no such variable), and `npx sanity hook list` returned zero hooks. Every route falls back to its `revalidate: 3600` (1h) static setting, so edits were always going to show up *eventually* — just up to an hour later, which reads as "broken" to someone checking right after publishing.
+
+**Fixed properly, not just documented:**
+1. Generated a real secret, added as `SANITY_REVALIDATE_SECRET` in Vercel (`vercel env add ... production`), then redeployed — Vercel serverless functions only pick up a newly-added env var on the *next* deployment, not retroactively.
+2. Created the actual webhook via Sanity's Management HTTP API (`POST /v2021-10-04/hooks/projects/{id}`, called through `getCliClient()` inside `sanity exec --with-user-token` — the `sanity hook create` CLI command doesn't create anything itself, it just opens the sanity.io/manage web form in a browser, which isn't usable headlessly). Body shape verified against Sanity's own docs before sending, not guessed: trigger events live under `rule.on`, not a top-level `trigger` field.
+3. **Caught a real bug in the process**, worth remembering for any future webhook: the webhook URL `https://idealroofingsystem.com/api/revalidate` 308-redirects to `/api/revalidate/` because of this site's site-wide `trailingSlash: true`. `curl -L` follows that fine, but there's no guarantee Sanity's webhook dispatcher follows redirects on a POST — silently getting 308s back forever would look identical to a working webhook (200-looking logs would never even appear) while never actually revalidating anything. Fixed by pointing the webhook at the exact trailing-slash URL directly (`PATCH /hooks/{id}` with the corrected `url`), so no redirect is ever involved.
+4. Verified for real, not just assumed: triggered a genuine document mutation (harmless no-op patch, same title re-set) and confirmed via `npx sanity hook logs vercel-revalidate` that Sanity's own delivery log shows **Status: success, Result code: 200** — then fetched the live homepage and the affected post directly and confirmed the new title and new image are actually there.
+
+**If this ever needs to be recreated or debugged:** `npx sanity hook list` / `npx sanity hook logs vercel-revalidate` from this repo (needs `--with-user-token` for anything beyond listing). The webhook secret only lives in Vercel's env vars and the webhook's own `headers` config — it isn't in git and isn't in this file.
+
 ## 17. If you're the next agent picking this up
 
 Read `CLAUDE.md` first — it has the invariants. Then:
