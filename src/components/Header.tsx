@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { mainNav, site } from '@/lib/site'
 import { cn } from '@/lib/cn'
+import { currentMonthYear } from '@/lib/format'
 import Container from './Container'
 import StarRating from './StarRating'
 import SearchBox from './SearchBox'
@@ -74,6 +75,7 @@ export function Header({
                           className="block rounded-md px-3 py-2 text-sm text-ink transition-colors hover:bg-surface-soft"
                         >
                           {child.label}
+                          {'dated' in child && child.dated ? ' | ' + currentMonthYear() : ''}
                         </Link>
                       </li>
                     ))}
@@ -159,6 +161,7 @@ export function Header({
                           className="block py-2 text-sm text-ink-muted"
                         >
                           {child.label}
+                          {'dated' in child && child.dated ? ' | ' + currentMonthYear() : ''}
                         </Link>
                       </li>
                     ))}

@@ -126,16 +126,22 @@ export const mainNav = [
     href: '/pricelist/',
     children: [
       {
-        label: 'Best Price of Aluminium Roofing Sheet in Nigeria | July 2026',
+        label: 'Best Price of Aluminium Roofing Sheet in Nigeria',
         href: '/price-of-aluminium-roofing-sheets-in-2026/',
+        // Appends the real current month/year at render time (see
+        // `currentMonthYear()` in `@/lib/format`) instead of a hardcoded
+        // string, so this never goes stale and never needs a manual edit.
+        dated: true,
       },
       {
-        label: 'Latest Price of Stone Coated (Gerard) Roof Sheet | July 2026',
+        label: 'Latest Price of Stone Coated (Gerard) Roof Sheet',
         href: '/price-of-stone-coated-gerard-in-lagos-2025/',
+        dated: true,
       },
       {
         label: 'Latest Price of Rain Gutter / Water collector | 2026',
         href: '/price-of-pvc-rain-gutter-water-collector/',
+        dated: false,
       },
     ],
   },

@@ -12,6 +12,15 @@ export function formatDate(value?: string | null): string {
   return dd + '/' + mm + '/' + yyyy
 }
 
+/**
+ * "August 2026" — the visitor's current month/year, computed at render time.
+ * Used for nav labels like "...Roofing Sheet | August 2026" so they're
+ * always correct without a monthly manual edit or redeploy.
+ */
+export function currentMonthYear(): string {
+  return new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' })
+}
+
 /** ISO 8601 for datetime attributes and structured data. */
 export function isoDate(value?: string | null): string | undefined {
   if (!value) return undefined
