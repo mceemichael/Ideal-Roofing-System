@@ -38,8 +38,8 @@ const SERVICES = [
     title: 'Roof Installations',
     href: '/services/',
     body: 'We specialize in expertly installing premium aluminium roofing sheets (lightweight, easy to handle, corrosion-resistant, and excellent for heat reflection) as well as stone-coated roofing sheets (like Gerard, Metrocopo, step-tiles, and longspan designs for timeless elegance and superior protection).',
-    image: '/wp-content/uploads/2025/06/WhatsApp-Image-2025-06-24-at-175612_6e9167cc-1024x768.jpg',
-    alt: 'Ideal Roofing System installers at work',
+    image: '/wp-content/uploads/2026/08/roof-installation-project-watermarked-v2.jpg',
+    alt: 'Ideal Roofing System stone-coated roof installation project',
   },
   {
     title: 'Roof Corrugation and Supply',
