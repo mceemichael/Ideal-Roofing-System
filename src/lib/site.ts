@@ -16,8 +16,11 @@ export const site = {
   // explicit grammar-accuracy pass; a spelling fix carries none of the
   // ranking risk a URL/structure change would, so it's safe to diverge from
   // live's current (still-typo'd) description here.
+  // Updated 2026-08-09: added "roofing company" so the meta description
+  // actually contains the phrase the <title> and tagline both lead with —
+  // it previously had "roofing industry" but never "company".
   description:
-    "Ideal Roofing System is a trusted leader in Nigeria's roofing industry, specializing in the sales and installation of Aluminium and Stonecoated Roofing Sheets",
+    "Ideal Roofing System, a trusted roofing company in Nigeria, specializes in the sales and installation of Aluminium and Stonecoated Roofing Sheets.",
   tagline: 'Leading Roofing Company In Nigeria',
   locale: 'en_US',
   themeColor: '#2f5aae',

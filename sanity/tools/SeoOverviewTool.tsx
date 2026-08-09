@@ -3,6 +3,7 @@ import { IntentLink } from 'sanity/router'
 import { useClient } from 'sanity'
 import { Badge, Box, Card, Container, Flex, Select, Spinner, Stack, Text } from '@sanity/ui'
 import { computeSeoScore, scoreTone, type SeoScoreResult } from '../lib/seoScore'
+import { redirects } from '../../src/lib/redirects.js'
 
 const QUERY = `*[_type in ["post", "page"]]{
   _id,
@@ -12,6 +13,19 @@ const QUERY = `*[_type in ["post", "page"]]{
   body,
   seo { title, description, focusKeyword }
 }`
+
+// Literal (non-templated) redirect sources, as bare slugs. A document whose
+// only URL permanently redirects elsewhere is never seen by Google under
+// that slug — scoring it here is actively misleading (see "home": WordPress's
+// static-front-page mechanism imported the homepage's own content a second
+// time as a normal page, which /home/ redirects away from in redirects.js;
+// editing that document has zero effect on the real, hardcoded homepage).
+const REDIRECTED_SLUGS = new Set(
+  (redirects as unknown as Array<{ source: string }>)
+    .map((r) => r.source)
+    .filter((s) => !s.includes(':'))
+    .map((s) => s.replace(/^\/|\/$/g, ''))
+)
 
 type Row = {
   _id: string
@@ -47,13 +61,15 @@ export function SeoOverviewTool() {
 
   const rows: Row[] = useMemo(() => {
     if (!docs) return []
-    const computed = docs.map((doc) => ({
-      _id: doc._id,
-      _type: doc._type,
-      title: doc.title || '(untitled)',
-      slug: doc.slug || '',
-      result: computeSeoScore(doc),
-    }))
+    const computed = docs
+      .filter((doc) => !REDIRECTED_SLUGS.has(doc.slug || ''))
+      .map((doc) => ({
+        _id: doc._id,
+        _type: doc._type,
+        title: doc.title || '(untitled)',
+        slug: doc.slug || '',
+        result: computeSeoScore(doc),
+      }))
     return computed.sort((a, b) => {
       if (sort === 'score-asc') return a.result.score - b.result.score
       if (sort === 'score-desc') return b.result.score - a.result.score
