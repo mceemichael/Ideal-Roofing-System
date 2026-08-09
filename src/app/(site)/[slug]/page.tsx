@@ -409,7 +409,12 @@ async function PageView({ page, slug }: { page: any; slug: string }) {
   return (
     <>
       <JsonLd
-        data={graph(organizationSchema(), websiteSchema(), breadcrumbSchema(crumbs))}
+        data={graph(
+          organizationSchema(),
+          websiteSchema(),
+          breadcrumbSchema(crumbs),
+          page.faq?.length ? faqSchema(page.faq) : null
+        )}
       />
 
       <PageHeader title={page.title} />

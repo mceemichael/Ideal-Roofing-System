@@ -79,6 +79,27 @@ export default defineType({
       group: 'content',
     }),
     defineField({ name: 'seo', type: 'seo', group: 'seo' }),
+    defineField({
+      name: 'faq',
+      title: 'FAQ',
+      type: 'array',
+      group: 'seo',
+      description:
+        'Optional. Emits FAQPage structured data for rich results and AI answer engines. Should mirror a visible Q&A section in the body, not stand alone — Google expects the markup to match what a reader actually sees on the page.',
+      of: [
+        {
+          type: 'object',
+          name: 'faqItem',
+          fields: [
+            defineField({ name: 'question', title: 'Question', type: 'string' }),
+            defineField({ name: 'answer', title: 'Answer', type: 'text', rows: 3 }),
+          ],
+          preview: {
+            select: { title: 'question' },
+          },
+        },
+      ],
+    }),
   ],
   preview: { select: { title: 'title', subtitle: 'slug.current' } },
 })

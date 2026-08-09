@@ -124,6 +124,7 @@ export const pageBySlugQuery = groq`*[_type == "page" && slug.current == $slug][
   },
   publishedAt,
   updatedAt,
+  faq[]{ question, answer },
   ${seoFields}
 }`
 

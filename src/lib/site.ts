@@ -194,4 +194,5 @@ export const NO_HERO_IMAGE_SLUGS = new Set([
   'how-to-budget-for-a-2-bedroom-bungalow',
   'price-of-pvc-rain-gutter-water-collector',
   'roof-area-calculator',
+  'pricelist',
 ])
