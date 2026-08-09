@@ -24,6 +24,11 @@ export const metadata: Metadata = buildMetadata({
   path: '/',
   title: site.title,
   description: site.description,
+  // The bare SVG in site.logo isn't supported by WhatsApp/Facebook/etc. link
+  // previews, so it silently showed no image at all when the homepage was
+  // shared. This is a real raster share card (logo mark + wordmark + tagline
+  // on brand blue), not just a rasterized copy of the header icon.
+  image: { legacyUrl: '/wp-content/uploads/2026/08/og-share-image.png' },
 })
 
 const DEFAULT_STATS = [
