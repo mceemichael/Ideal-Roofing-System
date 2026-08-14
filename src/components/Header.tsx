@@ -176,11 +176,9 @@ export function Header({
       {/* Blue band */}
       <div className="bg-secondary text-white">
         <Container className="py-4">
-          <div className="flex flex-col items-center gap-3 text-center lg:flex-row lg:justify-between lg:text-left">
+          <div className="flex flex-col items-center gap-3 text-center lg:flex-row lg:items-start lg:justify-start lg:gap-8 lg:text-left">
             {/* Left-aligned on mobile (self-start + text-left override the
-                parent's items-center/text-center) — the search box below
-                stays centered, only the name/tagline block shifts. Reverts
-                to the parent's own alignment at lg:. */}
+                parent's items-center/text-center), same on desktop. */}
             <div className="w-full self-start text-left lg:w-auto lg:shrink-0 lg:self-auto">
               {/* The only H1 on the site — rendered once here in the shared
                   header, so every page/post title below is an H2 instead.
@@ -200,8 +198,10 @@ export function Header({
             {/* Search — present on every page of the live WordPress site.
                 Stays right after the name/tagline (not pushed down by the
                 star rating/NAP row below) so it's still immediately visible
-                on mobile without scrolling past extra content first. */}
-            <div className="w-full max-w-sm">
+                on mobile without scrolling past extra content first.
+                self-start left-aligns it (matching the name/tagline block)
+                instead of being centered by the parent's items-center. */}
+            <div className="w-full max-w-sm self-start">
               <SearchBox compact />
             </div>
           </div>
