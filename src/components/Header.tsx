@@ -175,39 +175,48 @@ export function Header({
 
       {/* Blue band */}
       <div className="bg-secondary text-white">
-        <Container className="flex flex-col items-center gap-3 py-4 text-center lg:flex-row lg:justify-between lg:text-left">
-          {/* Left-aligned on mobile (self-start + text-left override the
-              parent's items-center/text-center) — the search box and star
-              rating below stay centered, only the name/tagline block
-              shifts. Reverts to the parent's own alignment at lg:. */}
-          <div className="w-full self-start text-left lg:w-auto lg:shrink-0 lg:self-auto">
-            {/* The only H1 on the site — rendered once here in the shared
-                header, so every page/post title below is an H2 instead.
-                Deliberate choice per an explicit accessibility/SEO request,
-                not the usual "article title is the H1" pattern. Sized to
-                match live's own header text exactly (36px mobile / 40px
-                desktop, confirmed via computed styles) — it was previously
-                left at the old placeholder text-base/text-lg size, which
-                is why it read as smaller than section headings lower on
-                the page despite being the H1. */}
-            <h1 className="text-[28px] font-bold leading-tight tracking-wide sm:text-[36px] lg:text-[40px]">
-              <Link href="/">IDEAL ROOFING SYSTEM</Link>
-            </h1>
-            <p className="text-xs text-white/85 sm:text-sm">{site.tagline}</p>
-
-            {/* Star rating moved here, left-aligned under the name/tagline
-                instead of pinned to the far right — plus the address and
-                phone number, so NAP appears on the page itself on every
-                page, not just in the footer and structured data. */}
-            <div className="mt-2">
-              <StarRating
-                rating={reviewRating}
-                count={reviewCount}
-                href="https://www.google.com/search?q=Ideal+Roofing+System"
-              />
+        <Container className="py-4">
+          <div className="flex flex-col items-center gap-3 text-center lg:flex-row lg:justify-between lg:text-left">
+            {/* Left-aligned on mobile (self-start + text-left override the
+                parent's items-center/text-center) — the search box below
+                stays centered, only the name/tagline block shifts. Reverts
+                to the parent's own alignment at lg:. */}
+            <div className="w-full self-start text-left lg:w-auto lg:shrink-0 lg:self-auto">
+              {/* The only H1 on the site — rendered once here in the shared
+                  header, so every page/post title below is an H2 instead.
+                  Deliberate choice per an explicit accessibility/SEO request,
+                  not the usual "article title is the H1" pattern. Sized to
+                  match live's own header text exactly (36px mobile / 40px
+                  desktop, confirmed via computed styles) — it was previously
+                  left at the old placeholder text-base/text-lg size, which
+                  is why it read as smaller than section headings lower on
+                  the page despite being the H1. */}
+              <h1 className="text-[28px] font-bold leading-tight tracking-wide sm:text-[36px] lg:text-[40px]">
+                <Link href="/">IDEAL ROOFING SYSTEM</Link>
+              </h1>
+              <p className="text-xs text-white/85 sm:text-sm">{site.tagline}</p>
             </div>
 
-            <p className="mt-2 text-xs text-white/80 sm:text-sm">
+            {/* Search — present on every page of the live WordPress site.
+                Stays right after the name/tagline (not pushed down by the
+                star rating/NAP row below) so it's still immediately visible
+                on mobile without scrolling past extra content first. */}
+            <div className="w-full max-w-sm">
+              <SearchBox compact />
+            </div>
+          </div>
+
+          {/* Star rating, left-aligned, plus address and phone beneath it —
+              a second row under the name+search row (not inside it), so NAP
+              appears on the page itself on every page without burying the
+              search box under it. */}
+          <div className="mt-3 flex flex-col items-center gap-2 text-center lg:items-start lg:text-left">
+            <StarRating
+              rating={reviewRating}
+              count={reviewCount}
+              href="https://www.google.com/search?q=Ideal+Roofing+System"
+            />
+            <p className="text-xs text-white/80 sm:text-sm">
               {site.business.streetAddress}, {site.business.addressLocality},{' '}
               {site.business.addressRegion} {site.business.postalCode}
               <br />
@@ -218,11 +227,6 @@ export function Header({
                 {site.business.telephoneDisplay}
               </a>
             </p>
-          </div>
-
-          {/* Search — present on every page of the live WordPress site */}
-          <div className="w-full max-w-sm">
-            <SearchBox compact />
           </div>
         </Container>
       </div>
