@@ -496,7 +496,38 @@ Built a full scoring system: `sanity/lib/seoScore.ts` runs a 10-check Rank Math-
 
 Verified thoroughly before *and* after deploying: full clean build, `npm run verify` 110/110 locally, then again against the live domain after `vercel --prod`, plus a direct curl of the live `/robots.txt` to confirm the real (not preview-blocked) `Allow: /` content is actually being served — this specific check mattered more than usual given what had just broken and been fixed locally.
 
-## 17. If you're the next agent picking this up
+## 17. Bing Webmaster Tools findings and fixes (2026-08-14)
+
+Michael logged into Bing Webmaster Tools for the first time since cutover (its verification meta tag had been carried over from the old Rank Math config, but nobody had confirmed the account was actually verified and active there — separate from Google Search Console, which is what the [[ideal-roofing-gsc-baseline]] traffic numbers come from). It surfaced two "Recommendations," each with a downloaded CSV of affected URLs. Both are now fixed and deployed.
+
+**Finding 1 — "Meta descriptions on many of your pages are too short" (21 URLs, Moderate).** Checked every URL live rather than trusting the CSV at face value:
+
+- **12 of 21 were 404s, correctly.** All were WordPress image-attachment pages (auto-generated per-image URLs like `/price-of-aluminium-roofing-sheets-in-2026/metrocopo/`, or standalone ones like `/hip-roof/`) — confirmed against `wordpress-export.xml`, every one is `wp:post_type = attachment`, not real content. These were deliberately never migrated (see §1's inventory — attachment pages were never part of the 39/7/6/54/2 count) and Google/Bing themselves recommend not indexing them. Bing's report is just a stale pre-cutover crawl snapshot; these will drop out on their own as Bing recrawls. No action taken.
+- **9 of 21 were real, live pages.** 2 already had adequate-length descriptions (Bing's flag on those looks stale too). 7 were genuinely short:
+  - 5 tag archives + 1 author page were hitting the generic fallback template in `src/app/(site)/tag/[slug]/page.tsx` and `.../author/[slug]/page.tsx` ("Roofing articles tagged X from Ideal Roofing System.", 60-81 chars) — used whenever a tag/author has no custom `description`/`bio` set in Sanity. Since this fallback covers all 54 tag archives + 2 author pages, not just the 5 the CSV happened to include, the fix targets the template itself: now includes the live post count and more context (e.g. "5 articles tagged Aluminium — roofing prices, installation tips and buying guides from Ideal Roofing System, a Nigerian roofing company.", 138 chars). An explicit `tag.description`/`author.bio` in Sanity still overrides it.
+  - `/aluminium-pricelist/` and `/stone-coated-pricelist/` are category archives (not simple pages), resolved through `[slug]/page.tsx`'s category branch — their short descriptions were real, hand-written `category.description` values imported from WordPress, not template output. Rewritten directly in Sanity via a one-off `sanity exec --with-user-token` script (deleted after use, per this project's established pattern).
+
+Deployed via `vercel --prod`, confirmed live: `npm run verify` 110/110, and both the template output and the two category descriptions fetched directly from the live domain to confirm the new text is actually served. Committed as `861e19a`.
+
+**Finding 2 — "Title too long" (8 URLs, High, >70 chars).** All 8 were real posts, several of them the site's top earners (`/price-of-aluminium-roofing-sheets-in-2026/`, `/price-of-stone-coated-gerard-in-lagos-2025/`). Root cause traced by comparing against the live WordPress origin directly (IP + `Host` header, same technique as §13): **individual WordPress posts and pages never carried a " | Ideal Roofing System" suffix in their `<title>` at all** — only tag/category/author archive titles did (`Aluminium Archives | Ideal Roofing System`), plus the homepage has it baked into its own literal title. This migration's `src/app/(site)/layout.tsx` had applied a **global `title.template`** appending the suffix to every single page uniformly — a deviation from the original site that was never caught because nobody had compared it against live WordPress output (same class of miss as §10's theme-colour bug and §16.7's Studio-layout bug).
+
+**Fix:** removed the global `title.template` from `layout.tsx` (now a plain string, used only as the homepage/default title). `tag/[slug]/page.tsx`, `author/[slug]/page.tsx`, and the category branch of `[slug]/page.tsx` now build the " | Ideal Roofing System" suffix themselves, matching what WordPress actually served for those three archive types. This alone brought 7 of the 8 flagged posts under 70 characters with **no content changes at all** — they'd only ever been too long because of a suffix they should never have had. Committed as `2be67a8`.
+
+The remaining 3 needed actual `seo.title` edits in Sanity (one because it was still >70 chars even without the suffix; two — the aluminium and stone-coated pricelist posts — at Michael's specific request to use his exact wording "Best Price of Stone coated (Gerard) In Nigeria - Aug 2026" / "Best Price of Aluminium Roofing Sheet In Nigeria - Aug 2026" rather than a paraphrase, which fit comfortably once the suffix was gone):
+
+| Post | New `seo.title` |
+|---|---|
+| `price-of-stone-coated-gerard-in-lagos-2025` | Best Price of Stone coated (Gerard) In Nigeria - Aug 2026 |
+| `price-of-aluminium-roofing-sheets-in-2026` | Best Price of Aluminium Roofing Sheet In Nigeria - Aug 2026 |
+| `practical-roofing-budget-for-a-3-bedroom-using-aluminium-metrocopo` | Practical Roofing Budget for a 3-Bedroom (Aluminium Metrocopo) |
+
+**A real gotcha hit while making these edits, worth remembering for any future `sanity exec --with-user-token` script:** patching the aluminium pricelist post by an `_id` obtained from a plain `*[_type == "post" && slug.current == $slug][0]` query silently wrote to a **draft** (`drafts.post-59425d795a1e70b5a5067960`), not the published document — `getCliClient()`'s default query has no perspective filter and returned the draft's `_id` preferentially over the published one. Because the live site's client uses `perspective: 'published'` (`sanity/client.ts`), the edit had zero effect on production despite the script reporting success. Caught by re-fetching the live page afterward and finding the old title still served — not by trusting the script's own "before/after" log. Fixed by comparing draft vs. published field-by-field (only the intended title differed, so nothing was at risk of being lost), patching the literal published `_id` directly, and deleting the now-redundant draft so Studio doesn't show Michael a phantom "unpublished changes" banner on that post. **If a future patch script needs the published document specifically, filter the query explicitly** (`&& !(_id in path("drafts.**"))`) rather than trusting the fetched `_id` to already be the published one.
+
+Deployed via `vercel --prod`, confirmed live: `npm run verify` 110/110, and all 8 previously-flagged titles fetched directly and confirmed under 70 characters (57-68 chars), with the two Michael specified matching his wording exactly.
+
+**Both fixes are now live; what's not yet resolved is Bing's own recrawl timing** — clearing the "Recommendations" list in Bing Webmaster Tools depends on Bing revisiting these URLs, which isn't something either side can push faster. Worth a glance next time Michael logs in, but not a blocker on anything.
+
+## 18. If you're the next agent picking this up
 
 Read `CLAUDE.md` first — it has the invariants. Then:
 
