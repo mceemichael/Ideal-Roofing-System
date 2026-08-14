@@ -29,11 +29,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const author = await sanityFetch<any>({ query: authorBySlugQuery, params: { slug } })
   if (!author) return { title: 'Not found', robots: { index: false, follow: true } }
 
+  const postCount = (author.posts || []).length
+  const articleWord = postCount === 1 ? 'article' : 'articles'
+
   return buildMetadata({
     path: '/author/' + slug + '/',
     title: 'Posts by ' + author.name,
     description:
-      author.bio || 'Roofing articles written by ' + author.name + ' at Ideal Roofing System.',
+      author.bio ||
+      postCount + ' roofing ' + articleWord + ' by ' + author.name +
+        ' at Ideal Roofing System, Nigeria\'s trusted roofing supplier and installer.',
   })
 }
 

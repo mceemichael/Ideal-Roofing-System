@@ -28,12 +28,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const tag = await sanityFetch<any>({ query: tagBySlugQuery, params: { slug } })
   if (!tag) return { title: 'Not found', robots: { index: false, follow: true } }
 
+  const postCount = (tag.posts || []).length
+  const articleWord = postCount === 1 ? 'article' : 'articles'
+
   return buildMetadata({
     path: '/tag/' + slug + '/',
     title: tag.title,
     description:
       tag.description ||
-      'Roofing articles tagged ' + tag.title + ' from Ideal Roofing System.',
+      postCount + ' ' + articleWord + ' tagged ' + tag.title +
+        ' — roofing prices, installation tips and buying guides from Ideal Roofing System, a Nigerian roofing company.',
     seo: tag.seo,
   })
 }
