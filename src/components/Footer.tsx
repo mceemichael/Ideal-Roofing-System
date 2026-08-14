@@ -31,8 +31,15 @@ export function Footer({
             <p className="mt-2 max-w-md text-sm leading-relaxed text-white/70">
               {site.description}
             </p>
+            {/* Full NAP (Name, Address, Phone), matching the LocalBusiness
+                JSON-LD and Google Business Profile exactly — this used to
+                show only locality/region, which put a shorter address in
+                front of visitors than the one Google has on file. */}
             <p className="mt-4 text-sm text-white/70">
-              {site.business.addressLocality}, {site.business.addressRegion}, Nigeria
+              {site.business.streetAddress}
+              <br />
+              {site.business.addressLocality}, {site.business.addressRegion}{' '}
+              {site.business.postalCode}, Nigeria
               <br />
               {site.business.registrationNumber}
             </p>
