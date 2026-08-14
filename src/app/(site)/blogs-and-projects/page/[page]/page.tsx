@@ -4,10 +4,12 @@ import { sanityFetch } from '../../../../../../sanity/client'
 import { postsPageQuery } from '../../../../../../sanity/queries'
 import { POSTS_PER_PAGE } from '@/lib/site'
 import { buildMetadata } from '@/lib/seo'
+import { breadcrumbSchema, graph, organizationSchema, websiteSchema } from '@/lib/schema'
 import Container from '@/components/Container'
 import PageHeader from '@/components/PageHeader'
 import PostCard, { type PostCardData } from '@/components/PostCard'
 import Pagination from '@/components/Pagination'
+import JsonLd from '@/components/JsonLd'
 
 export const revalidate = 3600
 
@@ -61,9 +63,16 @@ export default async function BlogPage({ params }: Props) {
   if (!posts.length) notFound()
 
   const totalPages = Math.max(1, Math.ceil(total / POSTS_PER_PAGE))
+  const crumbs = [
+    { name: 'Home', path: '/' },
+    { name: 'Blog', path: '/blogs-and-projects/' },
+    { name: 'Page ' + current, path: '/blogs-and-projects/page/' + current + '/' },
+  ]
 
   return (
     <>
+      <JsonLd data={graph(organizationSchema(), websiteSchema(), breadcrumbSchema(crumbs))} />
+
       <PageHeader title="Blog" description={'Page ' + current + ' of ' + totalPages} />
       <Container className="py-10">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

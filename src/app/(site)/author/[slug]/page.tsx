@@ -6,9 +6,11 @@ import { authorBySlugQuery, allAuthorSlugsQuery } from '../../../../../sanity/qu
 import { imageSrc } from '../../../../../sanity/image'
 import { buildMetadata } from '@/lib/seo'
 import { site } from '@/lib/site'
+import { breadcrumbSchema, graph, organizationSchema, websiteSchema } from '@/lib/schema'
 import Container from '@/components/Container'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import PostCard, { type PostCardData } from '@/components/PostCard'
+import JsonLd from '@/components/JsonLd'
 
 export const revalidate = 3600
 
@@ -56,16 +58,17 @@ export default async function AuthorPage({ params }: Props) {
 
   const posts: PostCardData[] = author.posts || []
   const avatar = imageSrc(author.avatar, 160) || author.avatarUrl
+  const crumbs = [
+    { name: 'Home', path: '/' },
+    { name: 'Blog', path: '/blogs-and-projects/' },
+    { name: author.name, path: '/author/' + slug + '/' },
+  ]
 
   return (
     <Container className="py-10">
-      <Breadcrumbs
-        items={[
-          { name: 'Home', path: '/' },
-          { name: 'Blog', path: '/blogs-and-projects/' },
-          { name: author.name, path: '/author/' + slug + '/' },
-        ]}
-      />
+      <JsonLd data={graph(organizationSchema(), websiteSchema(), breadcrumbSchema(crumbs))} />
+
+      <Breadcrumbs items={crumbs} />
 
       <header className="flex flex-col items-center gap-4 border-b border-white/20 pb-8 text-center sm:flex-row sm:text-left">
         {avatar ? (

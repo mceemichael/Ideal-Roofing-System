@@ -5,11 +5,9 @@ import { GoogleTagManager } from '@next/third-parties/google'
 import './globals.css'
 import { site } from '@/lib/site'
 import { DEFAULT_ROBOTS, absoluteUrl } from '@/lib/seo'
-import { graph, organizationSchema, websiteSchema } from '@/lib/schema'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import WhatsAppFloat from '@/components/WhatsAppFloat'
-import JsonLd from '@/components/JsonLd'
 import { sanityFetch } from '../../../sanity/client'
 import { siteSettingsQuery } from '../../../sanity/queries'
 
@@ -85,7 +83,15 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
-        <JsonLd data={graph(organizationSchema(), websiteSchema())} />
+        {/* No site-wide Organization/Website JSON-LD here: every route under
+            (site) builds its own single connected @graph (organization +
+            website + whatever's page-specific) so there's exactly one
+            <script type="application/ld+json"> per page, not two. Emitting
+            it here too used to duplicate the Organization node — including
+            its aggregateRating — on every route that also builds its own,
+            which is what Bing's "multiple aggregate ratings" warning was
+            catching. See author/[slug] and blogs-and-projects/page/[page]
+            for the two routes that build only the site-wide nodes. */}
 
         {/* Warm up the connections third-party scripts will need anyway. */}
         <link rel="preconnect" href="https://cdn.sanity.io" />
