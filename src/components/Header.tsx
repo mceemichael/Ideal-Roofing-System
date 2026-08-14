@@ -194,18 +194,36 @@ export function Header({
               <Link href="/">IDEAL ROOFING SYSTEM</Link>
             </h1>
             <p className="text-xs text-white/85 sm:text-sm">{site.tagline}</p>
+
+            {/* Star rating moved here, left-aligned under the name/tagline
+                instead of pinned to the far right — plus the address and
+                phone number, so NAP appears on the page itself on every
+                page, not just in the footer and structured data. */}
+            <div className="mt-2">
+              <StarRating
+                rating={reviewRating}
+                count={reviewCount}
+                href="https://www.google.com/search?q=Ideal+Roofing+System"
+              />
+            </div>
+
+            <p className="mt-2 text-xs text-white/80 sm:text-sm">
+              {site.business.streetAddress}, {site.business.addressLocality},{' '}
+              {site.business.addressRegion} {site.business.postalCode}
+              <br />
+              <a
+                href={'tel:' + site.business.telephone}
+                className="font-semibold text-white transition-opacity hover:opacity-80"
+              >
+                {site.business.telephoneDisplay}
+              </a>
+            </p>
           </div>
 
           {/* Search — present on every page of the live WordPress site */}
           <div className="w-full max-w-sm">
             <SearchBox compact />
           </div>
-
-          <StarRating
-            rating={reviewRating}
-            count={reviewCount}
-            href="https://www.google.com/search?q=Ideal+Roofing+System"
-          />
         </Container>
       </div>
 
