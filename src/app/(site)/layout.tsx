@@ -15,11 +15,13 @@ import { siteSettingsQuery } from '../../../sanity/queries'
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || site.url),
-  title: {
-    default: site.title,
-    // Matches the Rank Math title pattern currently in use.
-    template: '%s | ' + site.name,
-  },
+  // Plain string, no title.template: the live WordPress site never appended
+  // " | Ideal Roofing System" to individual post/page titles, only to
+  // tag/category/author archive titles — those three build the suffix
+  // themselves. A plain string here still applies as the homepage's title
+  // (it sets its own via buildMetadata) and as the default for any route
+  // that doesn't provide one.
+  title: site.title,
   description: site.description,
   applicationName: site.name,
   robots: DEFAULT_ROBOTS,

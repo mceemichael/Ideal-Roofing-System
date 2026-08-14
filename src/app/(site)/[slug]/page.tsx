@@ -159,7 +159,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return buildMetadata({
     path,
-    title: doc.title,
+    // The layout applies no title suffix (matches live WordPress posts/pages);
+    // category archive titles build their own, matching live WordPress.
+    title: doc.title + ' | ' + site.name,
     description: doc.description,
     seo: doc.seo,
   })

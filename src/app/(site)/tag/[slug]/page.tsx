@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { sanityFetch } from '../../../../../sanity/client'
 import { tagBySlugQuery, allTagSlugsQuery } from '../../../../../sanity/queries'
 import { buildMetadata } from '@/lib/seo'
+import { site } from '@/lib/site'
 import { breadcrumbSchema, graph, organizationSchema, websiteSchema } from '@/lib/schema'
 import Container from '@/components/Container'
 import PageHeader from '@/components/PageHeader'
@@ -33,7 +34,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return buildMetadata({
     path: '/tag/' + slug + '/',
-    title: tag.title,
+    // The layout applies no title suffix (matches live WordPress posts/pages);
+    // archive titles build their own, matching live WordPress archive titles.
+    title: tag.title + ' | ' + site.name,
     description:
       tag.description ||
       postCount + ' ' + articleWord + ' tagged ' + tag.title +

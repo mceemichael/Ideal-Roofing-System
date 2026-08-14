@@ -5,6 +5,7 @@ import { sanityFetch } from '../../../../../sanity/client'
 import { authorBySlugQuery, allAuthorSlugsQuery } from '../../../../../sanity/queries'
 import { imageSrc } from '../../../../../sanity/image'
 import { buildMetadata } from '@/lib/seo'
+import { site } from '@/lib/site'
 import Container from '@/components/Container'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import PostCard, { type PostCardData } from '@/components/PostCard'
@@ -34,7 +35,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return buildMetadata({
     path: '/author/' + slug + '/',
-    title: 'Posts by ' + author.name,
+    // The layout applies no title suffix (matches live WordPress posts/pages);
+    // archive titles build their own, matching live WordPress archive titles.
+    title: 'Posts by ' + author.name + ' | ' + site.name,
     description:
       author.bio ||
       postCount + ' roofing ' + articleWord + ' by ' + author.name +
