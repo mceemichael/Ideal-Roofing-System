@@ -206,11 +206,11 @@ export function Header({
             </div>
           </div>
 
-          {/* Star rating, left-aligned, plus address and phone beneath it —
-              a second row under the name+search row (not inside it), so NAP
-              appears on the page itself on every page without burying the
-              search box under it. */}
-          <div className="mt-3 flex flex-col items-center gap-2 text-center lg:items-start lg:text-left">
+          {/* Star rating, left-aligned (mobile and desktop), plus address
+              and phone beneath it — a second row under the name+search row
+              (not inside it), so NAP appears on the page itself on every
+              page without burying the search box under it. */}
+          <div className="mt-3 flex flex-col items-start gap-2 text-left">
             <StarRating
               rating={reviewRating}
               count={reviewCount}
