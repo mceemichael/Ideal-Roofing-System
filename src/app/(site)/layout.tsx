@@ -37,8 +37,13 @@ export const metadata: Metadata = {
     site: site.social.twitterHandle,
     creator: site.social.twitterHandle,
   },
+  // A second rel="icon" pointing at the SVG logo used to sit alongside this.
+  // Modern browsers render it fine, but stricter favicon fetchers (Bing's
+  // SERP thumbnail among them) don't reliably rasterize SVG favicons and can
+  // end up showing nothing rather than falling back to the .ico. One
+  // unambiguous icon avoids that.
   icons: {
-    icon: [{ url: '/favicon.ico' }, { url: site.logo, type: 'image/svg+xml' }],
+    icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
   },
   // These prove domain ownership to Google, Bing, Facebook and Pinterest.
