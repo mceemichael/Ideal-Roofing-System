@@ -1,91 +1,60 @@
-import { defineArrayMember, defineField, defineType } from 'sanity'
+import { defineField, defineType } from 'sanity'
+import { portableBodyMembers } from './portableBody'
 
 export default defineType({
   name: 'page',
   title: 'Page',
   type: 'document',
   groups: [
-    { name: 'content', title: 'Content', default: true },
+    { name: 'content', title: 'Write', default: true },
     { name: 'seo', title: 'SEO' },
+    { name: 'publishing', title: 'Publishing' },
   ],
+  initialValue: () => ({
+    publishedAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    seo: { noIndex: false },
+  }),
   fields: [
     defineField({
       name: 'title',
+      title: 'Headline',
       type: 'string',
       group: 'content',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'slug',
+      title: 'Web address',
       type: 'slug',
       group: 'content',
       options: { source: 'title', maxLength: 200 },
       validation: (Rule) => Rule.required(),
-      description: 'THE URL. See the warning on Post.slug - it applies equally here.',
+      readOnly: ({ document }) => Boolean((document as { legacyId?: number } | undefined)?.legacyId),
+      description:
+        'Click Generate after you type the headline. Locked on imported pages so the Google URL does not change.',
     }),
     defineField({
       name: 'heroImage',
-      title: 'Hero image',
+      title: 'Top photo',
       type: 'legacyImage',
       group: 'content',
     }),
     defineField({
       name: 'body',
-      title: 'Body',
+      title: 'Page content',
       type: 'array',
       group: 'content',
-      of: [
-        defineArrayMember({
-          type: 'block',
-          styles: [
-            { title: 'Normal', value: 'normal' },
-            { title: 'H2', value: 'h2' },
-            { title: 'H3', value: 'h3' },
-            { title: 'H4', value: 'h4' },
-            { title: 'Quote', value: 'blockquote' },
-          ],
-          marks: {
-            annotations: [
-              {
-                name: 'link',
-                type: 'object',
-                title: 'Link',
-                fields: [
-                  { name: 'href', type: 'url', title: 'URL',
-                    validation: (Rule: any) =>
-                      Rule.uri({ allowRelative: true, scheme: ['http', 'https', 'mailto', 'tel'] }) },
-                  { name: 'newTab', type: 'boolean', title: 'Open in new tab' },
-                ],
-              },
-            ],
-          },
-        }),
-        defineArrayMember({ type: 'legacyImage' }),
-        defineArrayMember({ type: 'priceTable' }),
-        defineArrayMember({ type: 'youtube' }),
-        defineArrayMember({ type: 'callout' }),
-        defineArrayMember({ type: 'toolEmbed' }),
-        defineArrayMember({ type: 'imageCarousel' }),
-        defineArrayMember({ type: 'htmlEmbed' }),
-      ],
+      of: portableBodyMembers,
     }),
-    defineField({ name: 'publishedAt', type: 'datetime', group: 'content' }),
-    defineField({ name: 'updatedAt', type: 'datetime', group: 'content' }),
-    defineField({
-      name: 'legacyId',
-      title: 'WordPress page ID',
-      type: 'number',
-      readOnly: true,
-      group: 'content',
-    }),
-    defineField({ name: 'seo', type: 'seo', group: 'seo' }),
+    defineField({ name: 'seo', title: 'Search listing', type: 'seo', group: 'seo' }),
     defineField({
       name: 'faq',
-      title: 'FAQ',
+      title: 'FAQ for Google',
       type: 'array',
       group: 'seo',
       description:
-        'Optional. Emits FAQPage structured data for rich results and AI answer engines. Should mirror a visible Q&A section in the body, not stand alone — Google expects the markup to match what a reader actually sees on the page.',
+        'Optional. Also add the same questions as headings in the page content.',
       of: [
         {
           type: 'object',
@@ -99,6 +68,27 @@ export default defineType({
           },
         },
       ],
+    }),
+    defineField({
+      name: 'publishedAt',
+      title: 'First published',
+      type: 'datetime',
+      group: 'publishing',
+    }),
+    defineField({
+      name: 'updatedAt',
+      title: 'Last updated',
+      type: 'datetime',
+      group: 'publishing',
+      description: 'Set automatically when you click Publish.',
+    }),
+    defineField({
+      name: 'legacyId',
+      title: 'WordPress page ID',
+      type: 'number',
+      readOnly: true,
+      group: 'publishing',
+      hidden: ({ document }) => !document?.legacyId,
     }),
   ],
   preview: { select: { title: 'title', subtitle: 'slug.current' } },

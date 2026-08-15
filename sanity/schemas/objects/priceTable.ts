@@ -19,8 +19,7 @@ export default defineType({
       name: 'theme',
       title: 'Colour theme',
       type: 'string',
-      description:
-        'Live styles its price tables inconsistently per post — this matches whichever one the source page actually used, rather than forcing every table to look identical.',
+      description: 'Use Forest green on stone-coated pricelists. Everyone else can leave Brand blue.',
       options: {
         list: [
           { title: 'Brand blue (default)', value: 'brand' },

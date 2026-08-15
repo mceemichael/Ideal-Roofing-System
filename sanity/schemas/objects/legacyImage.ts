@@ -25,18 +25,18 @@ export default defineType({
       name: 'legacyUrl',
       title: 'Original WordPress URL',
       type: 'string',
-      description:
-        'Set by the migration script. Used when the asset has not been uploaded to Sanity yet. Do not edit by hand.',
+      description: 'Imported. Leave this alone.',
       readOnly: true,
+      hidden: ({ parent }) => !parent?.legacyUrl,
     }),
     defineField({
       name: 'alt',
       title: 'Alt text',
       type: 'string',
       description:
-        'Describes the image for screen readers and Google Images. Genuinely worth filling in - your images rank.',
+        'Describe the photo in a few words (e.g. “Red longspan aluminium roof on a bungalow in Lagos”). Helps Google Images.',
       validation: (Rule) =>
-        Rule.warning('Alt text helps accessibility and image search rankings.'),
+        Rule.warning('Add a short description so this photo can rank in Google Images.'),
     }),
     defineField({ name: 'caption', title: 'Caption', type: 'string' }),
     defineField({ name: 'width', type: 'number', hidden: true }),

@@ -557,7 +557,19 @@ Code, not Studio. Four money slugs live in `MONEY_PAGE_SLUGS` (`src/lib/site.ts`
 
 `npm run typecheck` and `npm run build` (141/141) passed locally. Built HTML for the four money pages has the article title as H1 and Offer ItemLists of 17 / 17 / 13 offers (aluminium / stone / PVC). Alu-zinc offers come from the current Sanity table (bundle ₦60,000 / ~₦1,666 per metre). Vercel is now connected to GitHub, so this ships on push to `main`.
 
-## 20. If you're the next agent picking this up
+## 20. Studio made usable for writing posts and SEO (2026-08-15)
+
+Michael is not a developer. The Studio sidebar, field labels and insert menu were still written for the migration. Changes:
+
+- Sidebar is now **Blog posts → Pages → Comments (waiting / approved) → categories/tags/authors → Site settings**. Vision is hidden.
+- New posts open with today's date, last-updated, SEO noindex off, and author = Michael Chibuzo. Publish writes `updatedAt` so the sitemap stays honest.
+- Imported WordPress slugs are locked. New posts can still Generate from the headline.
+- Write / SEO / Publishing tabs. SEO leads with focus keyword, Google title, Google description; canonical and noindex are collapsed under Advanced.
+- Insert menu: Image, YouTube, Price table, Tip first; calculator and raw HTML last.
+- WordPress-only fields (legacy URL, WordPress ID) hide on new documents.
+- SEO Analysis tab tells you how to fix each red check.
+
+## 21. If you're the next agent picking this up
 
 Read `CLAUDE.md` first — it has the invariants. Then:
 

@@ -28,7 +28,7 @@ npm run verify -- <base-url>                       # every URL 200 or intended 3
 node scripts/verify-urls.mjs --diff <old> <new>    # catches lost content/tables
 ```
 
-`scripts/verify-urls.mjs` is the **live health gate**. It must stay green. GitHub auto-deploy is not connected; ship with `npx vercel --prod`.
+`scripts/verify-urls.mjs` is the **live health gate**. It must stay green. Vercel deploys from GitHub on push to `main`.
 
 ## Non-negotiable invariants
 
@@ -65,12 +65,12 @@ Breaking any of these costs real search traffic. Do not change them without sayi
 
 ## Current state
 
-Cut over 2026-08-04. Latest verified work: Offer schema + H1 swap + IndexNow on the four money pages (2026-08-15). Previous: Studio content pass (same day), Bing title/description fixes (2026-08-14). `npm run verify` 110/110, GATE: PASSED. GSC baseline for the 90-day watch: **6.9k clicks / 297k impressions**.
+Cut over 2026-08-04. Latest verified work: Studio UX pass for writing posts and SEO (2026-08-15). Previous: Offer schema + H1 + IndexNow live, Studio content pass, Bing title/description fixes. `npm run verify` 110/110, GATE: PASSED. GSC baseline for the 90-day watch: **6.9k clicks / 297k impressions**.
 
 **Still open:**
 
 1. Cancel WordPress hosting only after Michael is comfortable — media is already on Blob.
-2. Vercel ↔ GitHub auto-deploy never connected; deploys are `npx vercel --prod`.
+2. Vercel deploys from GitHub on push to `main`.
 3. T+60 (around early October 2026): consolidate thin tag archives — its own project, not mixed into other work.
 4. Homepage staff testimonials ("People Say The Nicest Things") were found on live WordPress and never rebuilt. Confirm with Michael before building.
 5. Duplicate `privacy-policy` / `about-us` post+page slugs still exist; catch-all is post-first.

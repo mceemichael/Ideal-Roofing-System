@@ -23,8 +23,7 @@ export default defineType({
       title: 'Approved',
       type: 'boolean',
       initialValue: false,
-      description:
-        'Only approved comments appear on the site. New submissions arrive unapproved — nothing is published until you say so.',
+      description: 'Turn this on to show the comment on the website. New comments start off.',
     }),
     defineField({
       name: 'name',

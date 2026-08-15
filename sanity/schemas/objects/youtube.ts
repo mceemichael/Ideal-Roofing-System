@@ -15,14 +15,14 @@ export default defineType({
       name: 'title',
       title: 'Video title',
       type: 'string',
-      description: 'Used for the iframe title and VideoObject structured data.',
+      description: 'A short name for the video. Shown to screen readers and Google.',
     }),
     defineField({
       name: 'description',
       title: 'Video description',
       type: 'text',
       rows: 2,
-      description: 'Feeds VideoObject schema. Your video sitemap uses this.',
+      description: 'Optional. One sentence about what the video shows.',
     }),
   ],
   preview: {

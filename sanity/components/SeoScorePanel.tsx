@@ -11,6 +11,19 @@ import { computeSeoScore, scoreLabel, scoreTone } from '../lib/seoScore'
  * view, not something reconstructed by hand, so the score updates as you
  * type with no save needed. See UserViewComponent in `sanity/structure.d.ts`.
  */
+const HINTS: Record<string, string> = {
+  titleLength: 'Open the SEO tab and edit Google title until the bar is green.',
+  descriptionLength: 'Open the SEO tab and write a Google description of 120–160 characters.',
+  hasFocusKeyword: 'On the SEO tab, type the phrase people search for.',
+  keywordInTitle: 'Put that same phrase in the Google title.',
+  keywordInDescription: 'Mention that phrase in the Google description.',
+  keywordInSlug: 'On a new post, click Generate on Web address after the headline includes the phrase. Do not change old addresses.',
+  keywordInIntro: 'Use the phrase in the first paragraph of the article.',
+  keywordInHeading: 'Use the phrase in an H2 or H3 heading.',
+  contentLength: 'Keep writing — aim for at least 300 words, 600 is better.',
+  imageAlt: 'Add a photo with Alt text filled in (the short description under the image).',
+}
+
 export function SeoScorePanel(props: {
   document: { displayed: Record<string, unknown> }
 }) {
@@ -40,7 +53,7 @@ export function SeoScorePanel(props: {
         <Card padding={4} radius={3} shadow={1}>
           <Stack space={3}>
             <Text size={1} weight="semibold">
-              Checklist
+              Checklist — fix the red ones on the Write and SEO tabs
             </Text>
             {result.checks.map((check) => (
               <Flex key={check.id} align="flex-start" gap={3}>
@@ -60,6 +73,11 @@ export function SeoScorePanel(props: {
                   {check.detail ? (
                     <Text size={1} muted>
                       {check.detail}
+                    </Text>
+                  ) : null}
+                  {!check.passed && HINTS[check.id] ? (
+                    <Text size={1} muted>
+                      {HINTS[check.id]}
                     </Text>
                   ) : null}
                 </Stack>

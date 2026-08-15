@@ -13,54 +13,64 @@ export default defineType({
   name: 'seo',
   title: 'SEO',
   type: 'object',
-  options: { collapsible: true, collapsed: false },
+  options: { collapsible: false },
+  fieldsets: [
+    {
+      name: 'advanced',
+      title: 'Advanced — leave these alone unless you are sure',
+      options: { collapsible: true, collapsed: true },
+    },
+  ],
   fields: [
-    defineField({
-      name: 'title',
-      title: 'Meta title',
-      type: 'string',
-      description:
-        'Overrides the page title in search results. Imported from Rank Math. Aim for under 60 characters.',
-      components: { input: SeoTitleInput },
-      validation: (Rule) =>
-        Rule.max(70).warning('Titles over ~70 characters get truncated in Google.'),
-    }),
-    defineField({
-      name: 'description',
-      title: 'Meta description',
-      type: 'text',
-      rows: 3,
-      description: 'Imported from Rank Math. Aim for 140-160 characters.',
-      components: { input: SeoDescriptionInput },
-      validation: (Rule) =>
-        Rule.max(200).warning('Descriptions over ~160 characters get truncated.'),
-    }),
     defineField({
       name: 'focusKeyword',
       title: 'Focus keyword',
       type: 'string',
-      description: 'Carried over from Rank Math for your reference. Not output in HTML.',
+      description:
+        'The phrase people type into Google, e.g. “price of aluminium roofing sheets in Lagos”. The SEO Analysis tab checks that this appears in the title, description, address and first paragraph.',
+    }),
+    defineField({
+      name: 'title',
+      title: 'Google title',
+      type: 'string',
+      description:
+        'What Google shows as the blue link. 30–60 characters. If empty, the headline is used instead.',
+      components: { input: SeoTitleInput },
+      validation: (Rule) =>
+        Rule.max(70).warning('Google cuts titles after about 60–70 characters.'),
+    }),
+    defineField({
+      name: 'description',
+      title: 'Google description',
+      type: 'text',
+      rows: 3,
+      description:
+        'The grey text under the link. 120–160 characters. Mention the focus keyword and a price or benefit.',
+      components: { input: SeoDescriptionInput },
+      validation: (Rule) =>
+        Rule.max(200).warning('Google cuts descriptions after about 160 characters.'),
+    }),
+    defineField({
+      name: 'ogImage',
+      title: 'Photo for WhatsApp / Facebook',
+      type: 'legacyImage',
+      description: 'If empty, the main photo is used.',
     }),
     defineField({
       name: 'canonicalUrl',
       title: 'Canonical URL override',
       type: 'url',
-      description:
-        'Leave empty in almost all cases. Only set this if this page is a deliberate duplicate of another URL.',
+      fieldset: 'advanced',
+      description: 'Leave empty. Only for a deliberate duplicate of another page.',
     }),
     defineField({
       name: 'noIndex',
-      title: 'Hide from search engines',
+      title: 'Hide this page from Google',
       type: 'boolean',
       initialValue: false,
+      fieldset: 'advanced',
       description:
-        'Emits noindex. Use sparingly - a wrongly-set noindex is the single fastest way to lose a page from Google.',
-    }),
-    defineField({
-      name: 'ogImage',
-      title: 'Social share image',
-      type: 'legacyImage',
-      description: 'Falls back to the featured image, then the site default.',
+        'Leave off. Turning this on removes the page from Google — the fastest way to lose a ranking.',
     }),
   ],
 })

@@ -98,7 +98,7 @@ export function SeoOverviewTool() {
               SEO Overview
             </Text>
             <Text size={1} muted>
-              {rows.length} pages · average score {average}%
+              {rows.length} pages · average score {average}%. Click a title to edit it.
             </Text>
           </Stack>
           <Select
