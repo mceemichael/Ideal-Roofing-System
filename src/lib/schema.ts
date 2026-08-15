@@ -181,6 +181,115 @@ export function faqSchema(faqs: Array<{ question: string; answer: string }>) {
   }
 }
 
+/**
+ * Pull ₦ / N-prefixed amounts out of a priceTable cell. Bare numbers
+ * (sheet counts, gauges like 0.40mm) are ignored so we never invent a price.
+ */
+export function parseNairaPrice(cell: string): number | null {
+  if (!cell) return null
+  const compact = cell.replace(/,/g, '').replace(/\s/g, '')
+  const match = compact.match(/[₦N](\d+(?:\.\d+)?)/i)
+  if (!match) return null
+  const value = Number(match[1])
+  return Number.isFinite(value) && value > 0 ? value : null
+}
+
+function lastDayOfUtcMonth(iso?: string | null): string {
+  const d = iso ? new Date(iso) : new Date()
+  const safe = Number.isNaN(d.getTime()) ? new Date() : d
+  const end = new Date(Date.UTC(safe.getUTCFullYear(), safe.getUTCMonth() + 1, 0))
+  return end.toISOString().slice(0, 10)
+}
+
+function offerName(rowLabel: string, colHeader: string): string {
+  const header = (colHeader || '').replace(/\(.*?\)/g, '').trim()
+  const label = (rowLabel || '').trim()
+  if (!header || /^(design type|product|item|gauge|thickness|gauge \/ thickness)$/i.test(header)) {
+    return label
+  }
+  if (!label) return header
+  return label + ' — ' + header
+}
+
+export type ParsedOffer = { name: string; price: number }
+
+/** Offers that actually appear in this page's price tables. Nothing invented. */
+export function offersFromBody(body: unknown): ParsedOffer[] {
+  if (!Array.isArray(body)) return []
+  const offers: ParsedOffer[] = []
+  const seen = new Set<string>()
+
+  for (const raw of body) {
+    const block = raw as {
+      _type?: string
+      headers?: string[]
+      rows?: Array<{ cells?: string[] }>
+    }
+    if (!block || block._type !== 'priceTable') continue
+    const headers: string[] = Array.isArray(block.headers) ? block.headers : []
+    const rows: Array<{ cells?: string[] }> = Array.isArray(block.rows) ? block.rows : []
+
+    for (const row of rows) {
+      const cells = row?.cells || []
+      const rowLabel = String(cells[0] || '').trim()
+      for (let i = 0; i < cells.length; i++) {
+        const price = parseNairaPrice(String(cells[i] || ''))
+        if (price == null) continue
+        const header = String(headers[i] || '')
+        const name = offerName(rowLabel, i === 0 ? '' : header)
+        if (!name) continue
+        const key = name + ':' + price
+        if (seen.has(key)) continue
+        seen.add(key)
+        offers.push({ name, price })
+      }
+    }
+  }
+
+  return offers
+}
+
+/**
+ * ItemList of Offer nodes for a pricelist page. Seller points at the
+ * existing Organization @id so this stays one connected graph, not an island.
+ * Gated by the caller to MONEY_PAGE_SLUGS — a blog table must not become
+ * a product listing.
+ */
+export function offerListSchema(post: {
+  slug: string
+  title: string
+  updatedAt?: string | null
+  body?: unknown
+}) {
+  const offers = offersFromBody(post.body)
+  if (!offers.length) return null
+
+  const url = absoluteUrl('/' + post.slug + '/')
+  const validThrough = lastDayOfUtcMonth(post.updatedAt)
+
+  return {
+    '@type': 'ItemList',
+    '@id': url + '#offers',
+    name: post.title,
+    numberOfItems: offers.length,
+    itemListElement: offers.map((offer, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Offer',
+        '@id': url + '#offer-' + (i + 1),
+        name: offer.name,
+        price: offer.price,
+        priceCurrency: 'NGN',
+        priceValidUntil: validThrough,
+        availability: 'https://schema.org/InStock',
+        url,
+        seller: { '@id': ORG_ID },
+      },
+    })),
+  }
+}
+
 /** Wrap any number of schema nodes into a single connected @graph. */
 export function graph(...nodes: unknown[]) {
   return {

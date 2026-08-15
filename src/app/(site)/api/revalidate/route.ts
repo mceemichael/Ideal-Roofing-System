@@ -1,5 +1,6 @@
 import { revalidateTag, revalidatePath } from 'next/cache'
 import { type NextRequest, NextResponse } from 'next/server'
+import { submitIndexNow } from '@/lib/indexnow'
 
 /**
  * Sanity webhook target. Hitting publish in the Studio makes the affected
@@ -76,5 +77,19 @@ export async function POST(req: NextRequest) {
     revalidated.push('layout')
   }
 
-  return NextResponse.json({ revalidated, now: Date.now() })
+  const indexNowPaths: string[] = []
+  if (slug) {
+    if (_type === 'tag') indexNowPaths.push('/tag/' + slug + '/')
+    else if (_type === 'author') indexNowPaths.push('/author/' + slug + '/')
+    else if (_type === 'post' || _type === 'page' || _type === 'category') {
+      indexNowPaths.push('/' + slug + '/')
+    }
+  }
+  if (_type === 'post') {
+    indexNowPaths.push('/', '/blogs-and-projects/')
+  }
+
+  const indexNow = await submitIndexNow(indexNowPaths)
+
+  return NextResponse.json({ revalidated, indexNow, now: Date.now() })
 }

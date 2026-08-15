@@ -2,7 +2,7 @@
 
 Written to transfer full context to whoever (or whatever) picks this up next. `CLAUDE.md` holds the rules that matter every session; this file holds the *reasoning*, which you only need when a decision looks odd.
 
-**Status: pre-cutover.** WordPress is live and serving real traffic. Nothing here is public. No DNS has been touched.
+**Status: LIVE since 2026-08-04.** DNS is on Cloudflare (grey-cloud / DNS-only) pointing at Vercel. `https://idealroofingsystem.com` is this Next.js app; WordPress is no longer serving public traffic. Uploads live in Vercel Blob (`MEDIA_ORIGIN` is set), so WordPress hosting can be cancelled when Michael is ready. Latest verified work: Bing title/description fixes (2026-08-14); `npm run verify` 110/110, GATE: PASSED. GSC baseline to watch for 90 days: 6.9k clicks / 297k impressions.
 
 ---
 
@@ -527,7 +527,37 @@ Deployed via `vercel --prod`, confirmed live: `npm run verify` 110/110, and all 
 
 **Both fixes are now live; what's not yet resolved is Bing's own recrawl timing** — clearing the "Recommendations" list in Bing Webmaster Tools depends on Bing revisiting these URLs, which isn't something either side can push faster. Worth a glance next time Michael logs in, but not a blocker on anything.
 
-## 18. If you're the next agent picking this up
+## 18. Studio content pass on the pricelist pages (2026-08-15)
+
+Content-only. No URL, schema-code, or design changes. Table prices were treated as the source of truth; contradictory captions/body/excerpts were rewritten to match.
+
+Patched published documents only (`!(_id in path("drafts.**"))`), confirmed no drafts existed before or after:
+
+- `post-59425d795a1e70b5a5067960` `/price-of-aluminium-roofing-sheets-in-2026/` — intro now ₦5,600–₦15,800 (was N5300), Gauge/Metrocopo spelling, Bozac-vs-Market clarified, empty "Client Feedback" heading removed, 4 FAQs + `faq` field, `updatedAt` 2026-08-15
+- `post-59eb11600e00ed4328f0a521` `/price-of-stone-coated-gerard-in-lagos-2025/` — captions and body now match the table (Roman ₦5,200/₦5,800 not N6400; flatsheet ₦4,700/₦5,400 not N4800/N5600-per-piece), empty "Table of Contents" removed, 4 FAQs, slug unchanged
+- `post-110b8d1136f31de42fb5413a` `/price-of-alu-zinc-in-lagos/` — title/seo "August 2026" (was March 2025), one price table (₦60,000 bundle / ~₦1,666 per metre), 3 FAQs, slug unchanged
+- `post-24f23134b878fb87f840fd0e` `/aluminium-roofing-sheets-types-grades-price/` — three May 2026 tables removed; page now points at the aluminium pricelist
+- `category-c8f15d234a5ce2cb9f036a36` `/aluminium-pricelist/` — description no longer carries the stale N5700/N6200/N7600 excerpt (that was the aluminium post's `excerpt`, also rewritten)
+
+Webhook `vercel-revalidate` returned 200 for each mutation. Verified on the live domain: bylines show Updated 15/08/2026, `FAQPage` JSON-LD is present on the three money pages, types/grades has zero price tables.
+
+`publishedAt` and slugs were not touched.
+
+## 19. Offer schema, H1 swap, IndexNow (2026-08-15)
+
+Code, not Studio. Four money slugs live in `MONEY_PAGE_SLUGS` (`src/lib/site.ts`):
+
+`price-of-aluminium-roofing-sheets-in-2026`, `price-of-stone-coated-gerard-in-lagos-2025`, `price-of-pvc-rain-gutter-water-collector`, `price-of-alu-zinc-in-lagos`.
+
+**Offer JSON-LD.** `offerListSchema()` walks that page's `priceTable` blocks, keeps only cells that parse as `₦`/`N` amounts (`parseNairaPrice` — gauges like `0.40mm` and counts like `15` are ignored), and emits one connected `ItemList` of `Offer` nodes (`priceCurrency: NGN`, `priceValidUntil` = last day of `updatedAt`'s month, `seller: { @id: organization }`). Wired into the existing `@graph` in `[slug]/page.tsx`. Not emitted on other posts, so a leftover blog table cannot become a product listing.
+
+**H1 swap.** On those four routes the article title is the `<h1>` and the header brand name is a `<p>` with the same classes — visually unchanged. Everywhere else the header brand name stays the site's single H1.
+
+**IndexNow.** `/api/revalidate` now pings `https://api.indexnow.org/indexnow` after a successful Sanity publish (content URL + home/blog index for posts). Failures are swallowed so a Bing outage cannot break revalidation. Uses the existing key file `public/abddba0e26de41cf843a84d559f0190d.txt` (added 2026-08-14). `INDEXNOW_KEY` env can override it if we rotate.
+
+`npm run typecheck` and `npm run build` (141/141) passed locally. Built HTML for the four money pages has the article title as H1 and Offer ItemLists of 17 / 17 / 13 offers (aluminium / stone / PVC). Alu-zinc offers come from the current Sanity table (bundle ₦60,000 / ~₦1,666 per metre). Vercel is now connected to GitHub, so this ships on push to `main`.
+
+## 20. If you're the next agent picking this up
 
 Read `CLAUDE.md` first — it has the invariants. Then:
 

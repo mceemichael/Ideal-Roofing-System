@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { mainNav, site } from '@/lib/site'
+import { usePathname } from 'next/navigation'
+import { mainNav, MONEY_PAGE_SLUGS, site, slugFromPathname } from '@/lib/site'
 import { cn } from '@/lib/cn'
 import { currentMonthYear } from '@/lib/format'
 import Container from './Container'
@@ -25,6 +26,9 @@ export function Header({
 }) {
   const [open, setOpen] = useState(false)
   const [subOpen, setSubOpen] = useState<string | null>(null)
+  const pathname = usePathname()
+  const brandIsH1 = !MONEY_PAGE_SLUGS.has(slugFromPathname(pathname || '/'))
+  const BrandTag = brandIsH1 ? 'h1' : 'p'
 
   return (
     <header className="sticky top-0 z-40 bg-secondary shadow-sm">
@@ -180,18 +184,13 @@ export function Header({
             {/* Left-aligned on mobile (self-start + text-left override the
                 parent's items-center/text-center), same on desktop. */}
             <div className="w-full self-start text-left lg:w-auto lg:shrink-0 lg:self-auto">
-              {/* The only H1 on the site — rendered once here in the shared
-                  header, so every page/post title below is an H2 instead.
-                  Deliberate choice per an explicit accessibility/SEO request,
-                  not the usual "article title is the H1" pattern. Sized to
-                  match live's own header text exactly (36px mobile / 40px
-                  desktop, confirmed via computed styles) — it was previously
-                  left at the old placeholder text-base/text-lg size, which
-                  is why it read as smaller than section headings lower on
-                  the page despite being the H1. */}
-              <h1 className="text-[28px] font-bold leading-tight tracking-wide sm:text-[36px] lg:text-[40px]">
+              {/* Default: the brand name is the site's only H1 (old Neve
+                  pattern). On the four money pricelist pages the article
+                  title is the H1 instead — this tag becomes a <p> with the
+                  same classes so the header looks unchanged. */}
+              <BrandTag className="text-[28px] font-bold leading-tight tracking-wide sm:text-[36px] lg:text-[40px]">
                 <Link href="/">IDEAL ROOFING SYSTEM</Link>
-              </h1>
+              </BrandTag>
               <p className="text-xs text-white/85 sm:text-sm">{site.tagline}</p>
             </div>
 

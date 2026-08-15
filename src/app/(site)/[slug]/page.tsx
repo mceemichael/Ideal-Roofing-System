@@ -16,13 +16,14 @@ import {
 } from '../../../../sanity/queries'
 import { imageSrc } from '../../../../sanity/image'
 
-import { NO_HERO_IMAGE_SLUGS, RESERVED_SLUGS, site } from '@/lib/site'
+import { MONEY_PAGE_SLUGS, NO_HERO_IMAGE_SLUGS, RESERVED_SLUGS, site } from '@/lib/site'
 import { buildMetadata, excerptFromBody } from '@/lib/seo'
 import {
   articleSchema,
   breadcrumbSchema,
   faqSchema,
   graph,
+  offerListSchema,
   organizationSchema,
   videoSchema,
   websiteSchema,
@@ -236,7 +237,15 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
                 uploadDate: post.publishedAt,
               })
             : null,
-          post.faq?.length ? faqSchema(post.faq) : null
+          post.faq?.length ? faqSchema(post.faq) : null,
+          MONEY_PAGE_SLUGS.has(slug)
+            ? offerListSchema({
+                slug,
+                title: post.title,
+                updatedAt: post.updatedAt,
+                body: post.body,
+              })
+            : null
         )}
       />
 
@@ -250,10 +259,17 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
             </p>
           ) : null}
 
-          {/* H2, not H1 — the site's single H1 lives in the header. */}
-          <h2 className="text-3xl font-bold leading-tight text-white sm:text-4xl">
-            {post.title}
-          </h2>
+          {/* Money pages: this title is the H1. Everywhere else the header
+              brand name is the H1 and this stays an H2. Same classes either way. */}
+          {MONEY_PAGE_SLUGS.has(slug) ? (
+            <h1 className="text-3xl font-bold leading-tight text-white sm:text-4xl">
+              {post.title}
+            </h1>
+          ) : (
+            <h2 className="text-3xl font-bold leading-tight text-white sm:text-4xl">
+              {post.title}
+            </h2>
+          )}
 
           <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-white/70">
             {post.author?.name ? (

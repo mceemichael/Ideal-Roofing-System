@@ -163,6 +163,23 @@ export const POSTS_PER_PAGE = 10
  * Routes that must never be resolved by the /[slug] catch-all, because a
  * dedicated route file owns them.
  */
+/**
+ * The four commercial pricelist posts. On these routes the article title is
+ * the page H1 (the query Google/Bing should associate with the URL) and the
+ * header brand name is a styled <p> so it looks identical. Everywhere else
+ * the header brand name stays the site's single H1, matching the old theme.
+ */
+export const MONEY_PAGE_SLUGS = new Set([
+  'price-of-aluminium-roofing-sheets-in-2026',
+  'price-of-stone-coated-gerard-in-lagos-2025',
+  'price-of-pvc-rain-gutter-water-collector',
+  'price-of-alu-zinc-in-lagos',
+])
+
+export function slugFromPathname(pathname: string): string {
+  return pathname.replace(/^\/+|\/+$/g, '').split('/')[0] || ''
+}
+
 export const RESERVED_SLUGS = new Set([
   'blogs-and-projects',
   'tag',
