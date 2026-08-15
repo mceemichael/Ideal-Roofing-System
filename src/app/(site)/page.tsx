@@ -100,12 +100,12 @@ const TEAM = [
     image: '/wp-content/uploads/2026/03/IMG-20260310-WA0012-1536x2048.jpg',
   },
   {
-    name: 'Chinaza Ezeh',
-    role: 'Social Media Manager',
+    name: 'Jennifer Ogbodo',
+    role: 'Customer Service',
     rating: 5,
     quote:
-      'Check us out on TikTok, Facebook, and YouTube… I post our best projects on Instagram and Pinterest. All @idealroofingsystem',
-    image: '/wp-content/uploads/2026/03/IMG-20220808-WA0025.jpg',
+      'I am here to welcome you and make sure your questions about our roofing products are answered quickly and clearly.',
+    image: '/team/jennifer-ogbodo.jpg',
   },
 ]
 
