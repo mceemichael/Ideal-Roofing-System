@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { mainNav, MONEY_PAGE_SLUGS, site, slugFromPathname } from '@/lib/site'
@@ -29,6 +29,18 @@ export function Header({
   const pathname = usePathname()
   const brandIsH1 = !MONEY_PAGE_SLUGS.has(slugFromPathname(pathname || '/'))
   const BrandTag = brandIsH1 ? 'h1' : 'p'
+
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [open])
+
+  useEffect(() => {
+    setOpen(false)
+    setSubOpen(null)
+  }, [pathname])
 
   return (
     <header className="bg-secondary shadow-sm lg:sticky lg:top-0 lg:z-40">
@@ -90,13 +102,18 @@ export function Header({
           </ul>
         </nav>
 
+        {/* Spacer so the logo row keeps its right-side gap; the real
+            control is position:fixed so it stays on screen while the
+            rest of the header scrolls away. */}
+        <div className="h-10 w-10 shrink-0 lg:hidden" aria-hidden="true" />
+
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls="mobile-nav"
           className={cn(
-            'rounded-md border-2 bg-white p-2 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-cta/60 lg:hidden',
+            'fixed right-3 top-3 z-50 rounded-md border-2 bg-white p-2 shadow-card outline-none transition-colors focus-visible:ring-2 focus-visible:ring-cta/60 lg:hidden',
             open ? 'border-emerald-400 text-emerald-500' : 'border-cta text-cta'
           )}
         >
@@ -107,18 +124,16 @@ export function Header({
         </button>
       </Container>
 
-      {/* Mobile nav — white panel with dark text, matching the live site's
-          mobile menu exactly (not the dark page canvas). */}
+      {/* Mobile nav — white overlay, not inside the scrolling header, so
+          opening the menu after scrolling still shows the links. */}
       <nav
         id="mobile-nav"
         aria-label="Mobile"
         className={cn(
-          // border-t only when open — a border on a max-h-0 box still
-          // renders as a 1px line even though the box has no visible
-          // height, which is exactly the stray line between the header
-          // and the page underneath it on every page in mobile view.
-          'overflow-hidden bg-white transition-[max-height] duration-300 lg:hidden',
-          open ? 'max-h-[32rem] border-t border-surface-border' : 'max-h-0 border-t-0'
+          'z-40 bg-white lg:hidden',
+          open
+            ? 'fixed inset-x-0 top-0 max-h-dvh overflow-y-auto border-b border-surface-border pt-16'
+            : 'hidden'
         )}
       >
         <Container className="py-2">
