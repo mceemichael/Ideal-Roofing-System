@@ -245,7 +245,7 @@ export default async function HomePage() {
                 href="/about-us/"
                 className="inline-block rounded-lg bg-brand px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-600"
               >
-                READ MORE
+                Read more about us
               </Link>
             </div>
           </div>
