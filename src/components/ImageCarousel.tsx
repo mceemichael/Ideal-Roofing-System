@@ -13,6 +13,18 @@ type Slide = {
   buttonLink?: string | null
 }
 
+const GENERIC_CTA = /^(click here|click this|here|order here|read more|learn more|more)$/i
+
+/** Visible label for the slide CTA. PageSpeed SEO scores the text on the
+ *  page, not aria-label — so "Click Here" still fails even with a good
+ *  accessible name. WhatsApp slides become "Chat on WhatsApp". */
+function slideButtonLabel(slide: Slide): string {
+  const raw = (slide.buttonText || '').trim()
+  if (raw && !GENERIC_CTA.test(raw)) return raw
+  if (/wa\.me|whatsapp/i.test(slide.buttonLink || '')) return 'Chat on WhatsApp'
+  return raw || 'Learn more'
+}
+
 /**
  * Live's Elementor "slides" promotional widget — product photo, optional
  * heading/description overlay, WhatsApp CTA. Self-built (no carousel
@@ -67,15 +79,9 @@ export function ImageCarousel({ slides }: { slides: Slide[] }) {
               href={slide.buttonLink}
               target="_blank"
               rel="noopener noreferrer"
-              // Migrated slide copy is a generic "Click Here" on every slide —
-              // fine visually, but a screen reader/SEO crawler needs an
-              // accessible name that says what it's actually linking to.
-              aria-label={[slide.buttonText, slide.description || slide.alt]
-                .filter(Boolean)
-                .join(' — ')}
               className="mt-1 inline-block w-fit rounded-lg border border-white px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
             >
-              {slide.buttonText}
+              {slideButtonLabel(slide)}
             </a>
           ) : null}
         </div>

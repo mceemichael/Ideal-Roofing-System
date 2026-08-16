@@ -581,6 +581,8 @@ Fixes: comment dates to `text-white/85`, 24px tap targets on those two links, an
 
 Local Lighthouse accessibility after the build: **100** on all four money pages. `npm run build` 141/141.
 
+**SEO 92 leftover (same session):** PageSpeed flagged the carousel WhatsApp button whose visible text was still “Click Here”. `aria-label` does not count for that audit. Generic slide CTAs (“Click Here” / “Order Here”) now render as **Chat on WhatsApp**. Local `link-text` score is 1.
+
 ## 22. If you're the next agent picking this up
 
 Read `CLAUDE.md` first — it has the invariants. Then:
