@@ -65,14 +65,14 @@ Breaking any of these costs real search traffic. Do not change them without sayi
 
 ## Current state
 
-Cut over 2026-08-04. Latest verified work: Studio UX pass for writing posts and SEO (2026-08-15). Previous: Offer schema + H1 + IndexNow live, Studio content pass, Bing title/description fixes. `npm run verify` 110/110, GATE: PASSED. GSC baseline for the 90-day watch: **6.9k clicks / 297k impressions**.
+Cut over 2026-08-04. Latest verified work: money-page accessibility (comment contrast/tap targets + heading-order, 2026-08-16). Previous: aluminium PageSpeed pass, homepage contrast, Studio UX, Offer schema + H1 + IndexNow, Bing title/description fixes. `npm run verify` 110/110, GATE: PASSED. GSC baseline for the 90-day watch: **6.9k clicks / 297k impressions**.
 
 **Still open:**
 
 1. Cancel WordPress hosting only after Michael is comfortable — media is already on Blob.
 2. Vercel deploys from GitHub on push to `main`.
 3. T+60 (around early October 2026): consolidate thin tag archives — its own project, not mixed into other work.
-4. Homepage staff testimonials ("People Say The Nicest Things") were found on live WordPress and never rebuilt. Confirm with Michael before building.
+4. Homepage staff testimonials are live (Michael, Adeshina, Jennifer Ogbodo). Swap Jennifer’s title/quote if Michael sends exact wording.
 5. Duplicate `privacy-policy` / `about-us` post+page slugs still exist; catch-all is post-first.
 6. Bing Webmaster "Recommendations" list will clear only after Bing recrawls.
 

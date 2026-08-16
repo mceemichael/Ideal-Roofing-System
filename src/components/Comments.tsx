@@ -119,7 +119,7 @@ function Comment({ comment }: { comment: CommentData }) {
                 // passing ranking value to arbitrary commenter sites is how
                 // you attract more of it.
                 rel="nofollow noopener noreferrer ugc"
-                className="hover:underline"
+                className="inline-flex min-h-6 items-center hover:underline"
               >
                 {comment.name}
               </a>
@@ -127,8 +127,11 @@ function Comment({ comment }: { comment: CommentData }) {
               comment.name
             )}
           </p>
-          <p className="text-xs text-white/70">
-            <a href={'#' + anchor} className="hover:text-white">
+          <p className="text-xs text-white/85">
+            <a
+              href={'#' + anchor}
+              className="inline-flex min-h-6 items-center hover:text-white"
+            >
               <time dateTime={isoDate(comment.publishedAt)}>
                 {formatDate(comment.publishedAt)}
               </time>

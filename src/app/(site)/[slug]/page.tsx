@@ -326,7 +326,7 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
               className="h-auto w-full rounded-xl"
             />
             {post.featuredImage?.caption ? (
-              <figcaption className="mt-2 text-center text-sm text-white/70">
+              <figcaption className="mt-2 text-center text-sm text-white/85">
                 {post.featuredImage.caption}
               </figcaption>
             ) : null}
@@ -334,13 +334,16 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
         ) : null}
 
         <div className="mx-auto mt-8 max-w-prose">
-          <PortableBody value={post.body} />
+          <PortableBody
+            value={post.body}
+            fixHeadingOrder={MONEY_PAGE_SLUGS.has(slug)}
+          />
 
           <TrustindexReviews />
 
           {post.tags?.length ? (
             <div className="mt-10 border-t border-white/20 pt-6">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-white/70">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-white/85">
                 Tags
               </h2>
               <ul className="mt-3 flex flex-wrap gap-2">

@@ -132,7 +132,7 @@ const components: PortableTextComponents = {
             className="h-auto w-full rounded-lg"
           />
           {value.caption ? (
-            <figcaption className="mt-2 text-center text-sm text-white/70">
+            <figcaption className="mt-2 text-center text-sm text-white/85">
               {value.caption}
             </figcaption>
           ) : null}
@@ -243,7 +243,7 @@ const components: PortableTextComponents = {
           </div>
 
           {value.footnote && !forest ? (
-            <p className="mt-2 text-xs text-white/70">{value.footnote}</p>
+            <p className="mt-2 text-xs text-white/85">{value.footnote}</p>
           ) : null}
         </figure>
       )
@@ -263,7 +263,7 @@ const components: PortableTextComponents = {
             <YouTubeEmbed id={id} title={value.title} />
           </div>
           {value.title ? (
-            <figcaption className="mt-2 text-center text-sm text-white/70">
+            <figcaption className="mt-2 text-center text-sm text-white/85">
               {value.title}
             </figcaption>
           ) : null}
@@ -328,11 +328,44 @@ const components: PortableTextComponents = {
   hardBreak: () => <br />,
 }
 
-export function PortableBody({ value }: { value: any }) {
+const HEADING_RANK: Record<string, number> = { h2: 2, h3: 3, h4: 4 }
+
+function styleForRank(n: number): 'h2' | 'h3' | 'h4' {
+  if (n <= 2) return 'h2'
+  if (n === 3) return 'h3'
+  return 'h4'
+}
+
+/**
+ * Money pages render the article title as H1. Imported WordPress bodies
+ * still jump (H1 → H3, or H2 → H4). Walk the blocks and pull any skip
+ * back to the next legal level so the outline stays sequential.
+ */
+function normalizeHeadingOrder(value: any, floor: number): any {
+  if (!Array.isArray(value)) return value
+  let last = floor
+  return value.map((b) => {
+    if (b?._type !== 'block') return b
+    const rank = HEADING_RANK[b.style]
+    if (!rank) return b
+    const next = rank > last + 1 ? last + 1 : rank
+    last = next
+    return next === rank ? b : { ...b, style: styleForRank(next) }
+  })
+}
+
+export function PortableBody({
+  value,
+  fixHeadingOrder = false,
+}: {
+  value: any
+  fixHeadingOrder?: boolean
+}) {
   if (!value) return null
+  const blocks = fixHeadingOrder ? normalizeHeadingOrder(value, 1) : value
   return (
     <div className="portable-body">
-      <PortableText value={value} components={components} />
+      <PortableText value={blocks} components={components} />
     </div>
   )
 }

@@ -569,7 +569,19 @@ Michael is not a developer. The Studio sidebar, field labels and insert menu wer
 - WordPress-only fields (legacy URL, WordPress ID) hide on new documents.
 - SEO Analysis tab tells you how to fix each red check.
 
-## 21. If you're the next agent picking this up
+## 21. PageSpeed accessibility on the four money pages (2026-08-16)
+
+Follow-up to the aluminium-page pass (`f27bf15`). Live Lighthouse still failed on the other pricelist URLs:
+
+- Comment dates were `text-white/70` (12px, 4.03:1) on the comment card.
+- Commenter name / date permalinks were smaller than the 24×24 tap target.
+- Money-page title is now H1, but imported WordPress bodies still jumped (stone-coated H1→H3; alu-zinc H2→H4).
+
+Fixes: comment dates to `text-white/85`, 24px tap targets on those two links, and `PortableBody` `fixHeadingOrder` on `MONEY_PAGE_SLUGS` only — pulls any skipped heading back to the next legal level, no Sanity patch. Figcaptions / table footnotes / tags heading also moved to `/85`.
+
+Local Lighthouse accessibility after the build: **100** on all four money pages. `npm run build` 141/141.
+
+## 22. If you're the next agent picking this up
 
 Read `CLAUDE.md` first — it has the invariants. Then:
 
