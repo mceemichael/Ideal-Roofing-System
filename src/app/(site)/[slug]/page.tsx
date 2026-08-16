@@ -271,7 +271,8 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
             </h2>
           )}
 
-          <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-white/70">
+          {/* white/85, not /70: the date text alone was 4.03:1 on this background, fails WCAG AA */}
+          <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-white/85">
             {post.author?.name ? (
               <>
                 <span>

@@ -33,10 +33,17 @@ const config: Config = {
         // Elementor's own "secondary" global colour on the live site — used
         // on the header marquee. Distinct from `brand` (the theme-color).
         secondary: '#004aad',
-        // Elementor custom global colour (--e-global-color-9d31dbf on live) —
-        // the reddish accent used for the search button, "Read More" links,
-        // and similar CTAs.
-        cta: '#da0d0d',
+        cta: {
+          // Elementor custom global colour (--e-global-color-9d31dbf on
+          // live) — the reddish accent used for the search button, "Read
+          // More" links, and similar CTAs. Always on a white/light surface.
+          DEFAULT: '#da0d0d',
+          // Salmon variant for in-content links rendered directly on the
+          // dark blue canvas (PortableBody/.wp-legacy article text). The
+          // DEFAULT red is only 1.56:1 on secondary (#004aad) — fails WCAG
+          // AA. This lightened tone clears 4.5:1 while staying in-hue.
+          light: '#ffb0b0',
+        },
         ink: {
           DEFAULT: '#1a1a1a',
           muted: '#5b6472',

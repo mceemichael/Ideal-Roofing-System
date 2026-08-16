@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { imageSrc } from '../../sanity/image'
 
 type Slide = {
@@ -39,14 +40,12 @@ export function ImageCarousel({ slides }: { slides: Slide[] }) {
       aria-label={slide.alt || 'Image carousel'}
     >
       {src ? (
-        // Plain <img>, not next/image: the background fills the whole slide
-        // via object-cover and swaps every few seconds, which doesn't suit
-        // the optimizer's fixed-intrinsic-size model as well as a simple tag.
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={src}
           alt={slide.alt || ''}
-          className="absolute inset-0 h-full w-full object-cover"
+          fill
+          sizes="(max-width: 1140px) 100vw, 1140px"
+          className="object-cover"
         />
       ) : null}
       <div className="absolute inset-0 bg-black/30" />
@@ -68,6 +67,12 @@ export function ImageCarousel({ slides }: { slides: Slide[] }) {
               href={slide.buttonLink}
               target="_blank"
               rel="noopener noreferrer"
+              // Migrated slide copy is a generic "Click Here" on every slide —
+              // fine visually, but a screen reader/SEO crawler needs an
+              // accessible name that says what it's actually linking to.
+              aria-label={[slide.buttonText, slide.description || slide.alt]
+                .filter(Boolean)
+                .join(' — ')}
               className="mt-1 inline-block w-fit rounded-lg border border-white px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
             >
               {slide.buttonText}
@@ -98,7 +103,7 @@ export function ImageCarousel({ slides }: { slides: Slide[] }) {
               <path d="M7.3 4.3 13.6 10l-6.3 5.7-1.3-1.4L10.6 10 6 5.7l1.3-1.4Z" />
             </svg>
           </button>
-          <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
+          <div className="absolute bottom-1 left-1/2 flex -translate-x-1/2">
             {slides.map((_, i) => (
               <button
                 key={i}
@@ -106,11 +111,17 @@ export function ImageCarousel({ slides }: { slides: Slide[] }) {
                 aria-label={'Go to slide ' + (i + 1)}
                 aria-current={i === index}
                 onClick={() => setIndex(i)}
-                className={
-                  'h-2 w-2 rounded-full transition-colors ' +
-                  (i === index ? 'bg-white' : 'bg-white/40')
-                }
-              />
+                // 24x24 hit area (WCAG target size) around an 8px visual dot.
+                className="flex h-6 w-6 items-center justify-center"
+              >
+                <span
+                  aria-hidden="true"
+                  className={
+                    'h-2 w-2 rounded-full transition-colors ' +
+                    (i === index ? 'bg-white' : 'bg-white/40')
+                  }
+                />
+              </button>
             ))}
           </div>
         </>

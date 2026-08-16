@@ -7,6 +7,7 @@ import { cn } from '@/lib/cn'
 import RoofAreaCalculator from './RoofAreaCalculator'
 import LengthConverter from './LengthConverter'
 import ImageCarousel from './ImageCarousel'
+import YouTubeEmbed from './YouTubeEmbed'
 
 /**
  * Renders migrated WordPress content.
@@ -87,8 +88,10 @@ const components: PortableTextComponents = {
       const href: string = value?.href || '#'
       const isInternal = href.startsWith('/') || href.includes('idealroofingsystem.com')
 
-      // Red, no underline — matches live's own in-content link style.
-      const linkClass = 'font-medium text-cta no-underline transition-opacity hover:opacity-80'
+      // Salmon, no underline — matches live's own in-content link style, but
+      // lightened from the DEFAULT cta red (1.56:1 here, fails WCAG AA on
+      // the dark canvas) to cta-light (4.69:1).
+      const linkClass = 'font-medium text-cta-light no-underline transition-opacity hover:opacity-80'
 
       if (isInternal && href.startsWith('/')) {
         return (
@@ -181,7 +184,8 @@ const components: PortableTextComponents = {
               ) : null}
               {headers.length ? (
                 <thead>
-                  <tr className={cn('text-left text-white', forest ? 'bg-forest-light' : 'bg-brand-400')}>
+                  {/* bg-brand (500), not brand-400: white-on-400 is only 3.68:1, fails WCAG AA */}
+                  <tr className={cn('text-left text-white', forest ? 'bg-forest-light' : 'bg-brand')}>
                     {headers.map((h, i) => (
                       <th
                         key={i}
@@ -252,18 +256,11 @@ const components: PortableTextComponents = {
       return (
         <figure className="my-8">
           <div className="relative aspect-video overflow-hidden rounded-lg bg-black">
-            <iframe
-              // Privacy-enhanced domain: no cookie until the user hits play.
-              src={'https://www.youtube-nocookie.com/embed/' + id}
-              title={value.title || 'YouTube video'}
-              // Lazy so an embed below the fold does not hurt LCP. The
-              // WordPress version loaded these eagerly, which is a large part
-              // of why the pages with video were slow.
-              loading="lazy"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-              className="absolute inset-0 h-full w-full border-0"
-            />
+            {/* Click-to-load facade, not an eager iframe: a real embed pulls
+                in ~850 KiB of YouTube player JS whether or not the visitor
+                ever presses play, which was the single biggest chunk of
+                unused JavaScript on pages with video. */}
+            <YouTubeEmbed id={id} title={value.title} />
           </div>
           {value.title ? (
             <figcaption className="mt-2 text-center text-sm text-white/70">

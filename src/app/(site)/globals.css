@@ -54,8 +54,9 @@
   .wp-legacy table {
     @apply my-6 w-full border-collapse overflow-hidden rounded-lg border border-white/20 text-sm;
   }
+  /* bg-brand (500), not brand-400: white-on-400 is only 3.68:1, fails WCAG AA */
   .wp-legacy thead {
-    @apply bg-brand-400 text-white;
+    @apply bg-brand text-white;
   }
   .wp-legacy th {
     @apply px-4 py-3 text-left font-semibold;
@@ -84,8 +85,9 @@
   .wp-legacy h4 {
     @apply mt-5 mb-2 text-lg font-semibold;
   }
+  /* text-cta-light, not cta: DEFAULT red is 1.56:1 on this dark canvas, fails WCAG AA */
   .wp-legacy a {
-    @apply font-medium text-cta no-underline;
+    @apply font-medium text-cta-light no-underline;
   }
   .wp-legacy img {
     @apply my-6 h-auto max-w-full rounded-lg;
