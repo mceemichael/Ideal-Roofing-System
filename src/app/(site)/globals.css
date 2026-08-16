@@ -26,9 +26,15 @@
     color: #fff;
   }
 
-  /* Anything a heading anchor scrolls to must clear the sticky header. */
+  /* Desktop only: heading anchors must clear the sticky header.
+     On mobile the header scrolls away, so a small offset is enough. */
   :target {
-    scroll-margin-top: 8rem;
+    scroll-margin-top: 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    :target {
+      scroll-margin-top: 8rem;
+    }
   }
 
   ::selection {

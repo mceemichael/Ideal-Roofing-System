@@ -31,7 +31,7 @@ export function Header({
   const BrandTag = brandIsH1 ? 'h1' : 'p'
 
   return (
-    <header className="sticky top-0 z-40 bg-secondary shadow-sm">
+    <header className="bg-secondary shadow-sm lg:sticky lg:top-0 lg:z-40">
       {/* Logo + navigation */}
       <Container className="flex items-center justify-between gap-4 py-3">
         <Link href="/" className="flex shrink-0 items-center" aria-label="Ideal Roofing System home">
