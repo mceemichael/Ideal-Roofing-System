@@ -145,12 +145,12 @@ export function Footer({
         </div>
 
         {site.footerNote ? (
-          <p className="mt-8 text-center text-sm text-white/60">
+          <p className="mt-8 text-center text-sm text-white/85">
             {site.footerNote}
           </p>
         ) : null}
 
-        <p className="mt-3 text-center text-xs text-white/50">
+        <p className="mt-3 text-center text-xs text-white/80">
           © {year} {site.name}. All rights reserved.
         </p>
       </Container>

@@ -342,7 +342,7 @@ export default async function HomePage() {
           </ul>
           <Link
             href="/services/"
-            className="mt-5 inline-block rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent-600"
+            className="mt-5 inline-block rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-accent-600"
           >
             Know More
           </Link>

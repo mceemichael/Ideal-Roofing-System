@@ -66,7 +66,7 @@ export function PostCard({
           Read More »
         </Link>
 
-        <div className="mt-auto flex items-center gap-2 border-t border-surface-border pt-3 text-xs text-ink-light">
+        <div className="mt-auto flex items-center gap-2 border-t border-surface-border pt-3 text-xs text-ink-muted">
           {post.author?.name ? (
             <>
               {post.author.slug ? (
