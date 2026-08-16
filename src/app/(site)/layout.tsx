@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next'
-import Script from 'next/script'
 import { GoogleTagManager } from '@next/third-parties/google'
 
 import './globals.css'
@@ -120,22 +119,15 @@ export default async function RootLayout({
         <WhatsAppFloat />
 
         {/* GTM. Same container ID as WordPress, so every tag, trigger and
-            conversion you have configured keeps working untouched. */}
+            conversion you have configured keeps working untouched. GTM is
+            also what should load AdSense, using the real ca-pub- publisher
+            ID — not Site Kit's ca-host-pub- platform account. Loading
+            adsbygoogle.js with ca-host-pub-2644536267352236 made
+            DoubleClick request /pagead/ads?client=…1:0 and 400, which is
+            the PageSpeed "browser errors were logged" finding. The
+            google-adsense-platform-* meta tags above stay; those are the
+            correct place for the host account. */}
         <GoogleTagManager gtmId={site.analytics.gtmId} />
-
-        {/* AdSense. `afterInteractive` keeps it off the critical path — the
-            WordPress plugin was loading this before first paint, which is a
-            measurable chunk of your current LCP. */}
-        <Script
-          id="adsense"
-          async
-          strategy="afterInteractive"
-          crossOrigin="anonymous"
-          src={
-            'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' +
-            site.analytics.adsenseHostAccount
-          }
-        />
       </body>
     </html>
   )
