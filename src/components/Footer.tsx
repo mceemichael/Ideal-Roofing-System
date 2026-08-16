@@ -28,9 +28,6 @@ export function Footer({
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-2">
             <p className="text-lg font-bold tracking-wide">IDEAL ROOFING SYSTEM</p>
-            <p className="mt-2 max-w-md text-sm leading-relaxed text-white/70">
-              {site.description}
-            </p>
             {/* Full NAP (Name, Address, Phone), matching the LocalBusiness
                 JSON-LD and Google Business Profile exactly — this used to
                 show only locality/region, which put a shorter address in

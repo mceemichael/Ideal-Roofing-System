@@ -195,9 +195,6 @@ export default async function HomePage() {
           <h2 className="mt-3 text-3xl font-bold leading-tight text-white sm:text-5xl">
             Nigeria&rsquo;s Leading Roofing Company
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg">
-            {site.description}
-          </p>
 
           <div className="mt-7 flex flex-wrap justify-center gap-3">
             <Link

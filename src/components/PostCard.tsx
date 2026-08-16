@@ -53,12 +53,6 @@ export function PostCard({
           </Link>
         </h2>
 
-        {post.excerpt ? (
-          <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-ink-muted">
-            {post.excerpt}
-          </p>
-        ) : null}
-
         <Link
           href={href}
           className="mt-3 inline-block self-start text-xs font-bold uppercase tracking-wide text-cta transition-opacity hover:opacity-80"
