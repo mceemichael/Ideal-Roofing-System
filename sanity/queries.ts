@@ -66,7 +66,7 @@ export const postBySlugQuery = groq`*[_type == "post" && slug.current == $slug][
     ...,
     _type == "legacyImage" => { ${imageFields} },
     _type == "imageCarousel" => {
-      slides[]{ ..., image { asset, legacyUrl } }
+      slides[]{ ..., image { ${imageFields} } }
     },
     markDefs[]{ ... }
   },
@@ -118,7 +118,7 @@ export const pageBySlugQuery = groq`*[_type == "page" && slug.current == $slug][
     ...,
     _type == "legacyImage" => { ${imageFields} },
     _type == "imageCarousel" => {
-      slides[]{ ..., image { asset, legacyUrl } }
+      slides[]{ ..., image { ${imageFields} } }
     },
     markDefs[]{ ... }
   },

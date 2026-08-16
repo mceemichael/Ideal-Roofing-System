@@ -6,6 +6,7 @@ import { imageSrc } from '../../sanity/image'
 
 type Slide = {
   image?: { asset?: unknown; legacyUrl?: string } | null
+  src?: string | null
   alt?: string | null
   heading?: string | null
   description?: string | null
@@ -42,7 +43,7 @@ export function ImageCarousel({ slides }: { slides: Slide[] }) {
 
   if (!count) return null
   const slide = slides[index]
-  const src = imageSrc(slide.image, 1200)
+  const src = slide.src || imageSrc(slide.image, 1200)
 
   return (
     <div
@@ -57,7 +58,7 @@ export function ImageCarousel({ slides }: { slides: Slide[] }) {
           alt={slide.alt || ''}
           fill
           sizes="(max-width: 1140px) 100vw, 1140px"
-          className="object-cover"
+          className="object-contain"
         />
       ) : null}
       <div className="absolute inset-0 bg-black/30" />

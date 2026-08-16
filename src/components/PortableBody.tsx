@@ -305,7 +305,13 @@ const components: PortableTextComponents = {
 
     imageCarousel: ({ value }) => {
       if (!value?.slides?.length) return null
-      return <ImageCarousel slides={value.slides} />
+      // Resolve URLs on the server so a missing client env cannot
+      // silently fall back to the old WordPress path.
+      const slides = value.slides.map((s: { image?: { asset?: unknown; legacyUrl?: string } }) => ({
+        ...s,
+        src: imageSrc(s.image, 1200),
+      }))
+      return <ImageCarousel slides={slides} />
     },
 
     /**

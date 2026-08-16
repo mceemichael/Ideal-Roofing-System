@@ -25,17 +25,10 @@ export default defineType({
           fields: [
             defineField({
               name: 'image',
-              title: 'Image',
-              type: 'object',
-              fields: [
-                defineField({ name: 'asset', title: 'Image', type: 'image', options: { hotspot: true } }),
-                defineField({
-                  name: 'legacyUrl',
-                  title: 'Original WordPress URL',
-                  type: 'string',
-                  readOnly: true,
-                }),
-              ],
+              title: 'Photo',
+              type: 'legacyImage',
+              description:
+                'This is the picture on the website. Upload the new file here, then press Publish. Do not edit the original WordPress URL if it appears underneath.',
             }),
             defineField({ name: 'alt', title: 'Alt text', type: 'string' }),
             defineField({ name: 'heading', title: 'Heading', type: 'string' }),
