@@ -15,6 +15,7 @@ import youtube from './objects/youtube'
 import callout from './objects/callout'
 import toolEmbed from './objects/toolEmbed'
 import imageCarousel from './objects/imageCarousel'
+import roofProject from './objects/roofProject'
 import comment from './comment'
 
 export const schemaTypes: SchemaTypeDefinition[] = [
@@ -35,6 +36,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   callout,
   toolEmbed,
   imageCarousel,
+  roofProject,
 ]
 
 export default schemaTypes

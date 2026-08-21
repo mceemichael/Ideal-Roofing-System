@@ -585,7 +585,16 @@ Local Lighthouse accessibility after the build: **100** on all four money pages.
 
 **Aluminium carousel photos (2026-08-16).** Michael’s Studio publishes were not reaching the live carousel because (1) a leftover draft sat on the post with no new files attached to the slides — only `updatedAt` had changed — and (2) the slide image field was a nested Image-inside-Image, so uploads often never landed on `image.asset`. Uploaded the three matching shop photos (red longspan, brown steptiles, beige metrocopo) onto the **published** document, deleted the empty draft, webhook 200. The fourth file in that folder (`20230907_090908.jpg`) is a stone-coated sheet, not aluminium, and was left off this page. Slide `image` is now a normal `legacyImage` so the next Studio swap is the same control used everywhere else.
 
-## 22. If you're the next agent picking this up
+## 22. `/roofprojects/` rebuilt as a dated job gallery (2026-08-21)
+
+Michael asked to replace the old static aluminium / stonetiles / Instagram page with real recent jobs from the shared Google Photos album `https://photos.app.goo.gl/8YtfyKTm9r6QuKDV9`.
+
+- **226 photos** uploaded to Sanity, grouped into **12 jobs by the date each photo was taken** (Africa/Lagos). Newest first. 74 album videos were not uploaded (Sanity is not a video host; stills only).
+- Each job has empty **Project name / Site location / Grade** fields. Fill them in Studio on the Projects page — empty labels stay blank on the website, they do not say “TBD”.
+- URL, `publishedAt` and the page title **Projects** are unchanged. The old in-body photos and Instagram link list were replaced by a short intro plus the `projects` array.
+- Studio: open Pages → Projects. The Roof projects list is only visible on this slug.
+
+## 23. If you're the next agent picking this up
 
 Read `CLAUDE.md` first — it has the invariants. Then:
 

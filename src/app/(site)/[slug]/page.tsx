@@ -38,6 +38,9 @@ import PageHeader from '@/components/PageHeader'
 import JsonLd from '@/components/JsonLd'
 import Comments, { type CommentData } from '@/components/Comments'
 import TrustindexReviews from '@/components/TrustindexReviews'
+import RoofProjectsGallery, {
+  type RoofProjectData,
+} from '@/components/RoofProjectsGallery'
 
 /**
  * The catch-all that reproduces WordPress's flat URL structure.
@@ -462,6 +465,13 @@ async function PageView({ page, slug }: { page: any; slug: string }) {
 
         <div className="mx-auto max-w-prose">
           <PortableBody value={page.body} />
+        </div>
+
+        {slug === 'roofprojects' && page.projects?.length ? (
+          <RoofProjectsGallery projects={page.projects as RoofProjectData[]} />
+        ) : null}
+
+        <div className="mx-auto max-w-prose">
           <CtaBlock />
 
           <Comments

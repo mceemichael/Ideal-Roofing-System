@@ -16,6 +16,9 @@ wordpress-export.xml
 sanity-import.ndjson
 uploads-backup/
 verify-report.json
+_gphotos.html
+_gphotos_*.json
+_gphotos_items.json
 
 .vercel
 .env*

@@ -47,6 +47,18 @@ export default defineType({
       group: 'content',
       of: portableBodyMembers,
     }),
+    defineField({
+      name: 'projects',
+      title: 'Roof projects',
+      type: 'array',
+      group: 'content',
+      hidden: ({ document }) =>
+        (document as { slug?: { current?: string } } | undefined)?.slug?.current !==
+        'roofprojects',
+      description:
+        'Jobs on /roofprojects/, grouped by date. Fill Project name, Site location and Grade when you know them — empty labels stay hidden on the website.',
+      of: [{ type: 'roofProject' }],
+    }),
     defineField({ name: 'seo', title: 'Search listing', type: 'seo', group: 'seo' }),
     defineField({
       name: 'faq',

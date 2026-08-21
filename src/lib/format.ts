@@ -12,6 +12,31 @@ export function formatDate(value?: string | null): string {
   return dd + '/' + mm + '/' + yyyy
 }
 
+const MONTHS_LONG = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
+
+/** "21 August 2026" from a YYYY-MM-DD date field — no timezone shift. */
+export function formatLongDate(value?: string | null): string {
+  if (!value) return ''
+  const m = String(value).match(/^(\d{4})-(\d{2})-(\d{2})/)
+  if (!m) return formatDate(value)
+  const month = MONTHS_LONG[Number(m[2]) - 1]
+  if (!month) return formatDate(value)
+  return Number(m[3]) + ' ' + month + ' ' + m[1]
+}
+
 /**
  * "August 2026" — the visitor's current month/year, computed at render time.
  * Used for nav labels like "...Roofing Sheet | August 2026" so they're
