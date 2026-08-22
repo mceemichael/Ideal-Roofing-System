@@ -593,6 +593,7 @@ Michael asked to replace the old static aluminium / stonetiles / Instagram page 
 - Each job has empty **Project name / Site location / Grade** fields. Fill them in Studio on the Projects page — empty labels stay blank on the website, they do not say “TBD”.
 - URL, `publishedAt` and the page title **Projects** are unchanged. The old in-body photos and Instagram link list were replaced by a short intro plus the `projects` array.
 - Studio: open Pages → Projects. The Roof projects list is only visible on this slug.
+- **Watermark (2026-08-22).** All 226 gallery photos were re-exported with a repeating diagonal “IDEAL ROOFING SYSTEM” + logo mark baked into the pixels (plus corner badges). Cropping a corner does not remove it. The mark is in the file, not a CSS overlay.
 
 ## 23. If you're the next agent picking this up
 
