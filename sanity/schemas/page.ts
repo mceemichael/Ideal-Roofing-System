@@ -56,7 +56,7 @@ export default defineType({
         (document as { slug?: { current?: string } } | undefined)?.slug?.current !==
         'roofprojects',
       description:
-        'Jobs on /roofprojects/, grouped by date. Fill Project name, Site location and Grade when you know them — empty labels stay hidden on the website.',
+        'Design galleries on /roofprojects/. Add watermarked photos under each design (Shingle, Milano, …). Unassigned at the bottom is hidden on the website.',
       of: [{ type: 'roofProject' }],
     }),
     defineField({ name: 'seo', title: 'Search listing', type: 'seo', group: 'seo' }),

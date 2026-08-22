@@ -122,11 +122,13 @@ export const pageBySlugQuery = groq`*[_type == "page" && slug.current == $slug][
     },
     markDefs[]{ ... }
   },
-  projects[]{
+  projects[showOnWebsite != false]{
+    family,
     postedAt,
     title,
     location,
     grade,
+    showOnWebsite,
     photos[]{ ${imageFields} }
   },
   publishedAt,

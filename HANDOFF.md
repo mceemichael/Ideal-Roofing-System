@@ -594,6 +594,7 @@ Michael asked to replace the old static aluminium / stonetiles / Instagram page 
 - URL, `publishedAt` and the page title **Projects** are unchanged. The old in-body photos and Instagram link list were replaced by a short intro plus the `projects` array.
 - Studio: open Pages → Projects. The Roof projects list is only visible on this slug.
 - **Watermark (2026-08-22).** All 226 gallery photos were re-exported with a repeating diagonal “IDEAL ROOFING SYSTEM” + logo mark baked into the pixels (plus corner badges). Cropping a corner does not remove it. The mark is in the file, not a CSS overlay.
+- **Rebuilt by design (2026-08-22).** The page is no longer grouped by date. Public sections are stone-coated (Shingle, Milano, Bond, Classic, Romania, Roman, Shingle Wine and Black), Aluminium, and Roof paint — empty slots until photos are filed. All watermarked files sit in Studio under **Unassigned** (hidden on the website). File them: Pages → Projects → open a design → Photos → Add item → pick `roofproject-wm…` from the media library.
 
 ## 23. If you're the next agent picking this up
 

@@ -3,8 +3,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import { imageSrc } from '../../sanity/image'
-import { formatLongDate } from '@/lib/format'
-import { cn } from '@/lib/cn'
 
 export type RoofProjectPhoto = {
   asset?: unknown
@@ -16,30 +14,32 @@ export type RoofProjectPhoto = {
 }
 
 export type RoofProjectData = {
+  family?: string | null
   postedAt?: string | null
   title?: string | null
   location?: string | null
   grade?: string | null
+  showOnWebsite?: boolean | null
   photos?: RoofProjectPhoto[] | null
 }
 
 const PREVIEW_COUNT = 9
+const EMPTY_SLOTS = 3
 
-function LabelSlot({ label, value }: { label: string; value?: string | null }) {
-  const filled = Boolean(value?.trim())
-  return (
-    <div>
-      <dt className="text-xs font-semibold uppercase tracking-wider text-white/70">{label}</dt>
-      <dd
-        className={cn(
-          'mt-0.5 min-h-[1.5rem]',
-          filled ? 'text-white' : 'border-b border-dashed border-white/35 text-transparent'
-        )}
-      >
-        {filled ? value : '\u00a0'}
-      </dd>
-    </div>
-  )
+const FAMILY_ORDER = ['stonecoated', 'aluminium', 'paint'] as const
+
+const FAMILY_HEADING: Record<(typeof FAMILY_ORDER)[number], string> = {
+  stonecoated: 'Stone-coated roof designs',
+  aluminium: 'Aluminium projects',
+  paint: 'Roof paint projects',
+}
+
+function slugify(value?: string | null) {
+  return (value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 60)
 }
 
 function photoSrc(photo: RoofProjectPhoto, width: number) {
@@ -47,26 +47,33 @@ function photoSrc(photo: RoofProjectPhoto, width: number) {
 }
 
 export function RoofProjectsGallery({ projects }: { projects: RoofProjectData[] }) {
-  const list = useMemo(
-    () =>
-      (projects || [])
-        .map((p) => ({
+  const groups = useMemo(() => {
+    const listed = (projects || []).filter(
+      (p) => p.showOnWebsite !== false && p.family !== 'unassigned'
+    )
+    return FAMILY_ORDER.map((family) => ({
+      family,
+      heading: FAMILY_HEADING[family],
+      items: listed
+        .map((p, index) => ({
           ...p,
           photos: (p.photos || []).filter((photo) => photoSrc(photo, 800)),
+          _index: index,
         }))
-        .filter((p) => p.photos.length > 0),
-    [projects]
-  )
+        .filter((p) => (p.family || 'stonecoated') === family),
+    })).filter((g) => g.items.length > 0)
+  }, [projects])
 
-  const [expanded, setExpanded] = useState<Record<number, boolean>>({})
+  const flat = useMemo(() => groups.flatMap((g) => g.items), [groups])
+
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({})
   const [lightbox, setLightbox] = useState<{ project: number; photo: number } | null>(
     null
   )
 
+  const activeProject = lightbox ? flat[lightbox.project] : null
   const active =
-    lightbox && list[lightbox.project]
-      ? list[lightbox.project].photos[lightbox.photo]
-      : null
+    activeProject && lightbox ? activeProject.photos[lightbox.photo] : null
   const activeSrc = active ? photoSrc(active, 1920) : null
 
   useEffect(() => {
@@ -83,110 +90,141 @@ export function RoofProjectsGallery({ projects }: { projects: RoofProjectData[] 
       document.body.style.overflow = prev
       window.removeEventListener('keydown', onKey)
     }
-    // stepLightbox is stable enough for this effect; lightbox identity is the trigger.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lightbox])
 
   function stepLightbox(delta: number) {
     setLightbox((current) => {
       if (!current) return current
-      const photos = list[current.project]?.photos || []
+      const photos = flat[current.project]?.photos || []
       if (!photos.length) return null
       const next = (current.photo + delta + photos.length) % photos.length
       return { project: current.project, photo: next }
     })
   }
 
-  if (!list.length) return null
+  if (!groups.length) return null
+
+  let runningIndex = -1
 
   return (
-    <div className="mt-10 space-y-10">
-      {list.map((project, projectIndex) => {
-        const photos = project.photos
-        const isOpen = Boolean(expanded[projectIndex])
-        const visible = isOpen ? photos : photos.slice(0, PREVIEW_COUNT)
-        const hiddenCount = photos.length - visible.length
-        const heading = project.title?.trim() || formatLongDate(project.postedAt)
-        const hasMeta = Boolean(project.location?.trim() || project.grade?.trim())
+    <div className="mt-10 space-y-14">
+      <nav aria-label="Roof designs" className="flex flex-wrap gap-2">
+        {flat.map((project) => {
+          const id = slugify(project.title)
+          if (!id) return null
+          return (
+            <a
+              key={id}
+              href={'#' + id}
+              className="rounded-full border border-white/30 px-3 py-1.5 text-sm text-white/85 transition-colors hover:border-white hover:text-white"
+            >
+              {project.title}
+            </a>
+          )
+        })}
+      </nav>
 
-        return (
-          <article
-            key={(project.postedAt || '') + '-' + projectIndex}
-            className="rounded-xl border border-white/20 bg-white/10 p-4 sm:p-6"
-          >
-            <header className="mb-4">
-              {project.postedAt ? (
-                <time
-                  dateTime={project.postedAt}
-                  className="text-xs font-semibold uppercase tracking-wider text-white/85"
+      {groups.map((group) => (
+        <section key={group.family}>
+          <h2 className="mb-6 text-2xl font-bold text-white sm:text-[1.75rem]">
+            {group.heading}
+          </h2>
+          <div className="space-y-8">
+            {group.items.map((project) => {
+              runningIndex += 1
+              const projectIndex = runningIndex
+              const id = slugify(project.title) || 'design-' + projectIndex
+              const photos = project.photos
+              const isOpen = Boolean(expanded[id])
+              const visible = isOpen ? photos : photos.slice(0, PREVIEW_COUNT)
+              const hiddenCount = photos.length - visible.length
+
+              return (
+                <article
+                  key={id}
+                  id={id}
+                  className="scroll-mt-32 rounded-xl border border-white/20 bg-white/10 p-4 sm:p-6"
                 >
-                  {formatLongDate(project.postedAt)}
-                </time>
-              ) : null}
+                  <header className="mb-4">
+                    <h3 className="text-xl font-bold leading-snug text-white sm:text-2xl">
+                      {project.title}
+                    </h3>
+                    {(project.location?.trim() || project.grade?.trim()) && (
+                      <p className="mt-2 text-sm text-white/85">
+                        {[project.location?.trim(), project.grade?.trim()]
+                          .filter(Boolean)
+                          .join(' · ')}
+                      </p>
+                    )}
+                  </header>
 
-              {project.title?.trim() ? (
-                <h3 className="mt-1 text-xl font-bold leading-snug text-white sm:text-2xl">
-                  {heading}
-                </h3>
-              ) : (
-                <h3 className="mt-1 text-xl font-bold leading-snug text-white sm:text-2xl">
-                  Roof project
-                </h3>
-              )}
-
-              <dl className="mt-3 grid gap-3 text-sm text-white/85 sm:grid-cols-3">
-                <LabelSlot label="Project" value={project.title} />
-                <LabelSlot label="Site location" value={project.location} />
-                <LabelSlot label="Grade" value={project.grade} />
-              </dl>
-              {!project.title?.trim() && !hasMeta ? (
-                <p className="sr-only">Project name, site location and grade to be labelled.</p>
-              ) : null}
-            </header>
-
-            <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {visible.map((photo, photoIndex) => {
-                const src = photoSrc(photo, 800)
-                if (!src) return null
-                const alt =
-                  photo.alt ||
-                  project.title?.trim() ||
-                  'Roof project photographed ' + formatLongDate(project.postedAt)
-                return (
-                  <li key={src + photoIndex}>
-                    <button
-                      type="button"
-                      onClick={() => setLightbox({ project: projectIndex, photo: photoIndex })}
-                      className="group block w-full overflow-hidden rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
-                    >
-                      <Image
-                        src={src}
-                        alt={alt}
-                        width={photo.width || 800}
-                        height={photo.height || 533}
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 360px"
-                        className="aspect-[4/3] h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                      />
-                    </button>
-                  </li>
-                )
-              })}
-            </ul>
-
-            {hiddenCount > 0 ? (
-              <button
-                type="button"
-                onClick={() =>
-                  setExpanded((prev) => ({ ...prev, [projectIndex]: true }))
-                }
-                className="mt-4 text-sm font-semibold text-white underline-offset-2 hover:underline"
-              >
-                Show all {photos.length} photos
-              </button>
-            ) : null}
-          </article>
-        )
-      })}
+                  {photos.length ? (
+                    <>
+                      <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        {visible.map((photo, photoIndex) => {
+                          const src = photoSrc(photo, 800)
+                          if (!src) return null
+                          const alt =
+                            photo.alt ||
+                            (project.title || 'Roof') + ' project'
+                          return (
+                            <li key={src + photoIndex}>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setLightbox({
+                                    project: projectIndex,
+                                    photo: photoIndex,
+                                  })
+                                }
+                                className="group block w-full overflow-hidden rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                              >
+                                <Image
+                                  src={src}
+                                  alt={alt}
+                                  width={photo.width || 800}
+                                  height={photo.height || 533}
+                                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 360px"
+                                  className="aspect-[4/3] h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                                />
+                              </button>
+                            </li>
+                          )
+                        })}
+                      </ul>
+                      {hiddenCount > 0 ? (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setExpanded((prev) => ({ ...prev, [id]: true }))
+                          }
+                          className="mt-4 text-sm font-semibold text-white underline-offset-2 hover:underline"
+                        >
+                          Show all {photos.length} photos
+                        </button>
+                      ) : null}
+                    </>
+                  ) : (
+                    <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                      {Array.from({ length: EMPTY_SLOTS }).map((_, i) => (
+                        <li
+                          key={i}
+                          className="flex aspect-[4/3] items-center justify-center rounded-lg border border-dashed border-white/35 bg-white/5 px-3 text-center text-sm text-white/70"
+                        >
+                          {i === 0
+                            ? 'Space for ' + (project.title || 'this design')
+                            : '\u00a0'}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </article>
+              )
+            })}
+          </div>
+        </section>
+      ))}
 
       {lightbox && activeSrc ? (
         <div
@@ -203,7 +241,7 @@ export function RoofProjectsGallery({ projects }: { projects: RoofProjectData[] 
           >
             Close
           </button>
-          {list[lightbox.project].photos.length > 1 ? (
+          {activeProject && activeProject.photos.length > 1 ? (
             <>
               <button
                 type="button"
@@ -229,10 +267,7 @@ export function RoofProjectsGallery({ projects }: { projects: RoofProjectData[] 
               </button>
             </>
           ) : null}
-          <div
-            className="max-h-[90vh] max-w-5xl"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="max-h-[90vh] max-w-5xl" onClick={(e) => e.stopPropagation()}>
             <Image
               src={activeSrc}
               alt={active?.alt || 'Roof project photo'}
