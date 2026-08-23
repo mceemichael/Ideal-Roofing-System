@@ -149,6 +149,7 @@ export const mainNav = [
     ],
   },
   { label: 'Roof Area Calculator', href: '/roof-area-calculator/' },
+  { label: 'Projects', href: '/roofprojects/' },
   { label: 'Blog', href: '/blogs-and-projects/' },
 ] as const
 

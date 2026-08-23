@@ -467,6 +467,8 @@ async function PageView({ page, slug }: { page: any; slug: string }) {
           <PortableBody value={page.body} />
         </div>
 
+        {slug === 'pricelist' ? <ProjectsTeaser /> : null}
+
         {slug === 'roofprojects' && page.projects?.length ? (
           <RoofProjectsGallery projects={page.projects as RoofProjectData[]} />
         ) : null}
@@ -526,6 +528,26 @@ function CategoryView({ category, slug }: { category: any; slug: string }) {
 /* ------------------------------------------------------------------ */
 /* Shared CTA                                                          */
 /* ------------------------------------------------------------------ */
+
+function ProjectsTeaser() {
+  return (
+    <aside className="mx-auto mt-10 max-w-prose rounded-xl border border-white/20 bg-white/10 p-6 text-center sm:p-8">
+      <h2 className="text-xl font-bold text-white sm:text-2xl">
+        See these materials on real roofs
+      </h2>
+      <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-white/85">
+        Prices are one thing. Look at completed aluminium, stone-coated and
+        roof-paint jobs we have already installed across Nigeria.
+      </p>
+      <Link
+        href="/roofprojects/"
+        className="mt-5 inline-block rounded-lg bg-white px-5 py-3 text-sm font-semibold text-secondary transition-colors hover:bg-white/90"
+      >
+        See completed projects
+      </Link>
+    </aside>
+  )
+}
 
 function CtaBlock() {
   return (
