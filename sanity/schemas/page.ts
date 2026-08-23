@@ -41,23 +41,29 @@ export default defineType({
       group: 'content',
     }),
     defineField({
+      name: 'projects',
+      title: 'Photo galleries',
+      type: 'array',
+      group: 'content',
+      hidden: ({ document }) => {
+        const id = String(
+          (document as { _id?: string } | undefined)?._id || ''
+        ).replace(/^drafts\./, '')
+        if (id === 'page-e0cbc0cefc828f0559f9acdb') return false
+        const slug = (document as { slug?: { current?: string } } | undefined)?.slug
+          ?.current
+        return slug !== 'projects' && slug !== 'roofprojects'
+      },
+      description:
+        'Open a design, then Photos, to add or remove pictures. This list is what appears on /projects/. Unassigned at the bottom stays off the website.',
+      of: [{ type: 'roofProject' }],
+    }),
+    defineField({
       name: 'body',
       title: 'Page content',
       type: 'array',
       group: 'content',
       of: portableBodyMembers,
-    }),
-    defineField({
-      name: 'projects',
-      title: 'Roof projects',
-      type: 'array',
-      group: 'content',
-      hidden: ({ document }) =>
-        (document as { slug?: { current?: string } } | undefined)?.slug?.current !==
-        'projects',
-      description:
-        'Design galleries on /projects/. Add watermarked photos under each design (Shingle, Milano, …). Unassigned at the bottom is hidden on the website.',
-      of: [{ type: 'roofProject' }],
     }),
     defineField({ name: 'seo', title: 'Search listing', type: 'seo', group: 'seo' }),
     defineField({
