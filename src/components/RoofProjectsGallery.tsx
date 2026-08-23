@@ -170,25 +170,32 @@ export function RoofProjectsGallery({ projects }: { projects: RoofProjectData[] 
                             (project.title || 'Roof') + ' project'
                           return (
                             <li key={src + photoIndex}>
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  setLightbox({
-                                    project: projectIndex,
-                                    photo: photoIndex,
-                                  })
-                                }
-                                className="group block w-full overflow-hidden rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
-                              >
-                                <Image
-                                  src={src}
-                                  alt={alt}
-                                  width={photo.width || 800}
-                                  height={photo.height || 533}
-                                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 360px"
-                                  className="aspect-[4/3] h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                                />
-                              </button>
+                              <figure>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setLightbox({
+                                      project: projectIndex,
+                                      photo: photoIndex,
+                                    })
+                                  }
+                                  className="group block w-full overflow-hidden rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                                >
+                                  <Image
+                                    src={src}
+                                    alt={alt}
+                                    width={photo.width || 800}
+                                    height={photo.height || 533}
+                                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 360px"
+                                    className="aspect-[4/3] h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                                  />
+                                </button>
+                                {photo.caption ? (
+                                  <figcaption className="mt-1.5 text-center text-xs leading-snug text-white/85">
+                                    {photo.caption}
+                                  </figcaption>
+                                ) : null}
+                              </figure>
                             </li>
                           )
                         })}
@@ -267,15 +274,21 @@ export function RoofProjectsGallery({ projects }: { projects: RoofProjectData[] 
               </button>
             </>
           ) : null}
-          <div className="max-h-[90vh] max-w-5xl" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="max-h-[90vh] max-w-5xl text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
             <Image
               src={activeSrc}
               alt={active?.alt || 'Roof project photo'}
               width={active?.width || 1600}
               height={active?.height || 900}
               sizes="90vw"
-              className="max-h-[90vh] w-auto rounded-lg object-contain"
+              className="max-h-[82vh] w-auto rounded-lg object-contain"
             />
+            {active?.caption ? (
+              <p className="mt-3 text-sm text-white">{active.caption}</p>
+            ) : null}
           </div>
         </div>
       ) : null}

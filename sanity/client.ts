@@ -5,8 +5,9 @@ export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  // CDN on in production for speed; off in dev so you see edits immediately.
-  useCdn: process.env.NODE_ENV === 'production',
+  // Off. Next.js already caches pages (revalidate + the Studio webhook).
+  // Sanity's CDN kept serving empty /roofprojects/ galleries after a publish.
+  useCdn: false,
   perspective: 'published',
 })
 

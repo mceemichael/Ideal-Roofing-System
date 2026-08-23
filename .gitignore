@@ -21,6 +21,7 @@ _gphotos_*.json
 _gphotos_items.json
 _wm-preview/
 _wm-upload-map.json
+_folder-upload-map.json
 
 .vercel
 .env*
