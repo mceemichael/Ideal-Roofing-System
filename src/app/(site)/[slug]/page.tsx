@@ -416,6 +416,47 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
 /* Page                                                                */
 /* ------------------------------------------------------------------ */
 
+function blockPlainText(block: { children?: Array<{ text?: string }> }): string {
+  return (block.children || []).map((c) => c.text || '').join('')
+}
+
+/** Intro + heading, then galleries, then the rest of the article. */
+function ProjectsLayout({ page }: { page: any }) {
+  const body = Array.isArray(page.body) ? page.body : []
+  const headingAt = body.findIndex((block: any) => {
+    if (block._type !== 'block' || block.style !== 'h2') return false
+    return /completed roof projects by design/i.test(blockPlainText(block))
+  })
+  let splitAt = headingAt < 0 ? body.length : headingAt + 1
+  const next = body[splitAt]
+  if (
+    headingAt >= 0 &&
+    next &&
+    next._type === 'block' &&
+    (next.style === 'normal' || !next.style)
+  ) {
+    splitAt += 1
+  }
+  const before = headingAt < 0 ? body : body.slice(0, splitAt)
+  const after = headingAt < 0 ? [] : body.slice(splitAt)
+
+  return (
+    <>
+      <div className="mx-auto max-w-prose">
+        <PortableBody value={before} />
+      </div>
+      {page.projects?.length ? (
+        <RoofProjectsGallery projects={page.projects as RoofProjectData[]} />
+      ) : null}
+      {after.length ? (
+        <div className="mx-auto max-w-prose">
+          <PortableBody value={after} />
+        </div>
+      ) : null}
+    </>
+  )
+}
+
 async function PageView({ page, slug }: { page: any; slug: string }) {
   const crumbs = [
     { name: 'Home', path: '/' },
@@ -464,15 +505,15 @@ async function PageView({ page, slug }: { page: any; slug: string }) {
           </figure>
         ) : null}
 
-        <div className="mx-auto max-w-prose">
-          <PortableBody value={page.body} />
-        </div>
+        {slug === 'projects' ? (
+          <ProjectsLayout page={page} />
+        ) : (
+          <div className="mx-auto max-w-prose">
+            <PortableBody value={page.body} />
+          </div>
+        )}
 
         {slug === 'pricelist' ? <ProjectsTeaser /> : null}
-
-        {slug === 'projects' && page.projects?.length ? (
-          <RoofProjectsGallery projects={page.projects as RoofProjectData[]} />
-        ) : null}
 
         <div className="mx-auto max-w-prose">
           {slug === 'projects' && page.faq?.length ? (
