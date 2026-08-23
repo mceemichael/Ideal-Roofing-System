@@ -68,11 +68,11 @@ export default defineType({
     defineField({ name: 'seo', title: 'Search listing', type: 'seo', group: 'seo' }),
     defineField({
       name: 'faq',
-      title: 'FAQ for Google',
+      title: 'FAQs',
       type: 'array',
-      group: 'seo',
+      group: 'content',
       description:
-        'Optional. Also add the same questions as headings in the page content.',
+        'Questions and answers shown at the bottom of the page and sent to Google. Add a question, then the answer, then Publish.',
       of: [
         {
           type: 'object',

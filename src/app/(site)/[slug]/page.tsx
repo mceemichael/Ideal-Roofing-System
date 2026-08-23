@@ -41,6 +41,7 @@ import TrustindexReviews from '@/components/TrustindexReviews'
 import RoofProjectsGallery, {
   type RoofProjectData,
 } from '@/components/RoofProjectsGallery'
+import FaqList from '@/components/FaqList'
 
 /**
  * The catch-all that reproduces WordPress's flat URL structure.
@@ -474,6 +475,9 @@ async function PageView({ page, slug }: { page: any; slug: string }) {
         ) : null}
 
         <div className="mx-auto max-w-prose">
+          {slug === 'projects' && page.faq?.length ? (
+            <FaqList items={page.faq} />
+          ) : null}
           <CtaBlock />
 
           <Comments
