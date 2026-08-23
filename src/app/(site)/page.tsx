@@ -41,7 +41,7 @@ const DEFAULT_STATS = [
 const SERVICES = [
   {
     title: 'Roof Installations',
-    href: '/roofprojects/',
+    href: '/projects/',
     body: 'We specialize in expertly installing premium aluminium roofing sheets (lightweight, easy to handle, corrosion-resistant, and excellent for heat reflection) as well as stone-coated roofing sheets (like Gerard, Metrocopo, step-tiles, and longspan designs for timeless elegance and superior protection).',
     image: '/wp-content/uploads/2026/08/roof-installation-project-watermarked-v2.jpg',
     alt: 'Ideal Roofing System stone-coated roof installation project',
@@ -204,7 +204,7 @@ export default async function HomePage() {
               See Updated Pricelist
             </Link>
             <Link
-              href="/roofprojects/"
+              href="/projects/"
               className="rounded-lg border border-white px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
             >
               See Completed Projects
@@ -321,7 +321,7 @@ export default async function HomePage() {
                   href={s.href}
                   className="mt-4 text-sm font-semibold text-white hover:underline"
                 >
-                  {s.href === '/roofprojects/' ? 'See completed projects →' : 'Read More →'}
+                  {s.href === '/projects/' ? 'See completed projects →' : 'Read More →'}
                 </Link>
               </div>
             </article>
@@ -484,7 +484,7 @@ export default async function HomePage() {
               Talk to us on WhatsApp
             </a>
             <Link
-              href="/roofprojects/"
+              href="/projects/"
               className="rounded-lg border border-white/40 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
             >
               See Completed Projects

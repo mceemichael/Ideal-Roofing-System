@@ -58,6 +58,7 @@ export const redirects = [
   { source: '/category/:slug', destination: '/:slug/', permanent: true },
   { source: '/blog/', destination: '/blogs-and-projects/', permanent: true },
   { source: '/blogs-and-projects/page/1/', destination: '/blogs-and-projects/', permanent: true },
+  { source: '/roofprojects/', destination: '/projects/', permanent: true },
 
   // ---------------------------------------------------------------------
   // Rank Math redirects, exported 2026-07-30. Prior-year pricelist slugs that

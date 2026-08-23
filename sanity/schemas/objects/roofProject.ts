@@ -1,7 +1,7 @@
 import { defineField, defineType } from 'sanity'
 
 /**
- * One design gallery on /roofprojects/ — e.g. Shingle, Milano, Aluminium.
+ * One design gallery on /projects/ — e.g. Shingle, Milano, Aluminium.
  * Empty photo lists are allowed so the website can show a reserved slot
  * before pictures are added.
  */

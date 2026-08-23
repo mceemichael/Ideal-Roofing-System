@@ -469,7 +469,7 @@ async function PageView({ page, slug }: { page: any; slug: string }) {
 
         {slug === 'pricelist' ? <ProjectsTeaser /> : null}
 
-        {slug === 'roofprojects' && page.projects?.length ? (
+        {slug === 'projects' && page.projects?.length ? (
           <RoofProjectsGallery projects={page.projects as RoofProjectData[]} />
         ) : null}
 
@@ -540,7 +540,7 @@ function ProjectsTeaser() {
         roof-paint jobs we have already installed across Nigeria.
       </p>
       <Link
-        href="/roofprojects/"
+        href="/projects/"
         className="mt-5 inline-block rounded-lg bg-white px-5 py-3 text-sm font-semibold text-secondary transition-colors hover:bg-white/90"
       >
         See completed projects

@@ -2,7 +2,7 @@ import { defineField, defineType } from 'sanity'
 
 /**
  * Your WordPress install strips the /category/ base, so these archives live at
- * the site root: /blogs/, /projects/, /pvc/ and so on. The [slug] catch-all
+ * the site root: /blogs/, /projectsblog/, /pvc/ and so on. The [slug] catch-all
  * route reproduces that exactly.
  */
 export default defineType({

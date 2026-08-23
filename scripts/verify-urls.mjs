@@ -67,7 +67,7 @@ const POSTS = [
 
 const PAGES = [
   '', // homepage
-  'roofprojects',
+  'projects',
   'pricelist',
   'roof-area-calculator',
   'services',
@@ -76,7 +76,7 @@ const PAGES = [
 
 const CATEGORIES = [
   'quotation',
-  'projects',
+  'projectsblog',
   'blogs',
   'aluminium-pricelist',
   'stone-coated-pricelist',

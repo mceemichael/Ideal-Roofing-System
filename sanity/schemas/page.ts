@@ -54,9 +54,9 @@ export default defineType({
       group: 'content',
       hidden: ({ document }) =>
         (document as { slug?: { current?: string } } | undefined)?.slug?.current !==
-        'roofprojects',
+        'projects',
       description:
-        'Design galleries on /roofprojects/. Add watermarked photos under each design (Shingle, Milano, …). Unassigned at the bottom is hidden on the website.',
+        'Design galleries on /projects/. Add watermarked photos under each design (Shingle, Milano, …). Unassigned at the bottom is hidden on the website.',
       of: [{ type: 'roofProject' }],
     }),
     defineField({ name: 'seo', title: 'Search listing', type: 'seo', group: 'seo' }),
