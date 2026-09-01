@@ -156,7 +156,7 @@ export function videoSchema(video: {
   url: string
   title: string
   description?: string | null
-  thumbnailUrl?: string | null
+  thumbnailUrl?: string | string[] | null
   uploadDate?: string | null
 }) {
   return {
