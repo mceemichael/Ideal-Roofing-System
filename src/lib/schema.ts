@@ -250,7 +250,9 @@ export function offersFromBody(body: unknown): ParsedOffer[] {
 }
 
 /**
- * ItemList of Offer nodes for a pricelist page. Seller points at the
+ * ItemList of Product nodes for a pricelist page. Each row becomes its own
+ * Product (Google's Product Snippet requires a Product wrapping the Offer —
+ * a bare Offer isn't eligible on its own, see HANDOFF). Seller points at the
  * existing Organization @id so this stays one connected graph, not an island.
  * Gated by the caller to MONEY_PAGE_SLUGS — a blog table must not become
  * a product listing.
@@ -260,6 +262,7 @@ export function offerListSchema(post: {
   title: string
   updatedAt?: string | null
   body?: unknown
+  image?: string | null
 }) {
   const offers = offersFromBody(post.body)
   if (!offers.length) return null
@@ -276,15 +279,20 @@ export function offerListSchema(post: {
       '@type': 'ListItem',
       position: i + 1,
       item: {
-        '@type': 'Offer',
-        '@id': url + '#offer-' + (i + 1),
+        '@type': 'Product',
+        '@id': url + '#product-' + (i + 1),
         name: offer.name,
-        price: offer.price,
-        priceCurrency: 'NGN',
-        priceValidUntil: validThrough,
-        availability: 'https://schema.org/InStock',
-        url,
-        seller: { '@id': ORG_ID },
+        ...(post.image ? { image: post.image } : {}),
+        offers: {
+          '@type': 'Offer',
+          '@id': url + '#offer-' + (i + 1),
+          price: offer.price,
+          priceCurrency: 'NGN',
+          priceValidUntil: validThrough,
+          availability: 'https://schema.org/InStock',
+          url,
+          seller: { '@id': ORG_ID },
+        },
       },
     })),
   }

@@ -263,6 +263,7 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
                 title: post.title,
                 updatedAt: post.updatedAt,
                 body: post.body,
+                image: heroSrc,
               })
             : null
         )}
