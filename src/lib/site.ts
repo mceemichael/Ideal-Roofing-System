@@ -189,6 +189,37 @@ export const PRICELIST_ONLY_TOC_SLUGS = new Set([
   'price-of-stone-coated-gerard-in-lagos-2025',
 ])
 
+// Staff testimonials — live homepage's "People Say The Nicest Things" section
+// (three named staff, star rating, quote). Hardcoded, not CMS content, same
+// as SERVICES/REASONS on the homepage. Shared here (rather than duplicated)
+// because the About Us page reuses the same three people. Ratings rounded to
+// whole stars (live shows 4.5/4/4.5) since the star icon has no half-fill state.
+export const TEAM = [
+  {
+    name: 'Michael Chibuzo',
+    role: 'Sales Manager',
+    rating: 5,
+    quote:
+      'I am not just interested in selling you our products, I am very much interested in listening to your needs and ensuring you get the very best of services',
+    image: '/wp-content/uploads/2026/03/20250605_154718-scaled-e1772790568389.jpg',
+  },
+  {
+    name: 'Adeshina Olabamiji',
+    role: 'Site Project Manager',
+    rating: 4,
+    quote: 'I and my team are dedicated to provide you with the best roofing experience',
+    image: '/wp-content/uploads/2026/03/IMG-20260310-WA0012-1536x2048.jpg',
+  },
+  {
+    name: 'Jennifer Ogbodo',
+    role: 'Customer Service',
+    rating: 5,
+    quote:
+      'I am here to welcome you and make sure your questions about our roofing products are answered quickly and clearly.',
+    image: '/team/jennifer-ogbodo.jpg',
+  },
+] as const
+
 export function slugFromPathname(pathname: string): string {
   return pathname.replace(/^\/+|\/+$/g, '').split('/')[0] || ''
 }

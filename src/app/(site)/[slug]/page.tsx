@@ -13,6 +13,7 @@ import {
   allPageSlugsQuery,
   allCategorySlugsQuery,
   commentsForDocumentQuery,
+  projectsPreviewQuery,
 } from '../../../../sanity/queries'
 import { imageSrc } from '../../../../sanity/image'
 
@@ -21,9 +22,11 @@ import {
   NO_HERO_IMAGE_SLUGS,
   PRICELIST_ONLY_TOC_SLUGS,
   RESERVED_SLUGS,
+  TEAM,
   site,
 } from '@/lib/site'
 import { buildMetadata, excerptFromBody } from '@/lib/seo'
+import { cn } from '@/lib/cn'
 import {
   articleSchema,
   breadcrumbSchema,
@@ -197,6 +200,149 @@ export default async function SlugPage({ params }: Props) {
 /* Post                                                                */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Groups the About Us post body into h2 sections, each optionally holding
+ * h4/normal item pairs (e.g. "Why Nigerians Choose Us" → 4 reason cards).
+ * A section with no items (e.g. "Where to Find Us") is just its own intro
+ * text. Same "parse the real content, nothing invented" approach as
+ * offersFromBody / parseServicesSection.
+ */
+type AboutSection = { heading: string; intro: string | null; items: Array<{ title: string; body: string }> }
+
+function parseAboutSections(body: unknown): { opening: string; sections: AboutSection[] } {
+  const blocks: any[] = Array.isArray(body) ? body : []
+  const firstH2 = blocks.findIndex((b) => b?._type === 'block' && b.style === 'h2')
+  const openingBlocks = firstH2 < 0 ? blocks : blocks.slice(0, firstH2)
+  const opening = openingBlocks
+    .filter((b) => b._type === 'block' && b.style === 'normal')
+    .map(blockPlainText)
+    .join('\n\n')
+
+  const sections: AboutSection[] = []
+  let current: AboutSection | null = null
+
+  for (const block of firstH2 < 0 ? [] : blocks.slice(firstH2)) {
+    if (block?._type !== 'block') continue
+    const text = blockPlainText(block).trim()
+    if (!text) continue
+
+    if (block.style === 'h2') {
+      current = { heading: text, intro: null, items: [] }
+      sections.push(current)
+      continue
+    }
+    if (!current) continue
+
+    if (block.style === 'h4') {
+      current.items.push({ title: text, body: '' })
+      continue
+    }
+
+    const lastItem = current.items[current.items.length - 1]
+    if (lastItem && !lastItem.body) {
+      lastItem.body = text
+    } else if (!current.items.length) {
+      current.intro = current.intro ? current.intro + ' ' + text : text
+    }
+  }
+
+  return { opening, sections }
+}
+
+function AboutUsLayout({ post }: { post: any }) {
+  const { opening, sections } = parseAboutSections(post.body)
+
+  if (!sections.length) {
+    return (
+      <div className="mx-auto max-w-prose">
+        <PortableBody value={post.body} />
+      </div>
+    )
+  }
+
+  return (
+    <>
+      {opening ? (
+        <div className="mx-auto max-w-prose">
+          {opening.split('\n\n').map((para, i) => (
+            <p key={i} className="mt-4 leading-relaxed text-white/85 first:mt-0">
+              {para}
+            </p>
+          ))}
+        </div>
+      ) : null}
+
+      {sections.map((section) =>
+        section.items.length ? (
+          <section key={section.heading} className="mt-12">
+            <h2 className="text-2xl font-bold text-white sm:text-3xl">{section.heading}</h2>
+            <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {section.items.map((item) => (
+                <div
+                  key={item.title}
+                  className="rounded-xl border border-surface-border bg-white p-5 shadow-card transition-shadow hover:shadow-card-hover"
+                >
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-50 text-brand">
+                    <svg viewBox="0 0 20 20" aria-hidden="true" className="h-5 w-5 fill-current">
+                      <path d="M8.2 13.4 4.8 10l1.4-1.4 2 2 5-5L14.6 7l-6.4 6.4Z" />
+                    </svg>
+                  </div>
+                  <h3 className="mt-3 font-bold text-ink">{item.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-ink-muted">{item.body}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : (
+          <div key={section.heading} className="mx-auto mt-12 max-w-prose">
+            <h2 className="text-2xl font-bold text-white sm:text-3xl">{section.heading}</h2>
+            {section.intro ? (
+              <p className="mt-4 leading-relaxed text-white/85">{section.intro}</p>
+            ) : null}
+          </div>
+        )
+      )}
+
+      <section className="mt-12">
+        <h2 className="text-center text-2xl font-bold text-white sm:text-3xl">Meet the Team</h2>
+        <div className="mt-8 grid gap-10 sm:grid-cols-3">
+          {TEAM.map((member) => (
+            <div key={member.name} className="text-center">
+              <Image
+                src={member.image}
+                alt={member.name + ' (' + member.role + ')'}
+                width={600}
+                height={800}
+                sizes="(max-width: 640px) 60vw, 300px"
+                className="mx-auto aspect-[3/4] w-full max-w-[220px] rounded-xl object-cover"
+              />
+              <div
+                className="mt-4 flex items-center justify-center gap-1"
+                role="img"
+                aria-label={'Rated ' + member.rating + ' out of 5'}
+              >
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <svg
+                    key={i}
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                    className={cn('h-4 w-4', i < member.rating ? 'fill-accent' : 'fill-white/20')}
+                  >
+                    <path d="M9.05 2.93c.3-.92 1.6-.92 1.9 0l1.36 4.18a1 1 0 00.95.69h4.4c.97 0 1.37 1.24.59 1.81l-3.56 2.59a1 1 0 00-.36 1.12l1.36 4.18c.3.92-.75 1.69-1.54 1.12l-3.56-2.59a1 1 0 00-1.18 0l-3.56 2.59c-.78.57-1.83-.2-1.53-1.12l1.36-4.18a1 1 0 00-.37-1.12L1.75 9.61c-.78-.57-.38-1.81.59-1.81h4.4a1 1 0 00.95-.69l1.36-4.18Z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="mt-3 font-semibold text-white">{member.name}</p>
+              <p className="text-sm text-white/80">{member.role}</p>
+              <p className="mt-3 text-sm leading-relaxed text-white/85">{member.quote}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </>
+  )
+}
+
 async function PostView({ post, slug }: { post: any; slug: string }) {
   const categoryIds = (post.categories || [])
     .map((c: any) => c._id)
@@ -353,6 +499,11 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
           </figure>
         ) : null}
 
+        {/* About Us renders its own full-width card grids (matching the
+            /services/ page pattern) — kept out of the max-w-prose column
+            below so the grids aren't squeezed to 760px. */}
+        {slug === 'about-us' ? <div className="mt-8"><AboutUsLayout post={post} /></div> : null}
+
         <div className="mx-auto mt-8 max-w-prose">
           {MONEY_PAGE_SLUGS.has(slug) ? (
             <TableOfContents
@@ -362,10 +513,12 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
             />
           ) : null}
 
-          <PortableBody
-            value={post.body}
-            fixHeadingOrder={MONEY_PAGE_SLUGS.has(slug)}
-          />
+          {slug === 'about-us' ? null : (
+            <PortableBody
+              value={post.body}
+              fixHeadingOrder={MONEY_PAGE_SLUGS.has(slug)}
+            />
+          )}
 
           <TrustindexReviews />
 
@@ -603,11 +756,19 @@ async function PageView({ page, slug }: { page: any; slug: string }) {
   // page.heroImage regardless; only this on-page figure is suppressed.
   const showHero = heroSrc && !NO_HERO_IMAGE_SLUGS.has(slug)
 
-  const comments = await sanityFetch<CommentData[]>({
-    query: commentsForDocumentQuery,
-    params: { documentId: page._id },
-    tags: ['comment'],
-  }).catch(() => [] as CommentData[])
+  const [comments, projectsPreview] = await Promise.all([
+    sanityFetch<CommentData[]>({
+      query: commentsForDocumentQuery,
+      params: { documentId: page._id },
+      tags: ['comment'],
+    }).catch(() => [] as CommentData[]),
+    slug === 'pricelist'
+      ? sanityFetch<{ projects?: any[] } | null>({
+          query: projectsPreviewQuery,
+          tags: ['page:projects'],
+        }).catch(() => null)
+      : Promise.resolve(null),
+  ])
 
   return (
     <>
@@ -651,7 +812,9 @@ async function PageView({ page, slug }: { page: any; slug: string }) {
           </div>
         )}
 
-        {slug === 'pricelist' ? <ProjectsTeaser /> : null}
+        {slug === 'pricelist' ? (
+          <ProjectsTeaser projects={projectsPreview?.projects} />
+        ) : null}
 
         <div className="mx-auto max-w-prose">
           {slug === 'projects' && page.faq?.length ? (
@@ -712,9 +875,43 @@ function CategoryView({ category, slug }: { category: any; slug: string }) {
 /* Shared CTA                                                          */
 /* ------------------------------------------------------------------ */
 
-function ProjectsTeaser() {
+/**
+ * One real photo per material family (aluminium, stone-coated, paint), in
+ * that order, then whatever's left over up to `count` — not the full
+ * lightbox gallery (that's RoofProjectsGallery on /projects/ itself), just
+ * enough real, already-shot project photos to back up the CTA below them.
+ */
+function pickPreviewPhotos(projects: any[] | null | undefined, count = 6) {
+  const families = ['aluminium', 'stonecoated', 'paint']
+  const withPhotos = (projects || []).filter((p) => p.photos?.length)
+  const picked: Array<{ src: string; alt: string }> = []
+  const used = new Set<any>()
+
+  for (const family of families) {
+    const match = withPhotos.find((p) => (p.family || 'stonecoated') === family && !used.has(p))
+    if (!match) continue
+    const src = imageSrc(match.photos[0], 800)
+    if (!src) continue
+    used.add(match)
+    picked.push({ src, alt: match.photos[0].alt || (match.title || 'Completed roof project') })
+  }
+
+  for (const p of withPhotos) {
+    if (picked.length >= count || used.has(p)) continue
+    const src = imageSrc(p.photos[0], 800)
+    if (!src) continue
+    used.add(p)
+    picked.push({ src, alt: p.photos[0].alt || (p.title || 'Completed roof project') })
+  }
+
+  return picked.slice(0, count)
+}
+
+function ProjectsTeaser({ projects }: { projects?: any[] | null }) {
+  const photos = pickPreviewPhotos(projects)
+
   return (
-    <aside className="mx-auto mt-10 max-w-prose rounded-xl border border-white/20 bg-white/10 p-6 text-center sm:p-8">
+    <aside className="mx-auto mt-10 max-w-2xl rounded-xl border border-white/20 bg-white/10 p-6 text-center sm:p-8">
       <h2 className="text-xl font-bold text-white sm:text-2xl">
         See these materials on real roofs
       </h2>
@@ -722,9 +919,26 @@ function ProjectsTeaser() {
         Prices are one thing. Look at completed aluminium, stone-coated and
         roof-paint jobs we have already installed across Nigeria.
       </p>
+
+      {photos.length ? (
+        <div className="mx-auto mt-6 grid max-w-lg grid-cols-3 gap-2 sm:gap-3">
+          {photos.map((photo, i) => (
+            <Image
+              key={photo.src + i}
+              src={photo.src}
+              alt={photo.alt}
+              width={400}
+              height={300}
+              sizes="(max-width: 640px) 33vw, 200px"
+              className="aspect-[4/3] w-full rounded-lg object-cover"
+            />
+          ))}
+        </div>
+      ) : null}
+
       <Link
         href="/projects/"
-        className="mt-5 inline-block rounded-lg bg-white px-5 py-3 text-sm font-semibold text-secondary transition-colors hover:bg-white/90"
+        className="mt-6 inline-block rounded-lg bg-white px-5 py-3 text-sm font-semibold text-secondary transition-colors hover:bg-white/90"
       >
         See completed projects
       </Link>

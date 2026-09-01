@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 
 import { sanityFetch } from '../../../sanity/client'
 import { latestPostsQuery, siteSettingsQuery } from '../../../sanity/queries'
-import { site } from '@/lib/site'
+import { site, TEAM } from '@/lib/site'
 import { buildMetadata } from '@/lib/seo'
 import { graph, organizationSchema, websiteSchema } from '@/lib/schema'
 import { cn } from '@/lib/cn'
@@ -42,7 +42,7 @@ const SERVICES = [
   {
     title: 'Roof Installations',
     href: '/projects/',
-    body: 'We specialize in expertly installing premium aluminium roofing sheets (lightweight, easy to handle, corrosion-resistant, and excellent for heat reflection) as well as stone-coated roofing sheets (like Gerard, Metrocopo, step-tiles, and longspan designs for timeless elegance and superior protection).',
+    body: 'We specialize in expertly installing premium aluminium roofing sheets (lightweight, easy to handle, corrosion-resistant, and excellent for heat reflection) as well as stone-coated roofing sheets (like Milano, Bond and Romania designs for timeless elegance and superior protection).',
     image: '/wp-content/uploads/2026/08/roof-installation-project-watermarked-v2.jpg',
     alt: 'Ideal Roofing System stone-coated roof installation project',
   },
@@ -77,36 +77,6 @@ const ADDITIONAL = [
   'Roof Repainting',
   'Thunder Arrestor Installation',
   'PVC Rain Gutter Installation and Supply',
-]
-
-// Staff testimonials — live homepage's "People Say The Nicest Things"
-// section (three named staff, star rating, quote). Hardcoded homepage copy
-// like SERVICES/REASONS above, not CMS content. Ratings rounded to whole
-// stars (live shows 4.5/4/4.5) since the star icon here has no half-fill state.
-const TEAM = [
-  {
-    name: 'Michael Chibuzo',
-    role: 'Sales Manager',
-    rating: 5,
-    quote:
-      'I am not just interested in selling you our products, I am very much interested in listening to your needs and ensuring you get the very best of services',
-    image: '/wp-content/uploads/2026/03/20250605_154718-scaled-e1772790568389.jpg',
-  },
-  {
-    name: 'Adeshina Olabamiji',
-    role: 'Site Project Manager',
-    rating: 4,
-    quote: 'I and my team are dedicated to provide you with the best roofing experience',
-    image: '/wp-content/uploads/2026/03/IMG-20260310-WA0012-1536x2048.jpg',
-  },
-  {
-    name: 'Jennifer Ogbodo',
-    role: 'Customer Service',
-    rating: 5,
-    quote:
-      'I am here to welcome you and make sure your questions about our roofing products are answered quickly and clearly.',
-    image: '/team/jennifer-ogbodo.jpg',
-  },
 ]
 
 export default async function HomePage() {
@@ -233,8 +203,8 @@ export default async function HomePage() {
               {site.founded} and headquartered in {site.business.addressLocality},
               Lagos, we have built a strong reputation over
               the years as your go-to source for premium aluminium roofing sheets,
-              stone-coated roofing sheets (including popular options like Gerard,
-              Metrocopo, step-tiles, and longspan), along with accessories, rain
+              stone-coated roofing sheets (including popular options like Milano,
+              Bond and Romania), along with accessories, rain
               gutters (PVC water collectors), and related services.
             </p>
             <p className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-white">

@@ -137,6 +137,21 @@ export const pageBySlugQuery = groq`*[_type == "page" && slug.current == $slug][
   ${seoFields}
 }`
 
+/**
+ * A handful of real completed-project photos, for the /pricelist/ page's
+ * "See these materials on real roofs" teaser. The `projects` array lives on
+ * the "projects" page document itself, not on the pricelist page — this is
+ * a separate lookup, not a field of whatever page is currently rendering.
+ * Only the first photo per project is needed, so only fetch that one.
+ */
+export const projectsPreviewQuery = groq`*[_type == "page" && slug.current == "projects"][0]{
+  "projects": projects[showOnWebsite != false]{
+    family,
+    title,
+    "photos": photos[0...1]{ ${imageFields} }
+  }
+}`
+
 export const allPageSlugsQuery = groq`*[_type == "page" && defined(slug.current)]{
   "slug": slug.current,
   updatedAt
