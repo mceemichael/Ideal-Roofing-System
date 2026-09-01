@@ -471,6 +471,128 @@ function ProjectsLayout({ page }: { page: any }) {
   )
 }
 
+/**
+ * Parses the real /services/ page body (h4 title, normal description, an
+ * optional legacyImage right after — the exact shape the WordPress content
+ * was migrated in as) into cards, plus whatever heading/hero precedes the
+ * first service. Nothing invented — same "parse what's actually there"
+ * approach as offersFromBody in @/lib/schema. Falls back to the raw
+ * PortableBody render if the shape ever changes in the Studio.
+ */
+type ParsedService = {
+  title: string
+  description: string
+  image: { asset?: unknown; legacyUrl?: string } | null
+}
+
+function parseServicesSection(body: unknown): {
+  eyebrow: string | null
+  heading: string | null
+  heroImage: { asset?: unknown; legacyUrl?: string } | null
+  services: ParsedService[]
+} {
+  const blocks: any[] = Array.isArray(body) ? body : []
+  const services: ParsedService[] = []
+  let firstServiceIndex = -1
+
+  for (let i = 0; i < blocks.length; i++) {
+    const block = blocks[i]
+    if (block?._type !== 'block' || block.style !== 'h4') continue
+    const next = blocks[i + 1]
+    if (!next || next._type !== 'block' || next.style !== 'normal') continue
+    if (firstServiceIndex < 0) firstServiceIndex = i
+    const after = blocks[i + 2]
+    services.push({
+      title: blockPlainText(block),
+      description: blockPlainText(next),
+      image: after?._type === 'legacyImage' ? after : null,
+    })
+  }
+
+  const intro = firstServiceIndex < 0 ? blocks : blocks.slice(0, firstServiceIndex)
+  const eyebrowBlock = intro.find((b) => b._type === 'block' && b.style === 'h4')
+  const headingBlocks = intro.filter((b) => b._type === 'block' && b.style === 'h2')
+  const heroImage = intro.find((b) => b._type === 'legacyImage') || null
+
+  return {
+    eyebrow: eyebrowBlock ? blockPlainText(eyebrowBlock) : null,
+    heading: headingBlocks.length ? blockPlainText(headingBlocks[headingBlocks.length - 1]) : null,
+    heroImage,
+    services,
+  }
+}
+
+function ServicesLayout({ page }: { page: any }) {
+  const { eyebrow, heading, heroImage, services } = parseServicesSection(page.body)
+
+  // Shape changed in the Studio and no longer parses as services — never
+  // silently drop the content, fall back to the plain render.
+  if (!services.length) {
+    return (
+      <div className="mx-auto max-w-prose">
+        <PortableBody value={page.body} />
+      </div>
+    )
+  }
+
+  const heroSrc = imageSrc(heroImage, 1400)
+
+  return (
+    <>
+      <div className="mx-auto max-w-2xl text-center">
+        {eyebrow ? (
+          <p className="text-sm font-semibold uppercase tracking-wider text-white">
+            {eyebrow}
+          </p>
+        ) : null}
+        {heading ? (
+          <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">{heading}</h2>
+        ) : null}
+      </div>
+
+      {heroSrc ? (
+        <Image
+          src={heroSrc}
+          alt={heading || page.title}
+          width={1400}
+          height={700}
+          sizes="(max-width: 1024px) 100vw, 1024px"
+          className="mx-auto mt-8 aspect-[2/1] w-full max-w-4xl rounded-xl object-cover"
+        />
+      ) : null}
+
+      <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {services.map((service) => {
+          const src = imageSrc(service.image, 800)
+          return (
+            <article
+              key={service.title}
+              className="group flex flex-col overflow-hidden rounded-xl border border-surface-border bg-white shadow-card transition-shadow hover:shadow-card-hover"
+            >
+              {src ? (
+                <Image
+                  src={src}
+                  alt={service.title}
+                  width={800}
+                  height={600}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
+                  className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                />
+              ) : null}
+              <div className="flex flex-1 flex-col p-5">
+                <h3 className="text-lg font-bold text-ink">{service.title}</h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-muted">
+                  {service.description}
+                </p>
+              </div>
+            </article>
+          )
+        })}
+      </div>
+    </>
+  )
+}
+
 async function PageView({ page, slug }: { page: any; slug: string }) {
   const crumbs = [
     { name: 'Home', path: '/' },
@@ -521,6 +643,8 @@ async function PageView({ page, slug }: { page: any; slug: string }) {
 
         {slug === 'projects' ? (
           <ProjectsLayout page={page} />
+        ) : slug === 'services' ? (
+          <ServicesLayout page={page} />
         ) : (
           <div className="mx-auto max-w-prose">
             <PortableBody value={page.body} />

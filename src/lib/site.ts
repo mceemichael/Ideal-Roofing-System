@@ -124,6 +124,7 @@ export const site = {
 /** Main navigation — matches the live WordPress menu exactly. */
 export const mainNav = [
   { label: 'Ideal Roofing System', href: '/' },
+  { label: 'Services', href: '/services/' },
   {
     label: 'Updated Pricelist',
     href: '/pricelist/',

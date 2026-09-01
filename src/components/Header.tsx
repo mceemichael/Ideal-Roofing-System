@@ -137,14 +137,20 @@ export function Header({
         )}
       >
         <Container className="py-2">
-          <ul className="divide-y divide-surface-border text-center">
+          {/* Left-aligned, full-bleed rows — every label starts at the same
+              edge whether or not it has a submenu toggle. The old centered
+              layout put the "Updated Pricelist" label off-center relative to
+              every other item, because its chevron button ate space only on
+              that row (text-center inside a flex-1 box that isn't the full
+              row width is not the same as centering in the row). */}
+          <ul className="divide-y divide-surface-border">
             {mainNav.map((item) => (
-              <li key={item.href} className="py-1">
-                <div className="flex items-center justify-center gap-2">
+              <li key={item.href}>
+                <div className="flex items-center justify-between">
                   <Link
                     href={item.href}
                     onClick={() => setOpen(false)}
-                    className="block flex-1 py-2 text-sm font-medium text-ink"
+                    className="block flex-1 py-3.5 text-base font-bold text-black"
                   >
                     {item.label}
                   </Link>
@@ -153,14 +159,14 @@ export function Header({
                       type="button"
                       onClick={() => setSubOpen(subOpen === item.href ? null : item.href)}
                       aria-expanded={subOpen === item.href}
-                      className="p-2"
+                      className="shrink-0 p-3.5"
                     >
                       <span className="sr-only">Toggle submenu for {item.label}</span>
                       <svg
                         viewBox="0 0 20 20"
                         aria-hidden="true"
                         className={cn(
-                          'h-4 w-4 fill-current text-ink transition-transform',
+                          'h-4 w-4 fill-current text-black transition-transform',
                           subOpen === item.href && 'rotate-180'
                         )}
                       >
@@ -171,13 +177,13 @@ export function Header({
                 </div>
 
                 {'children' in item && item.children && subOpen === item.href ? (
-                  <ul className="pb-2">
+                  <ul className="space-y-0.5 pb-3">
                     {item.children.map((child) => (
                       <li key={child.href}>
                         <Link
                           href={child.href}
                           onClick={() => setOpen(false)}
-                          className="block py-2 text-sm text-ink-muted"
+                          className="block rounded-md py-2.5 pl-4 text-sm font-bold text-black transition-colors hover:bg-surface-soft"
                         >
                           {child.label}
                           {'dated' in child && child.dated ? ' | ' + currentMonthYear() : ''}
