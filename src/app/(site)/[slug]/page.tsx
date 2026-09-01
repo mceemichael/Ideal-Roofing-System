@@ -16,7 +16,13 @@ import {
 } from '../../../../sanity/queries'
 import { imageSrc } from '../../../../sanity/image'
 
-import { MONEY_PAGE_SLUGS, NO_HERO_IMAGE_SLUGS, RESERVED_SLUGS, site } from '@/lib/site'
+import {
+  MONEY_PAGE_SLUGS,
+  NO_HERO_IMAGE_SLUGS,
+  PRICELIST_ONLY_TOC_SLUGS,
+  RESERVED_SLUGS,
+  site,
+} from '@/lib/site'
 import { buildMetadata, excerptFromBody } from '@/lib/seo'
 import {
   articleSchema,
@@ -348,7 +354,11 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
 
         <div className="mx-auto mt-8 max-w-prose">
           {MONEY_PAGE_SLUGS.has(slug) ? (
-            <TableOfContents body={post.body} fixHeadingOrder />
+            <TableOfContents
+              body={post.body}
+              fixHeadingOrder
+              pricelistOnly={PRICELIST_ONLY_TOC_SLUGS.has(slug)}
+            />
           ) : null}
 
           <PortableBody

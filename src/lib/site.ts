@@ -177,6 +177,17 @@ export const MONEY_PAGE_SLUGS = new Set([
   'price-of-alu-zinc-in-lagos',
 ])
 
+/**
+ * Aluminium and Gerard get a stripped-down table of contents: every entry
+ * except the price-table section(s) themselves is removed, so it's a direct
+ * one- or two-link jump to pricing instead of a full outline. Alu-zinc and
+ * the PVC gutter page keep the full outline.
+ */
+export const PRICELIST_ONLY_TOC_SLUGS = new Set([
+  'price-of-aluminium-roofing-sheets-in-2026',
+  'price-of-stone-coated-gerard-in-lagos-2025',
+])
+
 export function slugFromPathname(pathname: string): string {
   return pathname.replace(/^\/+|\/+$/g, '').split('/')[0] || ''
 }
