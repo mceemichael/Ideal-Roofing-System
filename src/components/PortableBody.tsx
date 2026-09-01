@@ -83,10 +83,13 @@ const components: PortableTextComponents = {
       const href: string = value?.href || '#'
       const isInternal = href.startsWith('/') || href.includes('idealroofingsystem.com')
 
-      // Salmon, no underline — matches live's own in-content link style, but
-      // lightened from the DEFAULT cta red (1.56:1 here, fails WCAG AA on
-      // the dark canvas) to cta-light (4.69:1).
-      const linkClass = 'font-medium text-cta-light no-underline transition-opacity hover:opacity-80'
+      // Salmon — lightened from the DEFAULT cta red (1.56:1 here, fails
+      // WCAG AA on the dark canvas) to cta-light (4.69:1). Live's own
+      // in-content links drop the underline; this build keeps it so a link
+      // never depends on color alone to read as clickable (WCAG 1.4.1) — a
+      // deliberate deviation from "match live", not an oversight.
+      const linkClass =
+        'font-medium text-cta-light underline decoration-cta-light/60 underline-offset-2 transition-opacity hover:opacity-80'
 
       if (isInternal && href.startsWith('/')) {
         return (
