@@ -33,6 +33,7 @@ import { formatDate, isoDate, youtubeId } from '@/lib/format'
 import Container from '@/components/Container'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import PortableBody from '@/components/PortableBody'
+import TableOfContents from '@/components/TableOfContents'
 import PostCard, { type PostCardData } from '@/components/PostCard'
 import PageHeader from '@/components/PageHeader'
 import JsonLd from '@/components/JsonLd'
@@ -235,8 +236,16 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
                 url: post.videoUrl,
                 title: post.title,
                 description: post.excerpt,
+                // maxresdefault.jpg only exists for higher-resolution
+                // uploads; YouTube 404s it for older/lower-res videos.
+                // hqdefault.jpg is generated for every video, so it's a safe
+                // fallback for Google's thumbnailUrl fetch (matches the
+                // client-side onError fallback in YouTubeEmbed.tsx).
                 thumbnailUrl: ytId
-                  ? 'https://i.ytimg.com/vi/' + ytId + '/maxresdefault.jpg'
+                  ? [
+                      'https://i.ytimg.com/vi/' + ytId + '/maxresdefault.jpg',
+                      'https://i.ytimg.com/vi/' + ytId + '/hqdefault.jpg',
+                    ]
                   : heroSrc,
                 uploadDate: post.publishedAt,
               })
@@ -338,6 +347,10 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
         ) : null}
 
         <div className="mx-auto mt-8 max-w-prose">
+          {MONEY_PAGE_SLUGS.has(slug) ? (
+            <TableOfContents body={post.body} fixHeadingOrder />
+          ) : null}
+
           <PortableBody
             value={post.body}
             fixHeadingOrder={MONEY_PAGE_SLUGS.has(slug)}
