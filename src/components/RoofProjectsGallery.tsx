@@ -187,7 +187,7 @@ export function RoofProjectsGallery({ projects }: { projects: RoofProjectData[] 
                                     width={photo.width || 800}
                                     height={photo.height || 533}
                                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 360px"
-                                    className="aspect-[4/3] h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                                    className="aspect-video h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                                   />
                                 </button>
                                 {photo.caption ? (
@@ -217,7 +217,7 @@ export function RoofProjectsGallery({ projects }: { projects: RoofProjectData[] 
                       {Array.from({ length: EMPTY_SLOTS }).map((_, i) => (
                         <li
                           key={i}
-                          className="flex aspect-[4/3] items-center justify-center rounded-lg border border-dashed border-white/35 bg-white/5 px-3 text-center text-sm text-white/70"
+                          className="flex aspect-video items-center justify-center rounded-lg border border-dashed border-white/35 bg-white/5 px-3 text-center text-sm text-white/70"
                         >
                           {i === 0
                             ? 'Space for ' + (project.title || 'this design')
