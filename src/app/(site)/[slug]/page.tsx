@@ -42,6 +42,9 @@ import { formatDate, isoDate, youtubeId } from '@/lib/format'
 import Container from '@/components/Container'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import PortableBody from '@/components/PortableBody'
+import WaterCollectorArticle, {
+  isWaterCollectorPricelist,
+} from '@/components/WaterCollectorArticle'
 import TableOfContents from '@/components/TableOfContents'
 import PostCard, { type PostCardData } from '@/components/PostCard'
 import PageHeader from '@/components/PageHeader'
@@ -513,7 +516,9 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
             />
           ) : null}
 
-          {slug === 'about-us' ? null : (
+          {slug === 'about-us' ? null : isWaterCollectorPricelist(slug) ? (
+            <WaterCollectorArticle body={post.body} />
+          ) : (
             <PortableBody
               value={post.body}
               fixHeadingOrder={MONEY_PAGE_SLUGS.has(slug)}
