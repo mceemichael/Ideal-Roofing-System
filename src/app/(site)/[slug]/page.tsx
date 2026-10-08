@@ -18,6 +18,7 @@ import {
 import { imageSrc } from '../../../../sanity/image'
 
 import {
+  DESIGN_GRID_SLUGS,
   MONEY_PAGE_SLUGS,
   NO_HERO_IMAGE_SLUGS,
   PRICELIST_ONLY_TOC_SLUGS,
@@ -38,6 +39,7 @@ import {
   websiteSchema,
 } from '@/lib/schema'
 import { formatDate, isoDate, youtubeId } from '@/lib/format'
+import { designsFromBody, splitAtCarousel } from '@/lib/designs'
 
 import Container from '@/components/Container'
 import Breadcrumbs from '@/components/Breadcrumbs'
@@ -55,6 +57,7 @@ import RoofProjectsGallery, {
   type RoofProjectData,
 } from '@/components/RoofProjectsGallery'
 import FaqList from '@/components/FaqList'
+import DesignGrid from '@/components/DesignGrid'
 
 /**
  * The catch-all that reproduces WordPress's flat URL structure.
@@ -377,6 +380,10 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
   // slugs. See NO_HERO_IMAGE_SLUGS in @/lib/site.
   const showHero = heroSrc && !NO_HERO_IMAGE_SLUGS.has(slug)
   const ytId = post.videoUrl ? youtubeId(post.videoUrl) : null
+  // Design grid replaces the photo carousel in place; if the body ever stops
+  // parsing into designs, the plain render below still shows everything.
+  const designs = DESIGN_GRID_SLUGS.has(slug) ? designsFromBody(post.body) : []
+  const designBody = splitAtCarousel(post.body)
 
   return (
     <>
@@ -518,6 +525,12 @@ async function PostView({ post, slug }: { post: any; slug: string }) {
 
           {slug === 'about-us' ? null : isWaterCollectorPricelist(slug) ? (
             <WaterCollectorArticle body={post.body} />
+          ) : designs.length ? (
+            <>
+              <PortableBody value={designBody.before} fixHeadingOrder />
+              <DesignGrid designs={designs} />
+              <PortableBody value={designBody.after} fixHeadingOrder />
+            </>
           ) : (
             <PortableBody
               value={post.body}

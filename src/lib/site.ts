@@ -179,6 +179,12 @@ export const MONEY_PAGE_SLUGS = new Set([
 ])
 
 /**
+ * Pricelists whose photo carousel renders as a design grid instead: one
+ * card per design, colour swatches that swap the photo. See @/lib/designs.
+ */
+export const DESIGN_GRID_SLUGS = new Set(['price-of-stone-coated-gerard-in-lagos-2025'])
+
+/**
  * Aluminium and Gerard get a stripped-down table of contents: every entry
  * except the price-table section(s) themselves is removed, so it's a direct
  * one- or two-link jump to pricing instead of a full outline. Alu-zinc and
