@@ -30,13 +30,15 @@ function DesignCard({ design }: { design: Design }) {
   const colour = design.colours[index]
 
   return (
-    <article className="flex flex-col overflow-hidden rounded-xl border border-surface-border bg-white shadow-card">
+    // `relative` keeps the sr-only label inside the phone swipe row; without
+    // it the label escapes the row and makes the whole page scroll sideways.
+    <article className="relative flex w-[72%] shrink-0 snap-start flex-col overflow-hidden rounded-xl border border-surface-border bg-white shadow-card sm:w-auto">
       <Image
         src={colour.src}
         alt={colour.alt}
         width={800}
         height={671}
-        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 270px"
+        sizes="(max-width: 640px) 70vw, (max-width: 1024px) 33vw, 270px"
         className="aspect-[940/788] w-full object-cover"
       />
 
@@ -134,8 +136,10 @@ export function DesignGrid({ designs }: { designs: Design[] }) {
       </h2>
       <p className="mt-2 text-white/85">
         Tap a colour under any design to see it. Prices are per square metre.
+        <span className="sm:hidden"> Swipe sideways for more designs.</span>
       </p>
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+      {/* Phones: one swipeable row, next card peeking in. sm and up: a grid. */}
+      <div className="mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:pb-0 lg:grid-cols-4">
         {designs.map((design) => (
           <DesignCard key={design.name} design={design} />
         ))}
